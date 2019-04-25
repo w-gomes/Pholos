@@ -1,0 +1,47 @@
+# last updated 11/23/18
+
+Language: Cpp
+BasedOnStyle: Google
+
+AccessModifierOffset: -1
+AlignConsecutiveAssignments: true
+AlignConsecutiveDeclarations: false
+AlignTrailingComments: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowShortFunctionsOnASingleLine: false
+AllowShortIfStatementsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: true
+BreakBeforeBinaryOperators: false
+BreakBeforeBraces: Custom	
+BreakConstructorInitializersBeforeComma: true
+BreakBeforeTernaryOperators: true
+BraceWrapping: {
+  AfterControlStatement: 'false'
+  AfterClass: 'false'
+  AfterEnum: 'true'
+  AfterFunction: 'true'
+  AfterNamespace: 'false'
+  AfterStruct: 'false'
+  AfterUnion: 'false'
+  AfterExternBlock: 'false'
+  BeforeCatch: 'false'
+  BeforeElse: 'false'
+}
+ColumnLimit: 100
+ConstructorInitializerAllOnOneLineOrOnePerLine: false
+Cpp11BracedListStyle: false
+DerivePointerBinding: false
+FixNamespaceComments: true
+IncludeBlocks: Preserve
+IndentCaseLabels: true
+IndentWidth: 4
+IndentWrappedFunctionNames: true
+IndentPPDirectives: AfterHash
+NamespaceIndentation: Inner
+PointerBindsToType: false
+SpacesBeforeTrailingComments: 2
+Standard: Auto

@@ -1,0 +1,1 @@
+Checks: '*,-abseil*,-alpha*,-android*,-boost*,-core*,-cplusplus*,-deadcode*,-fuchsia*,-google*,-hicpp-no-array-decay,-hicpp-noa-assembler,-hicpp-noexcept-move,-hicpp-no-malloc,-llvm*,-misc*,-mpi*,-nullability*,-objc*,-optin*,-osx*,-performance*,-portability*,-security*,-unix*,-zircon*'
