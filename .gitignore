@@ -1,8 +1,9 @@
 # Dir
 .vs/
-bin/
-bin-int/
+build/
 
 *.user
 
 doc/
+
+vendor/
