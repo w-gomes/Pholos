@@ -24,7 +24,7 @@ project "Pholos"
 
 	includedirs {
 		"%{prj.name}/src",
-		"%{prj.name}/vendor/fmt/include"
+		"%{prj.name}/lib/fmt/include"
 	}
 
 	filter "system:windows"
