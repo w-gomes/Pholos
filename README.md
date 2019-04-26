@@ -1,3 +1,3 @@
 # Pholos
----
-- Working progress
+
+- Work in progress
