@@ -9,21 +9,16 @@ Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Release|x64 = Release|x64
-		Testing|x64 = Testing|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Debug|x64.ActiveCfg = Debug|x64
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Debug|x64.Build.0 = Debug|x64
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Release|x64.ActiveCfg = Release|x64
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Release|x64.Build.0 = Release|x64
-		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Testing|x64.ActiveCfg = Testing|x64
-		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Testing|x64.Build.0 = Testing|x64
 		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Debug|x64.ActiveCfg = Debug|x64
 		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Debug|x64.Build.0 = Debug|x64
 		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Release|x64.ActiveCfg = Release|x64
 		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Release|x64.Build.0 = Release|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Testing|x64.ActiveCfg = Testing|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Testing|x64.Build.0 = Testing|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
