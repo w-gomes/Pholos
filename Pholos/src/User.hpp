@@ -1,6 +1,6 @@
 #pragma once
 
 namespace Pholos {
-class User {
+class Users {
 };
 }  // namespace Pholos

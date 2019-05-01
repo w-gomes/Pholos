@@ -16,11 +16,16 @@ class Movies {
 
     Movies() = default;
     explicit Movies(const std::string &name, double rating, int year, Stats stats);
+    Movies(const Movies &obj)  = delete;
+    Movies(const Movies &&obj) = delete;
+    ~Movies()                  = default;
 
     std::string getName() const;
     int getYear() const;
     double getRating() const;
     Stats getStats() const;
+
+    void setName(const std::string &name);
 
     void setStats();
 

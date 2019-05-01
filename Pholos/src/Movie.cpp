@@ -25,6 +25,11 @@ double Movies::getRating() const
     return this->rating_;
 }
 
+void Movies::setName(const std::string &name)
+{
+    this->name_ = name;
+}
+
 Movies::Stats Movies::getStats() const
 {
     return this->stats_;

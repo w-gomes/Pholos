@@ -2,7 +2,7 @@ workspace "Pholos"
 	architecture "x64"
 	startproject "Pholos"
 
-	configurations	{ "Debug", "Release", "Testing" }
+	configurations	{ "Debug", "Release" }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -34,10 +34,12 @@ project "Pholos"
 	filter "configurations:Debug"
 			defines "PH_DEBUG"
 			symbols "On"
+			runtime "Debug"
 
 	filter "configurations:Release"
 			defines "PH_RELEASE"
 			optimize "On"
+			runtime "Release"
 
 project "PholosTest"
 	location "PholosTest"
@@ -57,13 +59,20 @@ project "PholosTest"
 
 	includedirs {
 		"%{prj.name}/src",
+		"%{prj.name}/vendor",
         "Pholos/src"
 	}
 
     filter "system:windows"
             cppdialect "C++17"
             systemversion "latest"
-
-	filter "configurations:Testing"
-			defines "PH_TESTING"
+	
+	filter "configurations:Debug"
+			defines "PH_DEBUG"
 			symbols "On"
+			runtime "Debug"
+
+	filter "configurations:Release"
+			defines "PH_RELEASE"
+			optimize "On"
+			runtime "Release"
