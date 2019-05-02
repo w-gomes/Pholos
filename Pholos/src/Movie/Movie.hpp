@@ -1,24 +1,17 @@
 #pragma once
 
+#include "Stats.hpp"
+
 #include <string>
 
 namespace Pholos {
 
+class MovieController;
+
 class Movies {
    public:
-    enum class Stats
-    {
-        PlanToWatch = 0,
-        Watching,
-        Completed,
-        Dropped
-    };
-
     Movies() = default;
-    explicit Movies(const std::string &name, double rating, int year, Stats stats);
-
     explicit Movies(const std::string &name, double rating, int year);
-
     Movies(const Movies &obj)  = delete;
     Movies(const Movies &&obj) = delete;
     ~Movies()                  = default;
@@ -29,13 +22,14 @@ class Movies {
     Stats getStats() const;
 
     void setName(const std::string &name);
-
-    void setStats();
+    void setStats(int response);
+    void setRating(double rating);
+    void setYear(int year);
 
    private:
-    std::string name_{ "none" };
-    double rating_{ 0.0 };
-    int year_{ 0 };
+    std::string name_{};
+    double rating_{};
+    int year_{};
     Stats stats_ = Stats::PlanToWatch;
 };
 }  // namespace Pholos

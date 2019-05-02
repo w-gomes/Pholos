@@ -91,16 +91,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Movie.hpp" />
-    <ClInclude Include="src\TvShow.hpp" />
-    <ClInclude Include="src\User.hpp" />
-    <ClInclude Include="src\import.hpp" />
+    <ClInclude Include="src\Controller.hpp" />
+    <ClInclude Include="src\Movie\Movie.hpp" />
+    <ClInclude Include="src\Stats.hpp" />
+    <ClInclude Include="src\TvShow\TvShow.hpp" />
+    <ClInclude Include="src\User\User.hpp" />
+    <ClInclude Include="src\fmt\fmt.hpp" />
+    <ClInclude Include="src\Utility.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Movie.cpp" />
-    <ClCompile Include="src\TvShow.cpp" />
-    <ClCompile Include="src\User.cpp" />
+    <ClCompile Include="src\Controller.cpp" />
+    <ClCompile Include="src\Movie\Movie.cpp" />
+    <ClCompile Include="src\TvShow\TvShow.cpp" />
+    <ClCompile Include="src\User\User.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
