@@ -12,10 +12,25 @@ Utility::Utility()
     this->instance = this;
 }
 
+// This gets called whenever arguments aren't passed
+// or -h passed as argument
 void Utility::usage()
 {
-    auto usage = fmt::format("test\n monkas\n");
-    fmt::print(usage);
+    auto logo = fmt::format("\n::::::::::::::::"
+                            "\n:::::::::::::::::"
+                            "\n::::        ::::::"
+                            "\n::::        ::::::"
+                            "\n::::        ::::::"
+                            "\n:::::::::::::::::"
+                            "\n::::::::::::::::"
+                            "\n::::"
+                            "\n::::"
+                            "\n::::"
+                            "\n::::"
+                            "\n::::"
+                            "\n::::\n\n");
+
+    fmt::print(logo);
 }
 
 Utility *getUtility()

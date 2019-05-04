@@ -2,9 +2,6 @@ branches:
     only:
         - Dev
 image: Visual Studio 2017
-platform: Any CPU
-
-clone_depth: 1
 
 build:
     project: Pholos.sln

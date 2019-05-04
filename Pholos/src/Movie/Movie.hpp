@@ -6,8 +6,6 @@
 
 namespace Pholos {
 
-class MovieController;
-
 class Movies {
    public:
     Movies() = default;
