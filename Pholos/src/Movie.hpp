@@ -16,6 +16,9 @@ class Movies {
 
     Movies() = default;
     explicit Movies(const std::string &name, double rating, int year, Stats stats);
+
+    explicit Movies(const std::string &name, double rating, int year);
+
     Movies(const Movies &obj)  = delete;
     Movies(const Movies &&obj) = delete;
     ~Movies()                  = default;

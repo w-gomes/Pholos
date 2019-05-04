@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pholos", "Pholos\Pholos.vcxproj", "{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PholosTest", "PholosTest\PholosTest.vcxproj", "{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,10 +13,6 @@ Global
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Debug|x64.Build.0 = Debug|x64
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Release|x64.ActiveCfg = Release|x64
 		{BA6314CA-A605-3FA0-8FC0-52F47B01C6F0}.Release|x64.Build.0 = Release|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Debug|x64.ActiveCfg = Debug|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Debug|x64.Build.0 = Debug|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Release|x64.ActiveCfg = Release|x64
-		{7A7DE3C0-6635-250E-CF3C-FE69BB13C0FE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
