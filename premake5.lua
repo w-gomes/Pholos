@@ -28,51 +28,15 @@ project "Pholos"
 	}
 
 	filter "system:windows"
-			cppdialect "C++17"
-			systemversion "latest"
+		cppdialect "C++17"
+		systemversion "latest"
 
 	filter "configurations:Debug"
-			defines "PH_DEBUG"
-			symbols "On"
-			runtime "Debug"
+		defines "PH_DEBUG"
+		symbols "On"
+		runtime "Debug"
 
 	filter "configurations:Release"
-			defines "PH_RELEASE"
-			optimize "On"
-			runtime "Release"
-
-project "PholosTest"
-	location "PholosTest"
-	kind "ConsoleApp"
-	language "C++"
-
-    warnings "Extra"
-
-	targetdir ("build/test/bin/" .. outputdir .. "/%{prj.name}")
-	objdir ("build/test/bin-int/" .. outputdir .. "/%{prj.name}")
-	targetname "pholostest"
-
-	files {
-		"%{prj.name}/src/**.hpp",
-		"%{prj.name}/src/**.cpp"
-	}
-
-	includedirs {
-		"%{prj.name}/src",
-		"%{prj.name}/vendor",
-        "Pholos/src"
-	}
-
-    filter "system:windows"
-            cppdialect "C++17"
-            systemversion "latest"
-	
-	filter "configurations:Debug"
-			defines "PH_DEBUG"
-			symbols "On"
-			runtime "Debug"
-
-	filter "configurations:Release"
-			defines "PH_RELEASE"
-			optimize "On"
-			runtime "Release"
+		defines "PH_RELEASE"
+		optimize "On"
+		runtime "Release"
