@@ -1,18 +1,28 @@
-#include "Movie.hpp"
-#include "import.hpp"
+#include "fmt/fmt.hpp"
+
+#include "Controller.hpp"
+#include "Utility.hpp"
+
+#include <algorithm>
+#include <iterator>
+#include <string>
+#include <vector>
 
 using namespace Pholos;
 
 int main(int argc, char **argv)
 {
-    fmt::print("Test\n");
-    Movies movie("Inception", 10.0, 2010, static_cast<Movies::Stats>(0));
+    Controller control;
+    std::vector<std::string> args;
+    Utility utility;
+    if (argc > 1) {
+        std::transform(argv + 1, argv + argc, std::back_inserter(args), [&](auto s) { return s; });
+    }
 
-    std::string name = movie.getName();
-    double rating    = movie.getRating();
-    int year         = movie.getYear();
-
-    fmt::print("Name: {}, rating: {}, year: {}.", name, rating, year);
+    fmt::print("Hello\n");
+    fmt::print("Creating new movie\n");
+    auto util = getUtility();
+    util->usage();
 
     return 0;
 }
