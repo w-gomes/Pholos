@@ -1,8 +1,7 @@
 workspace "Pholos"
+	configurations	{ "Debug", "Release" }
 	architecture "x64"
 	startproject "Pholos"
-
-	configurations	{ "Debug", "Release" }
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 

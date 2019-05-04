@@ -2,11 +2,19 @@
 
 namespace Pholos {
 
-Movies::Movies(const std::string &name, double rating, int year, Stats stats = Stats::PlanToWatch)
+Movies::Movies(const std::string &name, double rating, int year, Stats stats)
     : name_(name)
     , rating_(rating)
     , year_(year)
     , stats_(stats)
+{
+}
+
+Movies::Movies(const std::string &name, double rating, int year)
+    : name_(name)
+    , rating_(rating)
+    , year_(year)
+    , stats_(Stats::PlanToWatch)
 {
 }
 
