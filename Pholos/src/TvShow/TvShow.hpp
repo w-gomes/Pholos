@@ -11,8 +11,8 @@ namespace Pholos {
 class TvShow {
    public:
     TvShow() = default;
-    explicit TvShow(const std::string &name);
-    explicit TvShow(const std::string &name, int year, double rating);
+    TvShow(const std::string &name);
+    TvShow(const std::string &name, int year, double rating);
     TvShow(const TvShow &obj)  = delete;
     TvShow(const TvShow &&obj) = delete;
     ~TvShow()                  = default;

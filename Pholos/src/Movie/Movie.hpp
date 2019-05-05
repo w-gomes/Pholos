@@ -9,7 +9,7 @@ namespace Pholos {
 class Movies {
    public:
     Movies() = default;
-    explicit Movies(const std::string &name, double rating, int year);
+    Movies(const std::string &name, double rating, int year);
     Movies(const Movies &obj)  = delete;
     Movies(const Movies &&obj) = delete;
     ~Movies()                  = default;
