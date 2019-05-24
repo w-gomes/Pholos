@@ -9,7 +9,7 @@ namespace Pholos {
 class Movies {
    public:
     Movies() = default;
-    Movies(const std::string &name, double rating, int year);
+    Movies(std::string name, double rating, int year);
     Movies(const Movies &obj)  = delete;
     Movies(const Movies &&obj) = delete;
     ~Movies()                  = default;
@@ -17,7 +17,7 @@ class Movies {
     std::string getName() const;
     int getYear() const;
     double getRating() const;
-    Stats getStats() const;
+    std::string getStats() const;
 
     void setName(const std::string &name);
     void setStats(int response);
@@ -25,9 +25,9 @@ class Movies {
     void setYear(int year);
 
    private:
-    std::string name_{};
+    std::string name_{ "None" };
     double rating_{};
     int year_{};
-    Stats stats_ = Stats::PlanToWatch;
+    Stats stats_ = Stats::NotSet;
 };
 }  // namespace Pholos

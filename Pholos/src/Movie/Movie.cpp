@@ -1,9 +1,11 @@
 #include "Movie.hpp"
 
+#include <utility>
+
 namespace Pholos {
 
-Movies::Movies(const std::string &name, double rating, int year)
-    : name_(name)
+Movies::Movies(std::string name, double rating, int year)
+    : name_(std::move(name))
     , rating_(rating)
     , year_(year)
     , stats_(Stats::PlanToWatch)
@@ -30,9 +32,28 @@ void Movies::setName(const std::string &name)
     this->name_ = name;
 }
 
-Stats Movies::getStats() const
+std::string Movies::getStats() const
 {
-    return this->stats_;
+    std::string stats;
+    switch (this->stats_) {
+        case Stats::PlanToWatch:
+            stats = "Plan to watch";
+            break;
+        case Stats::Watching:
+            stats = "Watching";
+            break;
+        case Stats::Completed:
+            stats = "Completed";
+            break;
+        case Stats::Dropped:
+            stats = "Dropped";
+            break;
+        case Stats::NotSet:
+            stats = "Not set";
+            break;
+    }
+
+    return stats;
 }
 
 void Movies::setStats(int response)
@@ -49,6 +70,8 @@ void Movies::setStats(int response)
             break;
         case Stats::Dropped:
             this->stats_ = Stats::Dropped;
+            break;
+        default:
             break;
     }
 }

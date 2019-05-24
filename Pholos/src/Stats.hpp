@@ -7,6 +7,7 @@ enum class Stats
     PlanToWatch = 0,
     Watching,
     Completed,
-    Dropped
+    Dropped,
+    NotSet
 };
 }
