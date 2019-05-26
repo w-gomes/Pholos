@@ -10,15 +10,11 @@ Application::Application()
     this->instance = this;
 }
 
-Application::~Application()
-{
-}
-
 void Application::run()
 {
     this->running_ = true;
+    this->utility_.menu();
     while (isRunning()) {
-        this->utility_.usage();
     }
 }
 

@@ -1,15 +1,14 @@
 #pragma once
 
-#include "Controller.hpp"
-#include "Utility.hpp"
-
+#include "helper/Controller.hpp"
+#include "helper/Utility.hpp"
 namespace Pholos {
 class Application {
    public:
     Application();
 
     static Application *instance;
-    ~Application();
+    ~Application() = default;
 
     void run();
     bool isRunning();
