@@ -1,7 +1,7 @@
 #pragma once
 
-#include "helper/Controller.hpp"
-#include "helper/Utility.hpp"
+#include "Controller/Controller.hpp"
+
 namespace Pholos {
 class Application {
    public:
@@ -10,14 +10,14 @@ class Application {
     static Application *instance;
     ~Application() = default;
 
-    void run();
+    void welcomeMessage() const;
+    void runApplication();
     bool isRunning();
-    void close();
+    void exitApplication();
 
    private:
     bool running_{ false };
     Controller controller_;
-    Utility utility_;
 };
 
 Application *getApplication();

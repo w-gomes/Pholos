@@ -92,22 +92,20 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Application.hpp" />
-    <ClInclude Include="src\helper\Controller.hpp" />
+    <ClInclude Include="src\Controller\Controller.hpp" />
     <ClInclude Include="src\Movie\Movie.hpp" />
     <ClInclude Include="src\Stats.hpp" />
     <ClInclude Include="src\TvShow\TvShow.hpp" />
     <ClInclude Include="src\User\User.hpp" />
-    <ClInclude Include="src\fmt\fmt.hpp" />
-    <ClInclude Include="src\helper\Utility.hpp" />
+    <ClInclude Include="lib\fmt\include\fmt\fmt.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
-    <ClCompile Include="src\helper\Controller.cpp" />
+    <ClCompile Include="src\Controller\Controller.cpp" />
     <ClCompile Include="src\Movie\Movie.cpp" />
     <ClCompile Include="src\TvShow\TvShow.cpp" />
     <ClCompile Include="src\User\User.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\helper\Utility.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

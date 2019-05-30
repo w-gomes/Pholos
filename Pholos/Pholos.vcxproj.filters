@@ -30,10 +30,7 @@
     <ClCompile Include="src\Application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\helper\Utility.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\helper\Controller.cpp">
+    <ClCompile Include="src\Controller\Controller.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -47,19 +44,16 @@
     <ClInclude Include="src\TvShow\TvShow.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\fmt\fmt.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\User\User.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Application.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\helper\Utility.hpp">
+    <ClInclude Include="lib\fmt\include\fmt\fmt.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\helper\Controller.hpp">
+    <ClInclude Include="src\Controller\Controller.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

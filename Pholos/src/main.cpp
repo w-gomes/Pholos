@@ -18,7 +18,7 @@ void updatingMovie(Movies &m, const std::string &name, double rating, int year, 
 int main()
 {
     Application app;
-    app.run();
+    app.runApplication();
 
     // Test
     {

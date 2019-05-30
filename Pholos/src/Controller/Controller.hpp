@@ -1,12 +1,10 @@
 #pragma once
-#include "Controller.hpp"
-
 #include <string>
 #include <vector>
 
 namespace Pholos {
 
-class Utility {
+class Controller {
     enum Command
     {
         Help   = 0,
@@ -20,18 +18,22 @@ class Utility {
     };
 
    public:
-    Utility() = default;
+    Controller() = default;
 
+    Controller(const Controller &obj) = delete;
+    Controller &operator=(const Controller &obj) = delete;
+    Controller(const Controller &&obj)           = delete;
+    Controller &operator=(const Controller &&obj) = delete;
+
+    ~Controller() = default;
+
+    void proceedToMenu();  // This needs a better name
     void menu();
-    void getUserInput();
     void help();
     int getCommand(const std::string &command);
 
    private:
     Command commands_;
-    inline static std::vector<std::string> commandsVector_{
-        "-h",     "-x",     "-c",       "-a",    "-e",     "-d",       "-s",       "-q",
-        "--help", "--exit", "--create", "--add", "--edit", "--delete", "--search", "--query"
-    };
+    static std::vector<std::string> commandsVector_;
 };
 }  // namespace Pholos
