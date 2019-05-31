@@ -30,14 +30,14 @@ void Application::welcomeMessage() const
 
     const std::string commands = fmt::format("- Usage:\n"
                                              "\t-Operations:\n\n"
-                                             "\t -h or --help\n"
-                                             "\t -x or --exit\n"
-                                             "\t -c or --create\n\n\n"
-                                             "\t -a or --add \n"
-                                             "\t -e or --edit \n"
-                                             "\t -d or --delete \n"
-                                             "\t -s or --search \n"
-                                             "\t -q or --query \n");
+                                             "\t -h -> help\n"
+                                             "\t -x -> exit\n"
+                                             "\t -c -> create\n"
+                                             "\t -a -> add\n"
+                                             "\t -e -> edit\n"
+                                             "\t -d -> delete\n"
+                                             "\t -s -> search\n"
+                                             "\t -q -> query\n");
     fmt::print("{}{}", logo, commands);
 }
 
@@ -46,7 +46,7 @@ void Application::runApplication()
     this->running_ = true;
 
     this->welcomeMessage();
-    this->controller_.proceedToMenu();
+    this->controller_.goToMenu();
     while (isRunning()) {
         this->controller_.menu();
     }
