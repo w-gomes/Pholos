@@ -2,12 +2,37 @@
 
 namespace Pholos {
 
+Movies::Movies(std::string name)
+    : name_(std::move(name))
+{
+}
+
 Movies::Movies(std::string name, double rating, int year)
     : name_(std::move(name))
     , rating_(rating)
     , year_(year)
     , stats_(Stats::PlanToWatch)
 {
+}
+
+Movies::Movies(const Movies &other)
+{
+    this->name_   = other.name_;
+    this->rating_ = other.rating_;
+    this->year_   = other.year_;
+    this->stats_  = other.stats_;
+}
+
+Movies &Movies::operator=(const Movies &other)
+{
+    if (&other != this) {
+        this->name_   = other.name_;
+        this->rating_ = other.rating_;
+        this->year_   = other.year_;
+        this->stats_  = other.stats_;
+    }
+
+    return *this;
 }
 
 std::string Movies::getName() const

@@ -11,11 +11,16 @@ namespace Pholos {
 class TvShow {
    public:
     TvShow() = default;
-    TvShow(const std::string &name);
-    TvShow(const std::string &name, int year, double rating);
-    TvShow(const TvShow &obj)  = delete;
+    explicit TvShow(std::string name);
+    TvShow(std::string name, int year, double rating);
+
+    TvShow(const TvShow &other);
+    TvShow &operator=(const TvShow &other);
+
     TvShow(const TvShow &&obj) = delete;
-    ~TvShow()                  = default;
+    TvShow &operator=(const TvShow &&obj) = delete;
+
+    ~TvShow() = default;
 
     std::string getName() const;
     int getYear() const;

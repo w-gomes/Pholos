@@ -2,16 +2,38 @@
 
 namespace Pholos {
 
-TvShow::TvShow(const std::string &name)
-    : name_(name)
+TvShow::TvShow(std::string name)
+    : name_(std::move(name))
 {
 }
 
-TvShow::TvShow(const std::string &name, int year, double rating)
-    : name_(name)
+TvShow::TvShow(std::string name, int year, double rating)
+    : name_(std::move(name))
     , year_(year)
     , rating_(rating)
 {
+}
+
+TvShow::TvShow(const TvShow &other)
+{
+    this->name_   = other.name_;
+    this->year_   = other.year_;
+    this->rating_ = other.rating_;
+    this->stats_  = other.stats_;
+    this->season_ = other.season_;
+}
+
+TvShow &TvShow::operator=(const TvShow &other)
+{
+    if (&other != this) {
+        this->name_   = other.name_;
+        this->year_   = other.year_;
+        this->rating_ = other.rating_;
+        this->stats_  = other.stats_;
+        this->season_ = other.season_;
+    }
+
+    return *this;
 }
 
 std::string TvShow::getName() const

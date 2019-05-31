@@ -15,6 +15,12 @@ void updatingMovie(Movies &m, const std::string &name, double rating, int year, 
     m.setStats(stat);
 }
 
+void printing(const Movies &obj)
+{
+    fmt::print("\nName {}, Rating {}, year {}, stats {}.", obj.getName(), obj.getRating(),
+               obj.getYear(), obj.getStats());
+}
+
 int main()
 {
     Application app;
@@ -24,18 +30,18 @@ int main()
     {
         Movies movie1;
         Movies movie2("Inception", 10.0, 2010);
+        Movies movie3(movie2);
+        Movies movie4;
+        movie4 = movie2;
 
-        fmt::print("\nName {}, Rating {}, year {}, stats {}.", movie1.getName(), movie1.getRating(),
-                   movie1.getYear(), movie1.getStats());
-        fmt::print("\nName {}, Rating {}, year {}, stats {}.", movie2.getName(), movie2.getRating(),
-                   movie2.getYear(), movie2.getStats());
-
+        printing(movie1);
+        printing(movie2);
         updatingMovie(movie1, "Avengers: End Game", 8.2, 2019, 0);
         updatingMovie(movie2, "Inception", 9.2, 2009, 2);
-        fmt::print("\nName {}, Rating {}, year {}, stats {}.", movie1.getName(), movie1.getRating(),
-                   movie1.getYear(), movie1.getStats());
-        fmt::print("\nName {}, Rating {}, year {}, stats {}.", movie2.getName(), movie2.getRating(),
-                   movie2.getYear(), movie2.getStats());
+        printing(movie1);
+        printing(movie2);
+        printing(movie3);
+        printing(movie4);
     }
 
     return 0;
