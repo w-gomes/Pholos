@@ -9,12 +9,11 @@ class Controller {
     {
         Help   = 0,
         Exit   = 1,
-        Create = 2,
-        Add    = 3,
-        Edit   = 4,
-        Delete = 5,
-        Search = 6,
-        Query  = 7
+        Add    = 2,
+        Edit   = 3,
+        Delete = 4,
+        Search = 5,
+        Query  = 6
     };
 
    public:
@@ -35,6 +34,6 @@ class Controller {
 
    private:
     Command commands_;
-    static std::vector<std::string> commandsVector_;
+    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q" };
 };
 }  // namespace Pholos
