@@ -5,7 +5,7 @@
 namespace Pholos {
 
 class Controller {
-    enum Command
+    enum class Command
     {
         Help   = 0,
         Exit   = 1,
@@ -27,9 +27,10 @@ class Controller {
 
     ~Controller() = default;
 
-    void proceedToMenu();  // This needs a better name
+    void goToMenu();  // This needs a better name
     void menu();
     void help();
+    void exit();
     int getCommand(const std::string &command);
 
    private:

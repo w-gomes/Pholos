@@ -11,13 +11,11 @@
 
 namespace Pholos {
 
-std::vector<std::string> Controller::commandsVector_{ "-h",     "-x",       "-c",       "-a",
-                                                      "-e",     "-d",       "-s",       "-q",
-                                                      "--help", "--exit",   "--create", "--add",
-                                                      "--edit", "--delete", "--search", "--query" };
+std::vector<std::string> Controller::commandsVector_{
+    "-h", "-x", "-c", "-a", "-e", "-d", "-s", "-q"
+};
 
-// XXX Incomplete
-void Controller::proceedToMenu()
+void Controller::goToMenu()
 {
     auto app = getApplication();
 
@@ -36,8 +34,10 @@ void Controller::proceedToMenu()
 // Refactor this
 void Controller::menu()
 {
+    // Maybe we don't need this.
     auto app = getApplication();
-    fmt::print("Enter your option! Type --help or -h for command list : ");
+
+    fmt::print("Enter your option! Type -h for command list : ");
     std::string command;
     std::cin >> command;
 
@@ -45,9 +45,21 @@ void Controller::menu()
         std::find(Controller::commandsVector_.begin(), Controller::commandsVector_.end(), command);
 
     if (findResult == Controller::commandsVector_.end()) {
-        fmt::print("Unknonw command!\n");
+        fmt::print("command not found!\n");
         return;
     }
+
+    int y = this->getCommand(command);
+    assert(y != -1);
+    switch (static_cast<Command>(y)) {
+        case Command::Help:
+            this->help();
+            break;
+        case Command::Exit:
+            this->exit();
+            break;
+    }
+
     /*auto app = getApplication();
 
     bool gotAnswer    = false;
@@ -86,39 +98,45 @@ void Controller::menu()
 int Controller::getCommand(const std::string &command)
 {
     int x = -1;
-    if (command == "--help" || command == "-h") {
+    if (command == "-h") {
         x = 0;
-    } else if (command == "--exit" || command == "-x") {
+    } else if (command == "-x") {
         x = 1;
-    } else if (command == "--create" || command == "-c") {
+    } else if (command == "-c") {
         x = 2;
-    } else if (command == "--add" || command == "-a") {
+    } else if (command == "-a") {
         x = 3;
-    } else if (command == "--edit" || command == "-e") {
+    } else if (command == "-e") {
         x = 4;
-    } else if (command == "--delete" || command == "-d") {
+    } else if (command == "-d") {
         x = 5;
-    } else if (command == "--search" || command == "-s") {
+    } else if (command == "-s") {
         x = 6;
-    } else if (command == "--query" || command == "-q") {
+    } else if (command == "-q") {
         x = 7;
     }
 
     return x;
 }
 
+void Controller::exit()
+{
+    auto app = getApplication();
+    app->exitApplication();
+}
+
 void Controller::help()
 {
     const std::string commands = fmt::format("- Usage:\n"
                                              "\t-Operations:\n\n"
-                                             "\t -h or --help\n"
-                                             "\t -x or --exit\n"
-                                             "\t -c or --create\n\n\n"
-                                             "\t -a or --add \n"
-                                             "\t -e or --edit \n"
-                                             "\t -d or --delete \n"
-                                             "\t -s or --search \n"
-                                             "\t -q or --query \n");
+                                             "\t -h\n"
+                                             "\t -x\n"
+                                             "\t -c\n"
+                                             "\t -a\n"
+                                             "\t -e\n"
+                                             "\t -d\n"
+                                             "\t -s\n"
+                                             "\t -q\n");
 
     fmt::print(commands);
 }
