@@ -32,7 +32,6 @@ void Application::welcomeMessage() const
                                              "\t-Operations:\n\n"
                                              "\t -h -> help\n"
                                              "\t -x -> exit\n"
-                                             "\t -c -> create\n"
                                              "\t -a -> add\n"
                                              "\t -e -> edit\n"
                                              "\t -d -> delete\n"
@@ -52,7 +51,7 @@ void Application::runApplication()
     }
 }
 
-bool Application::isRunning()
+bool Application::isRunning() const
 {
     return this->running_;
 }

@@ -12,7 +12,7 @@ class Application {
 
     void welcomeMessage() const;
     void runApplication();
-    bool isRunning();
+    bool isRunning() const;
     void exitApplication();
 
    private:
