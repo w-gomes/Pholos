@@ -1,7 +1,4 @@
 #include "Controller.hpp"
-#include "fmt/fmt.hpp"
-
-#include "Application.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -9,21 +6,45 @@
 #include <string>
 #include <vector>
 
+#include "../Application.hpp"
+#include "fmt/fmt.hpp"
+
 namespace Pholos {
 
 void Controller::goToMenu()
 {
     auto app = getApplication();
 
-    fmt::print("\n\nType 'y' to continue or 'n' to leave : ");
-    char response;
-    std::cin >> response;
-    if (response == 'n' || response == 'N') {
-        // exit application
-        app->exitApplication();
-    } else if (response == 'y' || response == 'Y') {
-        // this looks dumb
-        return;
+    fmt::print("Enter your user username : ");
+    std::string name;
+    std::cin >> name;
+
+    // Check if user exists
+    // Will look for username in a userlist, if not found, prompt creation option
+    if (!getUser(name)) {
+        fmt::print("\n\nType 'y' to continue or 'n' to leave : ");
+        char response;
+        std::cin >> response;
+        if (response == 'n' || response == 'N') {
+            // exit application
+            app->exitApplication();
+        } else if (response == 'y' || response == 'Y') {
+            // this looks dumb
+            return;
+        }
+
+        // Fix this, not working
+    } else {
+        fmt::print("\n\nUser not found!\n"
+                   "Do you want to create a new User? : ");
+        char response;
+        std::cin >> response;
+        if (response = 'n' || response == 'N') {
+            app->exitApplication();
+        } else if (response == 'y' || response == 'Y') {
+            // calls createNewUser function
+            this->createNewUser();
+        }
     }
 }
 
@@ -99,6 +120,33 @@ void Controller::exit()
 {
     auto app = getApplication();
     app->exitApplication();
+}
+
+void Controller::loadUsersList()
+{
+}
+
+void Controller::createNewUser()
+{
+    std::string name;
+    fmt::print("Enter a username : ");
+    std::cin >> name;
+
+    // @incomplete: if check if name taken
+
+    Users user(name);
+    this->addNewUser(user);
+}
+
+void Controller::addNewUser(const Users &user)
+{
+    this->usersList_.push_back(user);
+}
+
+// TODO: check if user exists
+bool Controller::getUser(const std::string &name) const
+{
+    return true;
 }
 
 // TODO: Add instructions

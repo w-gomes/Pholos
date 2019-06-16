@@ -1,7 +1,8 @@
 #include "Application.hpp"
-#include "fmt/fmt.hpp"
 
 #include <cassert>
+
+#include "fmt/fmt.hpp"
 
 namespace Pholos {
 Application *Application::instance = nullptr;
@@ -33,6 +34,7 @@ void Application::welcomeMessage() const
                                              "\t -h -> help\n"
                                              "\t -x -> exit\n"
                                              "\t -a -> add\n"
+                                             "\t -c -> create\n"
                                              "\t -e -> edit\n"
                                              "\t -d -> delete\n"
                                              "\t -s -> search\n"

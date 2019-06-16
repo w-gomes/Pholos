@@ -1,8 +1,8 @@
 #pragma once
-
 #include "Controller/Controller.hpp"
 
 namespace Pholos {
+
 class Application {
    public:
     Application();

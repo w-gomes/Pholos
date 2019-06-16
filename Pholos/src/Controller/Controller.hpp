@@ -1,8 +1,14 @@
 #pragma once
+
+#include <memory>
 #include <string>
 #include <vector>
 
+#include "../User/User.hpp"
+
 namespace Pholos {
+
+class Users;
 
 class Controller {
     enum class Command
@@ -10,10 +16,11 @@ class Controller {
         Help   = 0,
         Exit   = 1,
         Add    = 2,
-        Edit   = 3,
-        Delete = 4,
-        Search = 5,
-        Query  = 6
+        Create = 3,
+        Edit   = 4,
+        Delete = 5,
+        Search = 6,
+        Query  = 7
     };
 
    public:
@@ -30,10 +37,15 @@ class Controller {
     void menu();
     void help();
     void exit();
+    void loadUsersList();
     int getCommand(const std::string &command);
+    void createNewUser();
+    void addNewUser(const Users &user);
+    bool getUser(const std::string &name) const;
 
    private:
     Command commands_;
-    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q" };
+    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-c", "-e", "-d", "-s", "-q" };
+    std::vector<Users> usersList_;
 };
 }  // namespace Pholos

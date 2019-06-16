@@ -1,8 +1,7 @@
 #pragma once
+#include <string>
 
 #include "Stats.hpp"
-
-#include <string>
 
 namespace Pholos {
 
