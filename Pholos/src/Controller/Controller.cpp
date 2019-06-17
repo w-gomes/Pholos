@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../Application.hpp"
+#include "../Stats.hpp"
 #include "fmt/fmt.hpp"
 
 namespace Pholos {
@@ -15,36 +16,15 @@ void Controller::goToMenu()
 {
     auto app = getApplication();
 
-    fmt::print("Enter your user username : ");
-    std::string name;
-    std::cin >> name;
-
-    // Check if user exists
-    // Will look for username in a userlist, if not found, prompt creation option
-    if (!getUser(name)) {
-        fmt::print("\n\nType 'y' to continue or 'n' to leave : ");
-        char response;
-        std::cin >> response;
-        if (response == 'n' || response == 'N') {
-            // exit application
-            app->exitApplication();
-        } else if (response == 'y' || response == 'Y') {
-            // this looks dumb
-            return;
-        }
-
-        // Fix this, not working
-    } else {
-        fmt::print("\n\nUser not found!\n"
-                   "Do you want to create a new User? : ");
-        char response;
-        std::cin >> response;
-        if (response = 'n' || response == 'N') {
-            app->exitApplication();
-        } else if (response == 'y' || response == 'Y') {
-            // calls createNewUser function
-            this->createNewUser();
-        }
+    fmt::print("\n\nType [y] to continue or [n] to leave : ");
+    char response;
+    std::cin >> response;
+    if (response == 'n' || response == 'N') {
+        // exit application
+        app->exitApplication();
+    } else if (response == 'y' || response == 'Y') {
+        // this looks dumb
+        return;
     }
 }
 
@@ -54,7 +34,7 @@ void Controller::menu()
     // Maybe we don't need this.
     // auto app = getApplication();
 
-    fmt::print("Enter your option! Type -h for command list : ");
+    fmt::print("Enter your option! Type [-h] for command list : ");
     std::string command;
     std::cin >> command;
 
@@ -77,6 +57,7 @@ void Controller::menu()
             break;
         case Command::Add:
             // Add new movie or tv show
+            this->addMenu();
             break;
         case Command::Edit:
             // Edit existing object
@@ -90,6 +71,9 @@ void Controller::menu()
         case Command::Query:
             // This query for specific, i.e., query all movies watching
             // probly hard to implement
+            break;
+        case Command::About:
+            // Show application information
             break;
     }
 }
@@ -111,6 +95,8 @@ int Controller::getCommand(const std::string &command)
         x = 5;
     } else if (command == "-q") {
         x = 6;
+    } else if (command == "-A") {
+        x = 7;
     }
 
     return x;
@@ -122,46 +108,103 @@ void Controller::exit()
     app->exitApplication();
 }
 
-void Controller::loadUsersList()
-{
-}
-
-void Controller::createNewUser()
-{
-    std::string name;
-    fmt::print("Enter a username : ");
-    std::cin >> name;
-
-    // @incomplete: if check if name taken
-
-    Users user(name);
-    this->addNewUser(user);
-}
-
-void Controller::addNewUser(const Users &user)
-{
-    this->usersList_.push_back(user);
-}
-
-// TODO: check if user exists
-bool Controller::getUser(const std::string &name) const
-{
-    return true;
-}
-
 // TODO: Add instructions
 void Controller::help()
 {
-    const std::string commands = fmt::format("- Usage:\n"
-                                             "\t-Operations:\n\n"
-                                             "\t -h\n"
-                                             "\t -x\n"
-                                             "\t -a\n"
-                                             "\t -e\n"
-                                             "\t -d\n"
-                                             "\t -s\n"
-                                             "\t -q\n");
+    const std::string commands =
+        fmt::format("- Usage:\n\n"
+                    "\t -h \tshow help duh.\n"
+                    "\t -x \texit application.\n"
+                    "\t -a \tadd new object.(i.e., Movie or Tv Show). \n"
+                    "\t -e \tedit existing objects.\n"
+                    "\t -d \tdelete objects.\n"
+                    "\t -s \tsearch.\n"
+                    "\t -q \tquery (advanced searching.)\n"
+                    "\t -A \tabout information about Pholos application.\n");
 
     fmt::print(commands);
+}
+
+// Add new movie or tvshow
+void Controller::addMenu()
+{
+    auto app = getApplication();
+
+    fmt::print("Movie [m] or Tv Show [t]?  : ");
+    char userChoose;
+    bool userChoice = false;
+
+    do {
+        std::cin >> userChoose;
+
+        if (userChoose == 'm' || userChoose == 'M') {
+            // call movie constructor.
+            this->addMovie();
+            userChoice = true;
+        } else if (userChoose == 't' || userChoose == 'T') {
+            // call tvshow constructor.
+            this->addTvShow();
+            userChoice = true;
+
+        } else if (userChoose == 'c' || userChoose == 'C') {
+            userChoice = true;
+            app->exitApplication();
+        } else {
+            fmt::print("Wrong option! Enter [m] or [t].\n");
+            fmt::print("Enter [c] to cancel. : ");
+        }
+    } while (!userChoice);
+}
+
+void Controller::addMovie()
+{
+    fmt::print("Adding a new Movie...\n"
+               "Basic or Complete creation? : ");
+    char optionCreation;
+    std::cin >> optionCreation;
+    std::cin.get();
+
+    std::string name;
+    double rating;
+    int year;
+    int stats = -1;
+
+    if (optionCreation == 'b' || optionCreation == 'B') {
+        fmt::print("Enter a name : ");
+        std::getline(std::cin, name);
+        std::cin.get();
+
+        this->moviesList_.emplace_back(name);
+
+    } else if (optionCreation == 'c' || optionCreation == 'C') {
+        fmt::print("Enter a name, rating, and year. (Stats is optional)\n");
+
+        fmt::print("Name : ");
+        std::getline(std::cin, name);
+        std::cin.get();
+        fmt::print("Rating : ");
+        std::cin >> rating;
+        fmt::print("Year : ");
+        std::cin >> year;
+
+        fmt::print("Want to set stats? : ");
+        char response;
+        std::cin >> response;
+
+        if (response == 'y' || response == 'Y') {
+            fmt::print("\nStats. Plan to Watch [0], Watching [1], Completed [2], Dropped [3] : ");
+            std::cin >> stats;
+        }
+
+        this->moviesList_.emplace_back(name, static_cast<double>(rating), static_cast<int>(year),
+                                       static_cast<Stats>(stats));
+    }
+
+    fmt::print("New movie has been created!\n");
+}
+
+void Controller::addTvShow()
+{
+    fmt::print("Adding a new Tv Show...\n");
 }
 }  // namespace Pholos

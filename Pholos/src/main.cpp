@@ -6,6 +6,7 @@
 
 using namespace Pholos;
 
+/*
 // Testing
 void updatingMovie(Movies &m, const std::string &name, double rating, int year, int stat)
 {
@@ -20,12 +21,14 @@ void printing(const Movies &obj)
     fmt::print("\nName {}, Rating {}, year {}, stats {}.", obj.getName(), obj.getRating(),
                obj.getYear(), obj.getStats());
 }
+*/
 
 int main()
 {
     Application app;
     app.runApplication();
 
+    /*
     // Test
     {
         Movies movie1;
@@ -43,6 +46,6 @@ int main()
         printing(movie3);
         printing(movie4);
     }
-
+    */
     return 0;
 }

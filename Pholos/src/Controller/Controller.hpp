@@ -1,10 +1,14 @@
 #pragma once
 
+// for debug purpose
+#include <iostream>
+
 #include <memory>
 #include <string>
 #include <vector>
 
-#include "../User/User.hpp"
+#include "../Movie/Movie.hpp"
+#include "../TvShow/TvShow.hpp"
 
 namespace Pholos {
 
@@ -16,11 +20,11 @@ class Controller {
         Help   = 0,
         Exit   = 1,
         Add    = 2,
-        Create = 3,
-        Edit   = 4,
-        Delete = 5,
-        Search = 6,
-        Query  = 7
+        Edit   = 3,
+        Delete = 4,
+        Search = 5,
+        Query  = 6,
+        About  = 7
     };
 
    public:
@@ -31,21 +35,27 @@ class Controller {
     Controller(const Controller &&obj)           = delete;
     Controller &operator=(const Controller &&obj) = delete;
 
-    ~Controller() = default;
+    // For debugging purpose...
+    // after return this to default.
+    ~Controller()
+    {
+        std::cout << "\n...Calling Controller destructor...\n";
+    }
 
     void goToMenu();  // This needs a better name
     void menu();
     void help();
     void exit();
-    void loadUsersList();
+    void addMenu();
     int getCommand(const std::string &command);
-    void createNewUser();
-    void addNewUser(const Users &user);
-    bool getUser(const std::string &name) const;
+
+    void addMovie();
+    void addTvShow();
 
    private:
     Command commands_;
-    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-c", "-e", "-d", "-s", "-q" };
-    std::vector<Users> usersList_;
+    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
+    std::vector<Movies> moviesList_;
+    std::vector<TvShow> tvShowList_;
 };
 }  // namespace Pholos

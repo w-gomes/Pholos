@@ -5,14 +5,25 @@ namespace Pholos {
 Movies::Movies(std::string name)
     : name_(std::move(name))
 {
+    std::cout << "\n...Calling constructor...\n";
 }
 
 Movies::Movies(std::string name, double rating, int year)
     : name_(std::move(name))
     , rating_(rating)
     , year_(year)
-    , stats_(Stats::PlanToWatch)
+    , stats_(Stats::NotSet)
 {
+    std::cout << "\n...Calling constructor...\n";
+}
+
+Movies::Movies(std::string name, double rating, int year, Stats stats)
+    : name_(std::move(name))
+    , rating_(rating)
+    , year_(year)
+    , stats_(stats)
+{
+    std::cout << "\n...Calling constructor...\n";
 }
 
 Movies::Movies(const Movies &other)
@@ -21,9 +32,33 @@ Movies::Movies(const Movies &other)
     this->rating_ = other.rating_;
     this->year_   = other.year_;
     this->stats_  = other.stats_;
+
+    std::cout << "\n...Calling copy constructor...\n";
 }
 
 Movies &Movies::operator=(const Movies &other)
+{
+    if (&other != this) {
+        this->name_   = other.name_;
+        this->rating_ = other.rating_;
+        this->year_   = other.year_;
+        this->stats_  = other.stats_;
+    }
+
+    return *this;
+}
+
+Movies::Movies(const Movies &&other)
+{
+    this->name_   = other.name_;
+    this->rating_ = other.rating_;
+    this->year_   = other.year_;
+    this->stats_  = other.stats_;
+
+    std::cout << "\n...Calling move constructor...\n";
+}
+
+Movies &Movies::operator=(const Movies &&other)
 {
     if (&other != this) {
         this->name_   = other.name_;
@@ -82,6 +117,9 @@ std::string Movies::getStats() const
 void Movies::setStats(int response)
 {
     switch (static_cast<Stats>(response)) {
+        case Stats::NotSet:
+            this->stats_ = Stats::NotSet;
+            break;
         case Stats::PlanToWatch:
             this->stats_ = Stats::PlanToWatch;
             break;

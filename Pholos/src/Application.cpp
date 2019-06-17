@@ -30,15 +30,14 @@ void Application::welcomeMessage() const
                                          "\n\t:::::\n\n");
 
     const std::string commands = fmt::format("- Usage:\n"
-                                             "\t-Operations:\n\n"
-                                             "\t -h -> help\n"
-                                             "\t -x -> exit\n"
-                                             "\t -a -> add\n"
-                                             "\t -c -> create\n"
-                                             "\t -e -> edit\n"
-                                             "\t -d -> delete\n"
-                                             "\t -s -> search\n"
-                                             "\t -q -> query\n");
+                                             "\t -h \thelp\n"
+                                             "\t -x \texit\n"
+                                             "\t -a \tadd\n"
+                                             "\t -e \tedit\n"
+                                             "\t -d \tdelete\n"
+                                             "\t -s \tsearch\n"
+                                             "\t -q \tquery (advanced searching.)\n"
+                                             "\t -A \tabout\n");
     fmt::print("{}{}", logo, commands);
 }
 
@@ -60,6 +59,7 @@ bool Application::isRunning() const
 
 void Application::exitApplication()
 {
+    fmt::print("\nExiting application!\n");
     this->running_ = false;
 }
 

@@ -36,6 +36,28 @@ TvShow &TvShow::operator=(const TvShow &other)
     return *this;
 }
 
+TvShow::TvShow(const TvShow &&other)
+{
+    this->name_   = other.name_;
+    this->year_   = other.year_;
+    this->rating_ = other.rating_;
+    this->stats_  = other.stats_;
+    this->season_ = other.season_;
+}
+
+TvShow &TvShow::operator=(const TvShow &&other)
+{
+    if (&other != this) {
+        this->name_   = other.name_;
+        this->year_   = other.year_;
+        this->rating_ = other.rating_;
+        this->stats_  = other.stats_;
+        this->season_ = other.season_;
+    }
+
+    return *this;
+}
+
 std::string TvShow::getName() const
 {
     return this->name_;

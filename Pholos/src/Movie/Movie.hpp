@@ -1,4 +1,7 @@
 #pragma once
+// Debugging
+#include <iostream>
+
 #include <string>
 
 #include "Stats.hpp"
@@ -7,18 +10,25 @@ namespace Pholos {
 
 class Movies {
    public:
-    Movies() = default;
+    Movies()
+    {
+        std::cout << "\n...Calling default constructor...\n";
+    }
 
     explicit Movies(std::string name);
     Movies(std::string name, double rating, int year);
-
+    Movies(std::string name, double rating, int year, Stats stats);
     Movies(const Movies &other);
     Movies &operator=(const Movies &other);
 
-    Movies(const Movies &&obj) = delete;
-    Movies &operator=(const Movies &&obj) = delete;
+    Movies(const Movies &&obj);
+    Movies &operator=(const Movies &&obj);
 
-    ~Movies() = default;
+    // for debugging only
+    ~Movies()
+    {
+        std::cout << "\n...Calling Movies Destructor...\n";
+    }
 
     std::string getName() const;
     int getYear() const;
