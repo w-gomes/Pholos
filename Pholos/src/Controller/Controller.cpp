@@ -16,7 +16,7 @@ void Controller::goToMenu()
 {
     auto app = getApplication();
 
-    fmt::print("\n\nType [y] to continue or [n] to leave : ");
+    fmt::print("\n\nEnter [y] to continue or [n] to leave : ");
     char response;
     std::cin >> response;
     if (response == 'n' || response == 'N') {
@@ -34,7 +34,7 @@ void Controller::menu()
     // Maybe we don't need this.
     // auto app = getApplication();
 
-    fmt::print("Enter your option! Type [-h] for command list : ");
+    fmt::print("Enter an option! Type [-h] for command list : ");
     std::string command;
     std::cin >> command;
 
@@ -42,7 +42,7 @@ void Controller::menu()
         std::find(this->commandsVector_.begin(), this->commandsVector_.end(), command);
 
     if (findResult == this->commandsVector_.end()) {
-        fmt::print("command not found!\n");
+        fmt::print("Command not found!\n");
         return;
     }
 
@@ -81,6 +81,7 @@ void Controller::menu()
 int Controller::getCommand(const std::string &command)
 {
     int x = -1;
+    // Can't use switch with strings
     if (command == "-h") {
         x = 0;
     } else if (command == "-x") {
@@ -108,19 +109,33 @@ void Controller::exit()
     app->exitApplication();
 }
 
-// TODO: Add instructions
+// TODO: incomplete
 void Controller::help()
 {
     const std::string commands =
         fmt::format("- Usage:\n\n"
-                    "\t -h \tshow help duh.\n"
-                    "\t -x \texit application.\n"
-                    "\t -a \tadd new object.(i.e., Movie or Tv Show). \n"
-                    "\t -e \tedit existing objects.\n"
-                    "\t -d \tdelete objects.\n"
+                    "\t -h \thelp.\n"
+                    "\t\t Show command instructions.\n\n"
+                    "\t -x \texit.\n"
+                    "\t\t Exit the application.\n\n"
+                    "\t -a \tadd.\n"
+                    "\t\t Add a new object to your track database.\n"
+                    "\t\t\t User can add movie or tv show.\n"
+                    "\t\t\t There are two ways to add a new object.\n"
+                    "\t\t\t Basic: you're asked to enter a name.\n"
+                    "\t\t\t Full: you're asked to enter name, rating, year, stats(optional).\n\n"
+                    "\t -e \tedit.\n"
+                    "\t\t Edit an object.\n\n"
+                    "\t -d \tdelete.\n"
+                    "\t\t Delete an object.\n\n"
                     "\t -s \tsearch.\n"
-                    "\t -q \tquery (advanced searching.)\n"
-                    "\t -A \tabout information about Pholos application.\n");
+                    "\t\t Search for an object.\n\n"
+                    "\t -q \tquery.\n"
+                    "\t\t Query for an object.\n"
+                    "\t\t\t Query is an advanced version of search. For instance, user can search "
+                    "for all movies with status 'Watching'.\n\n"
+                    "\t -A \tabout.\n"
+                    "\t\t Information about the application.\n\n");
 
     fmt::print(commands);
 }
@@ -159,7 +174,7 @@ void Controller::addMenu()
 void Controller::addMovie()
 {
     fmt::print("Adding a new Movie...\n"
-               "Basic or Complete creation? : ");
+               "Basic or Complete creation? [b/c] : ");
     char optionCreation;
     std::cin >> optionCreation;
     std::cin.get();
@@ -171,8 +186,7 @@ void Controller::addMovie()
 
     if (optionCreation == 'b' || optionCreation == 'B') {
         fmt::print("Enter a name : ");
-        std::getline(std::cin, name);
-        std::cin.get();
+        std::getline(std::cin, name, '\n');
 
         this->moviesList_.emplace_back(name);
 
@@ -180,19 +194,18 @@ void Controller::addMovie()
         fmt::print("Enter a name, rating, and year. (Stats is optional)\n");
 
         fmt::print("Name : ");
-        std::getline(std::cin, name);
-        std::cin.get();
+        std::getline(std::cin, name, '\n');
         fmt::print("Rating : ");
         std::cin >> rating;
         fmt::print("Year : ");
         std::cin >> year;
 
-        fmt::print("Want to set stats? : ");
+        fmt::print("Want to set stats? [y/n] : ");
         char response;
         std::cin >> response;
 
         if (response == 'y' || response == 'Y') {
-            fmt::print("\nStats. Plan to Watch [0], Watching [1], Completed [2], Dropped [3] : ");
+            fmt::print("Stats. Plan to Watch [0], Watching [1], Completed [2], Dropped [3] : ");
             std::cin >> stats;
         }
 

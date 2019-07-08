@@ -1,6 +1,4 @@
 #pragma once
-#include <iostream>
-
 #include "Controller/Controller.hpp"
 
 namespace Pholos {
@@ -12,10 +10,7 @@ class Application {
     static Application *instance;
 
     // Debugging
-    ~Application()
-    {
-        std::cout << "\n...Calling Application Destructor...\n";
-    }
+    ~Application() = default;
 
     void welcomeMessage() const;
     void runApplication();

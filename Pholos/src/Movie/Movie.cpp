@@ -5,7 +5,6 @@ namespace Pholos {
 Movies::Movies(std::string name)
     : name_(std::move(name))
 {
-    std::cout << "\n...Calling constructor...\n";
 }
 
 Movies::Movies(std::string name, double rating, int year)
@@ -14,7 +13,6 @@ Movies::Movies(std::string name, double rating, int year)
     , year_(year)
     , stats_(Stats::NotSet)
 {
-    std::cout << "\n...Calling constructor...\n";
 }
 
 Movies::Movies(std::string name, double rating, int year, Stats stats)
@@ -23,7 +21,6 @@ Movies::Movies(std::string name, double rating, int year, Stats stats)
     , year_(year)
     , stats_(stats)
 {
-    std::cout << "\n...Calling constructor...\n";
 }
 
 Movies::Movies(const Movies &other)
@@ -32,8 +29,6 @@ Movies::Movies(const Movies &other)
     this->rating_ = other.rating_;
     this->year_   = other.year_;
     this->stats_  = other.stats_;
-
-    std::cout << "\n...Calling copy constructor...\n";
 }
 
 Movies &Movies::operator=(const Movies &other)
@@ -54,8 +49,6 @@ Movies::Movies(const Movies &&other)
     this->rating_ = other.rating_;
     this->year_   = other.year_;
     this->stats_  = other.stats_;
-
-    std::cout << "\n...Calling move constructor...\n";
 }
 
 Movies &Movies::operator=(const Movies &&other)

@@ -45,6 +45,7 @@ void Application::runApplication()
 {
     this->running_ = true;
 
+    // Application loop
     this->welcomeMessage();
     this->controller_.goToMenu();
     while (isRunning()) {

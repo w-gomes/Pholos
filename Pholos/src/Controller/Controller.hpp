@@ -1,8 +1,5 @@
 #pragma once
 
-// for debug purpose
-#include <iostream>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -35,12 +32,7 @@ class Controller {
     Controller(const Controller &&obj)           = delete;
     Controller &operator=(const Controller &&obj) = delete;
 
-    // For debugging purpose...
-    // after return this to default.
-    ~Controller()
-    {
-        std::cout << "\n...Calling Controller destructor...\n";
-    }
+    ~Controller() = default;
 
     void goToMenu();  // This needs a better name
     void menu();
