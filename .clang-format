@@ -27,7 +27,7 @@ BraceWrapping:
   AfterExternBlock: false
   BeforeCatch: false
   BeforeElse: false
-ColumnLimit: 100
+ColumnLimit: 90
 ConstructorInitializerAllOnOneLineOrOnePerLine: false
 Cpp11BracedListStyle: false
 DerivePointerBinding: false

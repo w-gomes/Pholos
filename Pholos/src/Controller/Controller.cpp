@@ -16,13 +16,13 @@ void Controller::goToMenu()
 {
     auto app = getApplication();
 
-    fmt::print("\n\nEnter [y] to continue or [n] to leave : ");
+    fmt::print("\n\nEnter [c] to continue or [l] to leave : ");
     char response;
     std::cin >> response;
-    if (response == 'n' || response == 'N') {
+    if (response == 'L' || response == 'l') {
         // exit application
         app->exitApplication();
-    } else if (response == 'y' || response == 'Y') {
+    } else if (response == 'c' || response == 'c') {
         // this looks dumb
         return;
     }
@@ -112,30 +112,30 @@ void Controller::exit()
 // TODO: incomplete
 void Controller::help()
 {
-    const std::string commands =
-        fmt::format("- Usage:\n\n"
-                    "\t -h \thelp.\n"
-                    "\t\t Show command instructions.\n\n"
-                    "\t -x \texit.\n"
-                    "\t\t Exit the application.\n\n"
-                    "\t -a \tadd.\n"
-                    "\t\t Add a new object to your track database.\n"
-                    "\t\t\t User can add movie or tv show.\n"
-                    "\t\t\t There are two ways to add a new object.\n"
-                    "\t\t\t Basic: you're asked to enter a name.\n"
-                    "\t\t\t Full: you're asked to enter name, rating, year, stats(optional).\n\n"
-                    "\t -e \tedit.\n"
-                    "\t\t Edit an object.\n\n"
-                    "\t -d \tdelete.\n"
-                    "\t\t Delete an object.\n\n"
-                    "\t -s \tsearch.\n"
-                    "\t\t Search for an object.\n\n"
-                    "\t -q \tquery.\n"
-                    "\t\t Query for an object.\n"
-                    "\t\t\t Query is an advanced version of search. For instance, user can search "
-                    "for all movies with status 'Watching'.\n\n"
-                    "\t -A \tabout.\n"
-                    "\t\t Information about the application.\n\n");
+    const std::string commands = fmt::format(
+        "- Usage:\n\n"
+        "\t -h \thelp.\n"
+        "\t\t Show command instructions.\n\n"
+        "\t -x \texit.\n"
+        "\t\t Exit the application.\n\n"
+        "\t -a \tadd.\n"
+        "\t\t Add a new object to your track database.\n"
+        "\t\t\t User can add movie or tv show.\n"
+        "\t\t\t There are two ways to add a new object.\n"
+        "\t\t\t Basic: you're asked to enter a name.\n"
+        "\t\t\t Full: you're asked to enter name, rating, year, stats(optional).\n\n"
+        "\t -e \tedit.\n"
+        "\t\t Edit an object.\n\n"
+        "\t -d \tdelete.\n"
+        "\t\t Delete an object.\n\n"
+        "\t -s \tsearch.\n"
+        "\t\t Search for an object.\n\n"
+        "\t -q \tquery.\n"
+        "\t\t Query for an object.\n"
+        "\t\t\t Query is an advanced version of search. For instance, user can search "
+        "for all movies with status 'Watching'.\n\n"
+        "\t -A \tabout.\n"
+        "\t\t Information about the application.\n\n");
 
     fmt::print(commands);
 }
@@ -182,35 +182,41 @@ void Controller::addMovie()
     std::string name;
     double rating;
     int year;
-    int stats = -1;
+    int stats;
+    char confirm;
 
     if (optionCreation == 'b' || optionCreation == 'B') {
-        fmt::print("Enter a name : ");
-        std::getline(std::cin, name, '\n');
+        fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
+        do {
+            fmt::print("-> ");
+            std::cin >> name;
+            fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
+            std::cin >> confirm;
+            if (confirm == 'Y' || confirm == 'y') {
+                break;
+            }
+        } while (true);
 
         this->moviesList_.emplace_back(name);
 
     } else if (optionCreation == 'c' || optionCreation == 'C') {
-        fmt::print("Enter a name, rating, and year. (Stats is optional)\n");
+        fmt::print("Enter a name, rating, year and stats. in one single line\nExample: "
+                   "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
+                   "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
+        do {
+            fmt::print("-> ");
+            std::cin >> name >> rating >> year >> stats;
+            fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats{3}.\nDo you "
+                       "Confirm?[y/n]\n-> ",
+                       name, rating, year, stats);
+            std::cin >> confirm;
+            if (confirm == 'Y' || confirm == 'y') {
+                break;
+            }
+        } while (true);
 
-        fmt::print("Name : ");
-        std::getline(std::cin, name, '\n');
-        fmt::print("Rating : ");
-        std::cin >> rating;
-        fmt::print("Year : ");
-        std::cin >> year;
-
-        fmt::print("Want to set stats? [y/n] : ");
-        char response;
-        std::cin >> response;
-
-        if (response == 'y' || response == 'Y') {
-            fmt::print("Stats. Plan to Watch [0], Watching [1], Completed [2], Dropped [3] : ");
-            std::cin >> stats;
-        }
-
-        this->moviesList_.emplace_back(name, static_cast<double>(rating), static_cast<int>(year),
-                                       static_cast<Stats>(stats));
+        this->moviesList_.emplace_back(name, static_cast<double>(rating),
+                                       static_cast<int>(year), static_cast<Stats>(stats));
     }
 
     fmt::print("New movie has been created!\n");

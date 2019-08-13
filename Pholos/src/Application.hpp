@@ -9,13 +9,12 @@ class Application {
 
     static Application *instance;
 
-    // Debugging
     ~Application() = default;
 
-    void welcomeMessage() const;
     void runApplication();
     bool isRunning() const;
     void exitApplication();
+    static void welcomeMessage();
 
   private:
     bool running_{ false };

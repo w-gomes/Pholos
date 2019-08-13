@@ -15,10 +15,9 @@ class Movies {
     Movies(const Movies &other);
     Movies &operator=(const Movies &other);
 
-    Movies(const Movies &&obj);
-    Movies &operator=(const Movies &&obj);
+    Movies(const Movies &&other);
+    Movies &operator=(const Movies &&other);
 
-    // for debugging only
     ~Movies() = default;
 
     std::string getName() const;

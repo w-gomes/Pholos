@@ -13,21 +13,22 @@ Application::Application()
     this->instance = this;
 }
 
-void Application::welcomeMessage() const
+void Application::welcomeMessage()
 {
-    const std::string logo = fmt::format("\n\tWelcome to Pholos Tracker!\n\n\t:::::::::::::::::"
-                                         "\n\t::::::::::::::::::"
-                                         "\n\t:::::        ::::::"
-                                         "\n\t:::::        ::::::"
-                                         "\n\t:::::        ::::::"
-                                         "\n\t::::::::::::::::::"
-                                         "\n\t:::::::::::::::::"
-                                         "\n\t:::::"
-                                         "\n\t:::::"
-                                         "\n\t:::::"
-                                         "\n\t:::::"
-                                         "\n\t:::::"
-                                         "\n\t:::::\n\n");
+    const std::string logo =
+        fmt::format("\n\tWelcome to Pholos Tracker!\n\n\t:::::::::::::::::"
+                    "\n\t::::::::::::::::::"
+                    "\n\t:::::        ::::::"
+                    "\n\t:::::        ::::::"
+                    "\n\t:::::        ::::::"
+                    "\n\t::::::::::::::::::"
+                    "\n\t:::::::::::::::::"
+                    "\n\t:::::"
+                    "\n\t:::::"
+                    "\n\t:::::"
+                    "\n\t:::::"
+                    "\n\t:::::"
+                    "\n\t:::::\n\n");
 
     const std::string commands = fmt::format("- Usage:\n"
                                              "\t -h \thelp\n"
@@ -41,12 +42,13 @@ void Application::welcomeMessage() const
     fmt::print("{}{}", logo, commands);
 }
 
+// Main loop
 void Application::runApplication()
 {
     this->running_ = true;
 
     // Application loop
-    this->welcomeMessage();
+    Application::welcomeMessage();
     this->controller_.goToMenu();
     while (isRunning()) {
         this->controller_.menu();

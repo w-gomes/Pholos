@@ -46,7 +46,8 @@ class Controller {
 
   private:
     Command commands_;
-    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
+    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e",
+                                              "-d", "-s", "-q", "-A" };
     std::vector<Movies> moviesList_;
     std::vector<TvShow> tvShowList_;
 };
