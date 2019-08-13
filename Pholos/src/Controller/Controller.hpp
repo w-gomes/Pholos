@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include "../Movie/Movie.hpp"
-#include "../TvShow/TvShow.hpp"
+#include "../Movies/movies.hpp"
+#include "../TvShow/tv-show.hpp"
 
 namespace Pholos {
 
@@ -24,7 +24,7 @@ class Controller {
         About  = 7
     };
 
-   public:
+  public:
     Controller() = default;
 
     Controller(const Controller &obj) = delete;
@@ -44,7 +44,7 @@ class Controller {
     void addMovie();
     void addTvShow();
 
-   private:
+  private:
     Command commands_;
     std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
     std::vector<Movies> moviesList_;

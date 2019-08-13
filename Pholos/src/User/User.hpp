@@ -3,12 +3,12 @@
 #include <string>
 #include <vector>
 
-#include "../Movie/Movie.hpp"
-#include "../TvShow/TvShow.hpp"
+#include "../Movies/movies.hpp"
+#include "../TvShow/tv-show.hpp"
 
 namespace Pholos {
 class Users {
-   public:
+  public:
     Users() = default;
     explicit Users(std::string name);
     Users(std::string name, std::vector<Movies> &movieList, std::vector<TvShow> &tvShowList);
@@ -27,7 +27,7 @@ class Users {
         return user.name_ == other.name_;
     }*/
 
-   private:
+  private:
     std::string name_{ "No_name" };
     std::vector<Movies> moviesList_;
     std::vector<TvShow> tvShowList_;

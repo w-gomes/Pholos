@@ -1,8 +1,7 @@
+#include "application.hpp"
+
+#include "Movies/movies.hpp"
 #include "fmt/fmt.hpp"
-
-#include "Application.hpp"
-
-#include "Movie/Movie.hpp"
 
 using namespace Pholos;
 

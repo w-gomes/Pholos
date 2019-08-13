@@ -1,15 +1,15 @@
 #pragma once
 
-#include "Stats.hpp"
-
 #include <map>
 #include <string>
 #include <utility>
 
+#include "Stats/stats.hpp"
+
 namespace Pholos {
 
 class TvShow {
-   public:
+  public:
     TvShow() = default;
     explicit TvShow(std::string name);
     TvShow(std::string name, int year, double rating);
@@ -34,7 +34,7 @@ class TvShow {
     void setStats(int response);
     void addSeason(int season, int episode);
 
-   private:
+  private:
     std::string name_{};
     std::map<int, int> season_{};
     int year_{};

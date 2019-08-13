@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
 
-#include "Stats.hpp"
+#include "Stats/stats.hpp"
 
 namespace Pholos {
 
 class Movies {
-   public:
+  public:
     Movies() = default;
 
     explicit Movies(std::string name);
@@ -31,7 +31,7 @@ class Movies {
     void setRating(double rating);
     void setYear(int year);
 
-   private:
+  private:
     std::string name_{ "None" };
     double rating_{};
     int year_{};

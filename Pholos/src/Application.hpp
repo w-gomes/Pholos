@@ -1,10 +1,10 @@
 #pragma once
-#include "Controller/Controller.hpp"
+#include "Controller/controller.hpp"
 
 namespace Pholos {
 
 class Application {
-   public:
+  public:
     Application();
 
     static Application *instance;
@@ -17,7 +17,7 @@ class Application {
     bool isRunning() const;
     void exitApplication();
 
-   private:
+  private:
     bool running_{ false };
     Controller controller_;
 };

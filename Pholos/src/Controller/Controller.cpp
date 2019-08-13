@@ -1,4 +1,4 @@
-#include "Controller.hpp"
+#include "controller.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -6,8 +6,8 @@
 #include <string>
 #include <vector>
 
-#include "../Application.hpp"
-#include "../Stats.hpp"
+#include "../Stats/stats.hpp"
+#include "../application.hpp"
 #include "fmt/fmt.hpp"
 
 namespace Pholos {
