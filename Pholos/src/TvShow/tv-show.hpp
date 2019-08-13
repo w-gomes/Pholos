@@ -12,13 +12,14 @@ class TvShow {
   public:
     TvShow() = default;
     explicit TvShow(std::string name);
-    TvShow(std::string name, int year, double rating);
+    TvShow(std::string name, int year, double rating, std::map<int, int> season,
+           Stats stats);
 
     TvShow(const TvShow &other);
     TvShow &operator=(const TvShow &other);
 
-    TvShow(const TvShow &&other);
-    TvShow &operator=(const TvShow &&other);
+    TvShow(TvShow &&obj);
+    TvShow &operator=(TvShow &&obj);
 
     ~TvShow() = default;
 
@@ -35,7 +36,7 @@ class TvShow {
     void addSeason(int season, int episode);
 
   private:
-    std::string name_{};
+    std::string name_{ "None" };
     std::map<int, int> season_{};
     int year_{};
     double rating_{};

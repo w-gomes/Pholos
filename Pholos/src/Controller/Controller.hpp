@@ -29,8 +29,8 @@ class Controller {
 
     Controller(const Controller &obj) = delete;
     Controller &operator=(const Controller &obj) = delete;
-    Controller(const Controller &&obj)           = delete;
-    Controller &operator=(const Controller &&obj) = delete;
+    Controller(Controller &&obj)                 = delete;
+    Controller &operator=(Controller &&obj) = delete;
 
     ~Controller() = default;
 

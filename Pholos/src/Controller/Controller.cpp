@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cassert>
 #include <iostream>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -200,9 +201,10 @@ void Controller::addMovie()
         this->moviesList_.emplace_back(name);
 
     } else if (optionCreation == 'c' || optionCreation == 'C') {
-        fmt::print("Enter a name, rating, year and stats. in one single line\nExample: "
-                   "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
-                   "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
+        fmt::print(
+            "Please enter a name, rating, year and stats. in one single line\nExample: "
+            "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
+            "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
         do {
             fmt::print("-> ");
             std::cin >> name >> rating >> year >> stats;
@@ -219,11 +221,77 @@ void Controller::addMovie()
                                        static_cast<int>(year), static_cast<Stats>(stats));
     }
 
-    fmt::print("New movie has been created!\n");
+    fmt::print("New movie, {}, has been added!\n", name);
 }
 
 void Controller::addTvShow()
 {
-    fmt::print("Adding a new Tv Show...\n");
+    fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
+    char optionCreation;
+    std::cin >> optionCreation;
+    std::cin.get();
+
+    std::string name;
+    double rating;
+    int year;
+    int stats;
+    int season;
+    int episode;
+    char confirm;
+    std::map<int, int> seasons;
+
+    if (optionCreation == 'b' || optionCreation == 'B') {
+        fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
+        do {
+            fmt::print("-> ");
+            std::cin >> name;
+            fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
+            std::cin >> confirm;
+            if (confirm == 'Y' || confirm == 'y') {
+                break;
+            }
+        } while (true);
+
+        this->tvShowList_.emplace_back(name);
+    } else if (optionCreation == 'c' || optionCreation == 'C') {
+        fmt::print(
+            "Please enter a name, rating, year, and stats. in one single line\nExample: "
+            "Two_and_a_half_man 10.0 2008 0\n.Use underscore instead of spaces.\nStats: "
+            "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
+        do {
+            fmt::print("-> ");
+            std::cin >> name >> rating >> year >> stats;
+            fmt::print(
+                "You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
+                "Confirm?[y/n]\n-> ",
+                name, rating, year, stats);
+            std::cin >> confirm;
+            if (confirm == 'Y' || confirm == 'y') {
+                break;
+            }
+        } while (true);
+
+        fmt::print("Please enter number of seasons\n-> ");
+        std::cin >> season;
+        fmt::print("Please enter number of episodes for each season\n");
+        for (int i = 1; i < season + 1; i++) {
+            fmt::print("Season {}\n-> ", i);
+            std::cin >> episode;
+            fmt::print("Season {0} : Episode(s) {1}\n", i, episode);
+            seasons.insert({ i, episode });
+        }
+
+        fmt::print("You entered:\n");
+        for (std::map<int, int>::iterator iterMap = seasons.begin();
+             iterMap != seasons.end(); ++iterMap) {
+            fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
+        }
+
+        this->tvShowList_.emplace_back(name, static_cast<int>(year),
+                                       static_cast<int>(rating), seasons,
+                                       static_cast<Stats>(stats));
+    }
+
+    fmt::print("New Tv Show, {}, has been added!\n", name);
 }
 }  // namespace Pholos

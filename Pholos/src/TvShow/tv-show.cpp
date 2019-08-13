@@ -7,10 +7,13 @@ TvShow::TvShow(std::string name)
 {
 }
 
-TvShow::TvShow(std::string name, int year, double rating)
+TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> season,
+               Stats stats)
     : name_(std::move(name))
     , year_(year)
     , rating_(rating)
+    , season_{ season }
+    , stats_{ stats }
 {
 }
 
@@ -36,7 +39,7 @@ TvShow &TvShow::operator=(const TvShow &other)
     return *this;
 }
 
-TvShow::TvShow(const TvShow &&other)
+TvShow::TvShow(TvShow &&other)
 {
     this->name_   = other.name_;
     this->year_   = other.year_;
@@ -45,7 +48,7 @@ TvShow::TvShow(const TvShow &&other)
     this->season_ = other.season_;
 }
 
-TvShow &TvShow::operator=(const TvShow &&other)
+TvShow &TvShow::operator=(TvShow &&other)
 {
     if (&other != this) {
         this->name_   = other.name_;
