@@ -18,8 +18,8 @@ class TvShow {
     TvShow(const TvShow &other);
     TvShow &operator=(const TvShow &other);
 
-    TvShow(TvShow &&obj);
-    TvShow &operator=(TvShow &&obj);
+    TvShow(TvShow &&obj) noexcept;
+    TvShow &operator=(TvShow &&obj) noexcept;
 
     ~TvShow() = default;
 

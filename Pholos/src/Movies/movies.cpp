@@ -43,7 +43,7 @@ Movies &Movies::operator=(const Movies &other)
     return *this;
 }
 
-Movies::Movies(Movies &&other)
+Movies::Movies(Movies &&other) noexcept
 {
     this->name_   = other.name_;
     this->rating_ = other.rating_;
@@ -51,7 +51,7 @@ Movies::Movies(Movies &&other)
     this->stats_  = other.stats_;
 }
 
-Movies &Movies::operator=(Movies &&other)
+Movies &Movies::operator=(Movies &&other) noexcept
 {
     if (&other != this) {
         this->name_   = other.name_;

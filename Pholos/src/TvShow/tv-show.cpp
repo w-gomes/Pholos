@@ -39,7 +39,7 @@ TvShow &TvShow::operator=(const TvShow &other)
     return *this;
 }
 
-TvShow::TvShow(TvShow &&other)
+TvShow::TvShow(TvShow &&other) noexcept
 {
     this->name_   = other.name_;
     this->year_   = other.year_;
@@ -48,7 +48,7 @@ TvShow::TvShow(TvShow &&other)
     this->season_ = other.season_;
 }
 
-TvShow &TvShow::operator=(TvShow &&other)
+TvShow &TvShow::operator=(TvShow &&other) noexcept
 {
     if (&other != this) {
         this->name_   = other.name_;

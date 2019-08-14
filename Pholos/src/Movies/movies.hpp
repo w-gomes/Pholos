@@ -15,8 +15,8 @@ class Movies {
     Movies(const Movies &other);
     Movies &operator=(const Movies &other);
 
-    Movies(Movies &&other);
-    Movies &operator=(Movies &&other);
+    Movies(Movies &&other) noexcept;
+    Movies &operator=(Movies &&other) noexcept;
 
     ~Movies() = default;
 
