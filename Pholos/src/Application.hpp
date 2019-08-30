@@ -1,13 +1,19 @@
 #pragma once
 #include "Controller/controller.hpp"
+#include "Helper/database.hpp"
 
 namespace Pholos {
 
 class Application {
   public:
+    static Application *instance;
+
     Application();
 
-    static Application *instance;
+    Application(const Application &obj) = delete;
+    Application &operator=(const Application &obj) = delete;
+    Application(Application &&obj)                 = delete;
+    Application &operator=(Application &&obj) = delete;
 
     ~Application() = default;
 
@@ -19,6 +25,7 @@ class Application {
   private:
     bool running_{ false };
     Controller controller_;
+    Database database_;
 };
 
 Application *getApplication();

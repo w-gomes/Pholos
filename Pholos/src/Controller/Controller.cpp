@@ -13,7 +13,7 @@
 
 namespace Pholos {
 
-void Controller::goToMenu()
+void Controller::menu()
 {
     auto app = getApplication();
 
@@ -30,7 +30,7 @@ void Controller::goToMenu()
 }
 
 // Refactor this
-void Controller::menu()
+void Controller::drawMenu()
 {
     // Maybe we don't need this.
     // auto app = getApplication();

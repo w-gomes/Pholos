@@ -8,7 +8,6 @@ namespace Pholos {
 Application *Application::instance = nullptr;
 
 Application::Application()
-    : controller_()
 {
     this->instance = this;
 }
@@ -49,9 +48,9 @@ void Application::runApplication()
 
     // Application loop
     Application::welcomeMessage();
-    this->controller_.goToMenu();
+    this->controller_.menu();
     while (isRunning()) {
-        this->controller_.menu();
+        this->controller_.drawMenu();
     }
 }
 

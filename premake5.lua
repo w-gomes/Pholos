@@ -22,9 +22,17 @@ project "Pholos"
 	}
 
 	includedirs {
-		"%{prj.name}/src",
-		"%{prj.name}/lib/fmt/include"
+		"%{prj.name}/third_party/fmt/include",
+        "%{prj.name}/third_party/sqlite3"
 	}
+
+    libdirs {
+        "%{prj.name}/lib"
+    }
+
+    links {
+        "sqlite3.lib"
+    }
 
 	filter "system:windows"
 		cppdialect "C++17"

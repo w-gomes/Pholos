@@ -1,60 +1,63 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{E9A3153E-D55B-578B-3E63-30E72A3AF27B}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Helper">
+      <UniqueIdentifier>{C53F33B7-B1E1-5D8D-9A9C-71E186DDE4DD}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Movies">
+      <UniqueIdentifier>{F85D97C3-E4FF-C199-CDBA-D5EDB9FB48EA}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Stats">
+      <UniqueIdentifier>{F4391E0E-604E-46BF-29D0-E91E95A342F0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TvShow">
+      <UniqueIdentifier>{B0F156D4-9C93-81AA-854E-95FE718F08FB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="User">
+      <UniqueIdentifier>{64A28D7C-50D9-8E0D-F9C5-7410E5DB0A0F}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\User\user.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\application.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Controller\controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Movies\movies.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TvShow\tv-show.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="lib\fmt\include\fmt\fmt.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\User\user.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\application.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="src\Controller\controller.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Helper\database.hpp">
+      <Filter>Helper</Filter>
     </ClInclude>
     <ClInclude Include="src\Movies\movies.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\TvShow\tv-show.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Movies</Filter>
     </ClInclude>
     <ClInclude Include="src\Stats\stats.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Stats</Filter>
     </ClInclude>
+    <ClInclude Include="src\TvShow\tv-show.hpp">
+      <Filter>TvShow</Filter>
+    </ClInclude>
+    <ClInclude Include="src\User\user.hpp">
+      <Filter>User</Filter>
+    </ClInclude>
+    <ClInclude Include="src\application.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Controller\controller.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Helper\database.cpp">
+      <Filter>Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Movies\movies.cpp">
+      <Filter>Movies</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TvShow\tv-show.cpp">
+      <Filter>TvShow</Filter>
+    </ClCompile>
+    <ClCompile Include="src\User\user.cpp">
+      <Filter>User</Filter>
+    </ClCompile>
+    <ClCompile Include="src\application.cpp" />
+    <ClCompile Include="src\main.cpp" />
   </ItemGroup>
 </Project>

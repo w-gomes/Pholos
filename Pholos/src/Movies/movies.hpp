@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 
-#include "Stats/stats.hpp"
+#include "../Stats/stats.hpp"
 
 namespace Pholos {
 

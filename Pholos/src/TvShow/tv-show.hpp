@@ -4,7 +4,7 @@
 #include <string>
 #include <utility>
 
-#include "Stats/stats.hpp"
+#include "../Stats/stats.hpp"
 
 namespace Pholos {
 

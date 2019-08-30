@@ -34,8 +34,8 @@ class Controller {
 
     ~Controller() = default;
 
-    void goToMenu();  // This needs a better name
-    void menu();
+    void menu();  // This needs a better name
+    void drawMenu();
     void help();
     void exit();
     void addMenu();
