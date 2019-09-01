@@ -1,5 +1,6 @@
 #include "application.hpp"
 
+#include "Helper/database.hpp"
 #include "Movies/movies.hpp"
 #include "fmt/fmt.hpp"
 
@@ -23,9 +24,6 @@ void printing(const Movies &obj)
 
 int main()
 {
-    Application app;
-    app.runApplication();
-
 #if defined(_DEBUG)
     // Test
     {
@@ -43,7 +41,19 @@ int main()
         printing(movie2);
         printing(movie3);
         printing(movie4);
+
+        Application app;
+        app.runApplication();
+        auto DB = getDatabase();
+        DB->init();
+        DB->save(movie1);
+        DB->save(movie2);
+        DB->save(movie3);
+        DB->save(movie4);
     }
+#else
+    Application app;
+    app.runApplication();
 #endif
     return 0;
 }

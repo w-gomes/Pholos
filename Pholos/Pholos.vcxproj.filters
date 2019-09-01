@@ -40,6 +40,11 @@
       <Filter>User</Filter>
     </ClInclude>
     <ClInclude Include="src\application.hpp" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3pp.h" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3pp.ipp" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3ppext.h" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3ppext.ipp" />
+    <ClInclude Include="third_party\sqlite3\sqlite3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Controller\controller.cpp">

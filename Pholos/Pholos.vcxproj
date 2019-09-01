@@ -59,12 +59,11 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>PH_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>third_party\fmt\include;third_party\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>third_party\fmt\include;third_party\sqlite3;third_party\sqlite3pp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,7 +77,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level4</WarningLevel>
       <PreprocessorDefinitions>PH_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>third_party\fmt\include;third_party\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>third_party\fmt\include;third_party\sqlite3;third_party\sqlite3pp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -86,7 +85,6 @@
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -104,6 +102,11 @@
     <ClInclude Include="src\TvShow\tv-show.hpp" />
     <ClInclude Include="src\User\user.hpp" />
     <ClInclude Include="src\application.hpp" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3pp.h" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3pp.ipp" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3ppext.h" />
+    <ClInclude Include="third_party\sqlite3pp\sqlite3ppext.ipp" />
+    <ClInclude Include="third_party\sqlite3\sqlite3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Controller\controller.cpp" />
