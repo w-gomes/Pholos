@@ -38,7 +38,7 @@ void Application::welcomeMessage()
                                              "\t -s \tsearch\n"
                                              "\t -q \tquery (advanced searching.)\n"
                                              "\t -A \tabout\n");
-    fmt::print("{}{}", logo, commands);
+    fmt::print("{}{}\n\n", logo, commands);
 }
 
 // Main loop
@@ -48,7 +48,7 @@ void Application::runApplication()
 
     // Application loop
     Application::welcomeMessage();
-    this->controller_.menu();
+    this->controller_.getUserResponse();
     while (isRunning()) {
         this->controller_.drawMenu();
     }

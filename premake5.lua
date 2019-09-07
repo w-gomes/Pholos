@@ -24,7 +24,6 @@ project "Pholos"
 	includedirs {
 		"%{prj.name}/third_party/fmt/include",
         "%{prj.name}/third_party/sqlite3",
-        "%{prj.name}/third_party/sqlite3pp"
 	}
 
     libdirs {

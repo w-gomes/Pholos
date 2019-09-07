@@ -9,8 +9,6 @@
 
 namespace Pholos {
 
-class Users;
-
 class Controller {
     enum class Command
     {
@@ -34,7 +32,7 @@ class Controller {
 
     ~Controller() = default;
 
-    void menu();  // This needs a better name
+    void getUserResponse();  // This needs a better name
     void drawMenu();
     void help();
     void exit();
@@ -45,7 +43,7 @@ class Controller {
     void addTvShow();
 
   private:
-    Command commands_;
+    Command commands_{};
     std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e",
                                               "-d", "-s", "-q", "-A" };
     std::vector<Movies> moviesList_;

@@ -26,7 +26,7 @@ class TvShow {
     std::string getName() const;
     int getYear() const;
     double getRating() const;
-    Stats getStats() const;
+    std::string getStats() const;
     std::map<int, int> getSeasons() const;
 
     void setName(const std::string &name);

@@ -7,13 +7,15 @@
 #include <string>
 #include <vector>
 
+#include "../Helper/database.hpp"
+#include "../Movies/movies.hpp"
 #include "../Stats/stats.hpp"
 #include "../application.hpp"
 #include "fmt/fmt.hpp"
 
 namespace Pholos {
 
-void Controller::menu()
+void Controller::getUserResponse()
 {
     auto app = getApplication();
 
@@ -180,6 +182,8 @@ void Controller::addMovie()
     std::cin >> optionCreation;
     std::cin.get();
 
+    auto database = getDatabase();
+
     std::string name;
     double rating;
     int year;
@@ -198,7 +202,9 @@ void Controller::addMovie()
             }
         } while (true);
 
-        this->moviesList_.emplace_back(name);
+        Movies movie(name);
+        this->moviesList_.push_back(movie);
+        database->save(movie);
 
     } else if (optionCreation == 'c' || optionCreation == 'C') {
         fmt::print(
@@ -208,17 +214,20 @@ void Controller::addMovie()
         do {
             fmt::print("-> ");
             std::cin >> name >> rating >> year >> stats;
-            fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats{3}.\nDo you "
-                       "Confirm?[y/n]\n-> ",
-                       name, rating, year, stats);
+            fmt::print(
+                "You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
+                "Confirm?[y/n]\n-> ",
+                name, rating, year, stats);
             std::cin >> confirm;
             if (confirm == 'Y' || confirm == 'y') {
                 break;
             }
         } while (true);
 
-        this->moviesList_.emplace_back(name, static_cast<double>(rating),
-                                       static_cast<int>(year), static_cast<Stats>(stats));
+        Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
+                     static_cast<Stats>(stats));
+        this->moviesList_.push_back(movie);
+        database->save(movie);
     }
 
     fmt::print("New movie, {}, has been added!\n", name);
@@ -230,6 +239,8 @@ void Controller::addTvShow()
     char optionCreation;
     std::cin >> optionCreation;
     std::cin.get();
+
+    auto database = getDatabase();
 
     std::string name;
     double rating;
@@ -252,7 +263,11 @@ void Controller::addTvShow()
             }
         } while (true);
 
-        this->tvShowList_.emplace_back(name);
+        TvShow show(name);
+
+        this->tvShowList_.push_back(show);
+        database->save(show);
+
     } else if (optionCreation == 'c' || optionCreation == 'C') {
         fmt::print(
             "Please enter a name, rating, year, and stats. in one single line\nExample: "
@@ -287,9 +302,10 @@ void Controller::addTvShow()
             fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
         }
 
-        this->tvShowList_.emplace_back(name, static_cast<int>(year),
-                                       static_cast<int>(rating), seasons,
-                                       static_cast<Stats>(stats));
+        TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
+                    static_cast<Stats>(stats));
+        this->tvShowList_.push_back(show);
+        database->save(show);
     }
 
     fmt::print("New Tv Show, {}, has been added!\n", name);

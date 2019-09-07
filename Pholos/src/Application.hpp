@@ -24,8 +24,8 @@ class Application {
 
   private:
     bool running_{ false };
-    Controller controller_;
-    Database database_;
+    Controller controller_{};
+    Database database_{};
 };
 
 Application *getApplication();

@@ -76,9 +76,28 @@ double TvShow::getRating() const
     return this->rating_;
 }
 
-Stats TvShow::getStats() const
+std::string TvShow::getStats() const
 {
-    return this->stats_;
+    std::string stats;
+    switch (this->stats_) {
+        case Stats::PlanToWatch:
+            stats = "Plan to watch";
+            break;
+        case Stats::Watching:
+            stats = "Watching";
+            break;
+        case Stats::Completed:
+            stats = "Completed";
+            break;
+        case Stats::Dropped:
+            stats = "Dropped";
+            break;
+        case Stats::NotSet:
+            stats = "Not set";
+            break;
+    }
+
+    return stats;
 }
 
 std::map<int, int> TvShow::getSeasons() const
@@ -104,6 +123,9 @@ void TvShow::setRating(double rating)
 void TvShow::setStats(int response)
 {
     switch (static_cast<Stats>(response)) {
+        case Stats::NotSet:
+            this->stats_ = Stats::NotSet;
+            break;
         case Stats::PlanToWatch:
             this->stats_ = Stats::PlanToWatch;
             break;
@@ -115,6 +137,8 @@ void TvShow::setStats(int response)
             break;
         case Stats::Dropped:
             this->stats_ = Stats::Dropped;
+            break;
+        default:
             break;
     }
 }
