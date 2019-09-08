@@ -2,7 +2,7 @@
 
 #include <cassert>
 
-#include "fmt/fmt.hpp"
+#include "fmt/core.h"
 
 namespace Pholos {
 Application *Application::instance = nullptr;
