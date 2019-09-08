@@ -1,6 +1,7 @@
 branches:
     only:
         - Dev
+        - master
 image: Visual Studio 2017
 
 configuration:
