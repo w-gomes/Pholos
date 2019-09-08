@@ -3,5 +3,11 @@ branches:
         - Dev
 image: Visual Studio 2017
 
+configuration:
+    - Debug
+
+before_build:
+    - cmake -DCMAKE_GENERATOR_PLATFORM=x64 -Bbuild
+
 build:
-    project: Pholos.sln
+    project: build/Pholos.sln
