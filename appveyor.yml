@@ -1,0 +1,13 @@
+branches:
+    only:
+        - Dev
+image: Visual Studio 2017
+
+configuration:
+    - Debug
+
+before_build:
+    - cmake -DCMAKE_GENERATOR_PLATFORM=x64 -Bbuild
+
+build:
+    project: build/Pholos.sln

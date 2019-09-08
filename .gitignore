@@ -3,5 +3,6 @@
 build/
 
 *.user
+*.db
 
 doc/
