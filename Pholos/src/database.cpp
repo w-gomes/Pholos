@@ -39,31 +39,31 @@ void Database::close()
 void Database::save(TvShow &show)
 {
     this->init();
-    std::string name          = show.getName();
-    double rating             = show.getRating();
-    int year                  = show.getYear();
-    std::string stats         = show.getStats();
-    std::map<int, int> season = show.getSeasons();
+    std::string name          = show.get_name();
+    double rating             = show.get_rating();
+    int year                  = show.get_year();
+    std::string stats         = show.get_stats();
+    std::map<int, int> season = show.get_seasons();
 
     // database error
     char *zErrMsg = nullptr;
 
-    std::string tempSqlShow = fmt::format(
+    std::string temp_sql_show = fmt::format(
         "INSERT INTO tvshow (name,rating,year,stats) VALUES ('{0}', {1}, {2}, '{3}');");
-    const char *sqlInsertShow = tempSqlShow.c_str();
+    const char *sql_insert_show = temp_sql_show.c_str();
 
-    int rc = sqlite3_exec(this->db_, sqlInsertShow, 0, 0, &zErrMsg);
+    int rc = sqlite3_exec(this->db_, sql_insert_show, 0, 0, &zErrMsg);
     if (rc != SQLITE_OK) {
         fmt::print("SQL Error: {}\n", zErrMsg);
         sqlite3_free(zErrMsg);
     }
 
     // Incomplete: No idea how to retrieve data from db with sqlite3 c++
-    std::string tempSqlSeason =
+    std::string temp_sql_season =
         fmt::format("SELECT id FROM tvshow WHERE name = '{}';", name);
-    const char *sqlSelectId = tempSqlSeason.c_str();
+    const char *sql_select_id = temp_sql_season.c_str();
 
-    rc = sqlite3_exec(this->db_, sqlSelectId, 0, 0, &zErrMsg);
+    rc = sqlite3_exec(this->db_, sql_select_id, 0, 0, &zErrMsg);
     if (rc != SQLITE_OK) {
         fmt::print("SQL Error: {}\n", zErrMsg);
         sqlite3_free(zErrMsg);
@@ -78,18 +78,18 @@ void Database::save(TvShow &show)
 void Database::save(Movies &movie)
 {
     this->init();
-    std::string name  = movie.getName();
-    double rating     = movie.getRating();
-    int year          = movie.getYear();
-    std::string stats = movie.getStats();
+    std::string name  = movie.get_name();
+    double rating     = movie.get_rating();
+    int year          = movie.get_year();
+    std::string stats = movie.get_stats();
 
     // database error
     char *zErrMsg = nullptr;
 
-    std::string tempSql = fmt::format(
+    std::string temp_sql = fmt::format(
         "INSERT INTO movies (name,rating,year,stats) VALUES ('{0}', {1}, {2}, '{3}');",
         name, rating, year, stats);
-    const char *sql = tempSql.c_str();
+    const char *sql = temp_sql.c_str();
 
     int rc = sqlite3_exec(this->db_, sql, 0, 0, &zErrMsg);
     if (rc != SQLITE_OK) {
@@ -101,7 +101,7 @@ void Database::save(Movies &movie)
 }
 
 // is this really necessary?
-Database *getDatabase()
+Database *get_database()
 {
     assert(Database::instance != nullptr);
     return Database::instance;

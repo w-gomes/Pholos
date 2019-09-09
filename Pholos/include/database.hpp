@@ -30,5 +30,5 @@ class Database {
     sqlite3 *db_;
 };
 
-Database *getDatabase();
+Database *get_database();
 }  // namespace Pholos

@@ -15,41 +15,40 @@
 
 namespace Pholos {
 
-void Controller::getUserResponse()
+void Controller::get_user_response()
 {
-    auto app = getApplication();
+    auto app = get_application();
 
-    fmt::print("\n\nEnter [c] to continue or [l] to leave : ");
+    fmt::print("\n\nPress any letter to continue: ");
     char response;
     std::cin >> response;
-    if (response == 'L' || response == 'l') {
+    if (response == 'N' || response == 'n') {
         // exit application
-        app->exitApplication();
-    } else if (response == 'c' || response == 'c') {
-        // this looks dumb
+        app->exit_application();
+    } else {
         return;
     }
 }
 
 // Refactor this
-void Controller::drawMenu()
+void Controller::draw_menu()
 {
     // Maybe we don't need this.
-    // auto app = getApplication();
+    // auto app = get_application();
 
-    fmt::print("Enter an option! Type [-h] for command list : ");
+    fmt::print("\nEnter an option! Type [-h] for command list : ");
     std::string command;
     std::cin >> command;
 
     auto findResult =
-        std::find(this->commandsVector_.begin(), this->commandsVector_.end(), command);
+        std::find(this->commands_vector_.begin(), this->commands_vector_.end(), command);
 
-    if (findResult == this->commandsVector_.end()) {
+    if (findResult == this->commands_vector_.end()) {
         fmt::print("Command not found!\n");
         return;
     }
 
-    int y = this->getCommand(command);
+    int y = this->get_command(command);
     assert(y != -1);
     switch (static_cast<Command>(y)) {
         case Command::Help:
@@ -60,7 +59,7 @@ void Controller::drawMenu()
             break;
         case Command::Add:
             // Add new movie or tv show
-            this->addMenu();
+            this->add_menu();
             break;
         case Command::Edit:
             // Edit existing object
@@ -81,7 +80,7 @@ void Controller::drawMenu()
     }
 }
 
-int Controller::getCommand(const std::string &command)
+int Controller::get_command(const std::string &command)
 {
     int x = -1;
     // Can't use switch with strings
@@ -108,8 +107,8 @@ int Controller::getCommand(const std::string &command)
 
 void Controller::exit()
 {
-    auto app = getApplication();
-    app->exitApplication();
+    auto app = get_application();
+    app->exit_application();
 }
 
 // TODO: incomplete
@@ -144,45 +143,45 @@ void Controller::help()
 }
 
 // Add new movie or tvshow
-void Controller::addMenu()
+void Controller::add_menu()
 {
-    auto app = getApplication();
+    auto app = get_application();
 
     fmt::print("Movie [m] or Tv Show [t]?  : ");
-    char userChoose;
-    bool userChoice = false;
+    char user_choose;
+    bool user_choice = false;
 
     do {
-        std::cin >> userChoose;
+        std::cin >> user_choose;
 
-        if (userChoose == 'm' || userChoose == 'M') {
+        if (user_choose == 'm' || user_choose == 'M') {
             // call movie constructor.
-            this->addMovie();
-            userChoice = true;
-        } else if (userChoose == 't' || userChoose == 'T') {
+            this->add_movie();
+            user_choice = true;
+        } else if (user_choose == 't' || user_choose == 'T') {
             // call tvshow constructor.
-            this->addTvShow();
-            userChoice = true;
+            this->add_tv_show();
+            user_choice = true;
 
-        } else if (userChoose == 'c' || userChoose == 'C') {
-            userChoice = true;
-            app->exitApplication();
+        } else if (user_choose == 'c' || user_choose == 'C') {
+            user_choice = true;
+            app->exit_application();
         } else {
             fmt::print("Wrong option! Enter [m] or [t].\n");
             fmt::print("Enter [c] to cancel. : ");
         }
-    } while (!userChoice);
+    } while (!user_choice);
 }
 
-void Controller::addMovie()
+void Controller::add_movie()
 {
     fmt::print("Adding a new Movie...\n"
                "Basic or Complete creation? [b/c] : ");
-    char optionCreation;
-    std::cin >> optionCreation;
+    char option_creation;
+    std::cin >> option_creation;
     std::cin.get();
 
-    auto database = getDatabase();
+    auto database = get_database();
 
     std::string name;
     double rating;
@@ -190,7 +189,7 @@ void Controller::addMovie()
     int stats;
     char confirm;
 
-    if (optionCreation == 'b' || optionCreation == 'B') {
+    if (option_creation == 'b' || option_creation == 'B') {
         fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
         do {
             fmt::print("-> ");
@@ -203,10 +202,10 @@ void Controller::addMovie()
         } while (true);
 
         Movies movie(name);
-        this->moviesList_.push_back(movie);
+        this->movies_list_.push_back(movie);
         database->save(movie);
 
-    } else if (optionCreation == 'c' || optionCreation == 'C') {
+    } else if (option_creation == 'c' || option_creation == 'C') {
         fmt::print(
             "Please enter a name, rating, year and stats. in one single line\nExample: "
             "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
@@ -226,21 +225,21 @@ void Controller::addMovie()
 
         Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
                      static_cast<Stats>(stats));
-        this->moviesList_.push_back(movie);
+        this->movies_list_.push_back(movie);
         database->save(movie);
     }
 
     fmt::print("New movie, {}, has been added!\n", name);
 }
 
-void Controller::addTvShow()
+void Controller::add_tv_show()
 {
     fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
-    char optionCreation;
-    std::cin >> optionCreation;
+    char option_creation;
+    std::cin >> option_creation;
     std::cin.get();
 
-    auto database = getDatabase();
+    auto database = get_database();
 
     std::string name;
     double rating;
@@ -251,7 +250,7 @@ void Controller::addTvShow()
     char confirm;
     std::map<int, int> seasons;
 
-    if (optionCreation == 'b' || optionCreation == 'B') {
+    if (option_creation == 'b' || option_creation == 'B') {
         fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
         do {
             fmt::print("-> ");
@@ -265,10 +264,10 @@ void Controller::addTvShow()
 
         TvShow show(name);
 
-        this->tvShowList_.push_back(show);
+        this->tv_show_list_.push_back(show);
         database->save(show);
 
-    } else if (optionCreation == 'c' || optionCreation == 'C') {
+    } else if (option_creation == 'c' || option_creation == 'C') {
         fmt::print(
             "Please enter a name, rating, year, and stats. in one single line\nExample: "
             "Two_and_a_half_man 10.0 2008 0\n.Use underscore instead of spaces.\nStats: "
@@ -304,7 +303,7 @@ void Controller::addTvShow()
 
         TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
                     static_cast<Stats>(stats));
-        this->tvShowList_.push_back(show);
+        this->tv_show_list_.push_back(show);
         database->save(show);
     }
 

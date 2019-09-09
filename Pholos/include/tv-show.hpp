@@ -23,17 +23,17 @@ class TvShow {
 
     ~TvShow() = default;
 
-    std::string getName() const;
-    int getYear() const;
-    double getRating() const;
-    std::string getStats() const;
-    std::map<int, int> getSeasons() const;
+    std::string get_name() const;
+    int get_year() const;
+    double get_rating() const;
+    std::string get_stats() const;
+    std::map<int, int> get_seasons() const;
 
-    void setName(const std::string &name);
-    void setYear(int year);
-    void setRating(double rating);
-    void setStats(int response);
-    void addSeason(int season, int episode);
+    void set_name(const std::string &name);
+    void set_year(int year);
+    void set_rating(double rating);
+    void set_stats(int response);
+    void add_season(int season, int episode);
 
   private:
     std::string name_{ "None" };

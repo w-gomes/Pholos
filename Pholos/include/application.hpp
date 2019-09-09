@@ -17,10 +17,10 @@ class Application {
 
     ~Application() = default;
 
-    void runApplication();
-    bool isRunning() const;
-    void exitApplication();
-    static void welcomeMessage();
+    void run_application();
+    bool is_running() const;
+    void exit_application();
+    static void welcome_message();
 
   private:
     bool running_{ false };
@@ -28,5 +28,5 @@ class Application {
     Database database_{};
 };
 
-Application *getApplication();
+Application *get_application();
 }  // namespace Pholos

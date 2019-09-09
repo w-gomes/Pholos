@@ -16,9 +16,9 @@ class Users {
     Users(std::string name, std::vector<TvShow> &tvShowList);
     ~Users() = default;
 
-    void addName();
-    void addMovie();
-    void addTvShow();
+    void add_name();
+    void add_movie();
+    void add_tv_show();
 
     // Not sure how to implement this
     /*

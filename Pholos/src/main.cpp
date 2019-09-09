@@ -18,6 +18,6 @@ int main()
     //    app.runApplication();
     //#endif
     Application app;
-    app.runApplication();
+    app.run_application();
     return 0;
 }

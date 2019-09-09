@@ -61,22 +61,22 @@ TvShow &TvShow::operator=(TvShow &&other) noexcept
     return *this;
 }
 
-std::string TvShow::getName() const
+std::string TvShow::get_name() const
 {
     return this->name_;
 }
 
-int TvShow::getYear() const
+int TvShow::get_year() const
 {
     return this->year_;
 }
 
-double TvShow::getRating() const
+double TvShow::get_rating() const
 {
     return this->rating_;
 }
 
-std::string TvShow::getStats() const
+std::string TvShow::get_stats() const
 {
     std::string stats;
     switch (this->stats_) {
@@ -100,27 +100,27 @@ std::string TvShow::getStats() const
     return stats;
 }
 
-std::map<int, int> TvShow::getSeasons() const
+std::map<int, int> TvShow::get_seasons() const
 {
     return this->season_;
 }
 
-void TvShow::setName(const std::string &name)
+void TvShow::set_name(const std::string &name)
 {
     this->name_ = name;
 }
 
-void TvShow::setYear(int year)
+void TvShow::set_year(int year)
 {
     this->year_ = year;
 }
 
-void TvShow::setRating(double rating)
+void TvShow::set_rating(double rating)
 {
     this->rating_ = rating;
 }
 
-void TvShow::setStats(int response)
+void TvShow::set_stats(int response)
 {
     switch (static_cast<Stats>(response)) {
         case Stats::NotSet:
@@ -143,7 +143,7 @@ void TvShow::setStats(int response)
     }
 }
 
-void TvShow::addSeason(int season, int episode)
+void TvShow::add_season(int season, int episode)
 {
     this->season_.insert({ season, episode });
 }

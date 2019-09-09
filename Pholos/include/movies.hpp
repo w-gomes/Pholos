@@ -20,15 +20,15 @@ class Movies {
 
     ~Movies() = default;
 
-    std::string getName() const;
-    int getYear() const;
-    double getRating() const;
-    std::string getStats() const;
+    std::string get_name() const;
+    int get_year() const;
+    double get_rating() const;
+    std::string get_stats() const;
 
-    void setName(const std::string &name);
-    void setStats(int response);
-    void setRating(double rating);
-    void setYear(int year);
+    void set_name(const std::string &name);
+    void set_stats(int response);
+    void set_rating(double rating);
+    void set_year(int year);
 
   private:
     std::string name_{ "None" };

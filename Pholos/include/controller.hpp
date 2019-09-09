@@ -32,21 +32,21 @@ class Controller {
 
     ~Controller() = default;
 
-    void getUserResponse();  // This needs a better name
-    void drawMenu();
+    void get_user_response();  // This needs a better name
+    void draw_menu();
     void help();
     void exit();
-    void addMenu();
-    int getCommand(const std::string &command);
+    void add_menu();
+    int get_command(const std::string &command);
 
-    void addMovie();
-    void addTvShow();
+    void add_movie();
+    void add_tv_show();
 
   private:
     Command commands_{};
-    std::vector<std::string> commandsVector_{ "-h", "-x", "-a", "-e",
-                                              "-d", "-s", "-q", "-A" };
-    std::vector<Movies> moviesList_;
-    std::vector<TvShow> tvShowList_;
+    std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e",
+                                               "-d", "-s", "-q", "-A" };
+    std::vector<Movies> movies_list_;
+    std::vector<TvShow> tv_show_list_;
 };
 }  // namespace Pholos

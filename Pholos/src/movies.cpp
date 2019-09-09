@@ -63,27 +63,27 @@ Movies &Movies::operator=(Movies &&other) noexcept
     return *this;
 }
 
-std::string Movies::getName() const
+std::string Movies::get_name() const
 {
     return this->name_;
 }
 
-int Movies::getYear() const
+int Movies::get_year() const
 {
     return this->year_;
 }
 
-double Movies::getRating() const
+double Movies::get_rating() const
 {
     return this->rating_;
 }
 
-void Movies::setName(const std::string &name)
+void Movies::set_name(const std::string &name)
 {
     this->name_ = name;
 }
 
-std::string Movies::getStats() const
+std::string Movies::get_stats() const
 {
     std::string stats;
     switch (this->stats_) {
@@ -107,7 +107,7 @@ std::string Movies::getStats() const
     return stats;
 }
 
-void Movies::setStats(int response)
+void Movies::set_stats(int response)
 {
     switch (static_cast<Stats>(response)) {
         case Stats::NotSet:
@@ -130,12 +130,12 @@ void Movies::setStats(int response)
     }
 }
 
-void Movies::setRating(double rating)
+void Movies::set_rating(double rating)
 {
     this->rating_ = rating;
 }
 
-void Movies::setYear(int year)
+void Movies::set_year(int year)
 {
     this->year_ = year;
 }

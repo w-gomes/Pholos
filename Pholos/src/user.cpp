@@ -7,7 +7,8 @@ Users::Users(std::string name)
 {
 }
 
-Users::Users(std::string name, std::vector<Movies> &movieList, std::vector<TvShow> &tvShowList)
+Users::Users(std::string name, std::vector<Movies> &movieList,
+             std::vector<TvShow> &tvShowList)
     : name_(std::move(name))
     , moviesList_(movieList)
     , tvShowList_(tvShowList)
@@ -26,15 +27,15 @@ Users::Users(std::string name, std::vector<TvShow> &tvShowList)
 {
 }
 
-void Users::addName()
+void Users::add_name()
 {
 }
 
-void Users::addMovie()
+void Users::add_movie()
 {
 }
 
-void Users::addTvShow()
+void Users::add_tv_show()
 {
 }
 
