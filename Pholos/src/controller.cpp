@@ -63,19 +63,24 @@ void Controller::draw_menu()
             break;
         case Command::Edit:
             // Edit existing object
+            // Unimplemented
             break;
         case Command::Delete:
             // Delete a movie or a tvshow
+            // Unimplemented
             break;
         case Command::Search:
             // This search if movie exists
+            // Unimplemented
             break;
         case Command::Query:
             // This query for specific, i.e., query all movies watching
             // probly hard to implement
+            // Unimplemented
             break;
         case Command::About:
             // Show application information
+            // Unimplemented
             break;
     }
 }
@@ -206,10 +211,10 @@ void Controller::add_movie()
         database->save(movie);
 
     } else if (option_creation == 'c' || option_creation == 'C') {
-        fmt::print(
-            "Please enter a name, rating, year and stats. in one single line\nExample: "
-            "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
-            "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
+        fmt::print("Please enter the name, the rating, the year and the stats. in one "
+                   "single line\nExample: "
+                   "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
+                   "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
         do {
             fmt::print("-> ");
             std::cin >> name >> rating >> year >> stats;
