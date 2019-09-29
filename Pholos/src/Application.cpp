@@ -10,6 +10,7 @@ Application *Application::instance = nullptr;
 Application::Application()
 {
     this->instance = this;
+    this->database_.init();
 }
 
 void Application::welcome_message()

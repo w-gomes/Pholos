@@ -1,7 +1,7 @@
 #pragma once
-#include <iostream>
 
-#include "sqlite3.h"
+#include <string>
+#include <vector>
 
 namespace Pholos {
 
@@ -11,7 +11,6 @@ class TvShow;
 class Database {
   public:
     static Database *instance;
-
     Database();
 
     Database(const Database &obj) = delete;
@@ -21,13 +20,18 @@ class Database {
 
     ~Database() = default;
 
-    void init();
-    void close();
     void save(Movies &movie);
     void save(TvShow &show);
+    void init();
 
   private:
-    sqlite3 *db_;
+    void create_table();
+    void create_movie_table();
+    void create_tvshow_table();
+    void create_season_table();
+
+  private:
+    const std::vector<std::string> table_names_ = { "movies", "tvshow", "season" };
 };
 
 Database *get_database();
