@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4..3.15)
+cmake_minimum_required(VERSION 3.10)
 
 project(Pholos LANGUAGES CXX)
 
@@ -18,13 +18,8 @@ set(Pholos_SOURCES
     Pholos/src/movies.cpp
     )
 
-# Sqlite3
-set(SQLITE_INCLUDE Pholos/external/sqlite3)
-set(SQLITE_LINK_DIR Pholos/lib)
-link_directories(${SQLITE_LINK_DIR})
-
 add_executable(Pholos ${Pholos_SOURCES})
 target_compile_options(Pholos PUBLIC /W4)
 target_compile_features(Pholos PUBLIC cxx_std_17)
-target_include_directories(Pholos PUBLIC Pholos/include ${SQLITE_INCLUDE})
-target_link_libraries(Pholos PRIVATE fmt::fmt sqlite3 SQLiteCPP)
+target_include_directories(Pholos PUBLIC Pholos/include Pholos/external/SQLiteCpp/include)
+target_link_libraries(Pholos PRIVATE fmt::fmt SQLiteCPP sqlite3)

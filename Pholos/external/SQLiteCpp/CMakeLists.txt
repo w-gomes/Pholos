@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4..3.15)
+cmake_minimum_required(VERSION 3.10)
 
 project(SQLiteCPP LANGUAGES CXX)
 
@@ -11,8 +11,11 @@ add_library(SQLiteCPP STATIC
     src/Transaction.cpp
     )
 
-target_include_directories(SQLiteCPP PRIVATE 
-    ${CMAKE_SOURCE_DIR}/Pholos/external
-    ${CMAKE_SOURCE_DIR}/Pholos/external/sqlite3
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
-    )
+
+add_subdirectory(sqlite3)
+
+target_include_directories(SQLiteCPP 
+    PUBLIC ${PROJECT_SOURCE_DIR}/include
+    PUBLIC ${PROJECT_SOURCE_DIR}/sqlite3
+)
+target_link_libraries(SQLiteCPP PUBLIC sqlite3)
