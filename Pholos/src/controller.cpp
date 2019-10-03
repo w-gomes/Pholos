@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cctype>
 #include <conio.h>
 #include <iostream>
 #include <map>
@@ -115,15 +116,11 @@ void Controller::exit()
     app->exit_application();
 }
 
-// TODO: incomplete
+// TODO: incomplete, change the wordings.
 void Controller::help()
 {
     const std::string commands = fmt::format(
-        "- Usage:\n\n"
-        "\t -h \thelp.\n"
-        "\t\t Show command instructions.\n\n"
-        "\t -x \texit.\n"
-        "\t\t Exit the application.\n\n"
+        "\n\t - Usage:\n\n"
         "\t -a \tadd.\n"
         "\t\t Add a new object to your track database.\n"
         "\t\t\t User can add movie or tv show.\n"
@@ -141,7 +138,11 @@ void Controller::help()
         "\t\t\t Query is an advanced version of search. For instance, user can search "
         "for all movies with status 'Watching'.\n\n"
         "\t -A \tabout.\n"
-        "\t\t Information about the application.\n\n");
+        "\t\t Information about the application.\n\n"
+        "\t -x \texit.\n"
+        "\t\t Exit the application.\n\n"
+        "\t -h = \thelp.\n"
+        "\t\t Show command instructions.\n\n");
 
     fmt::print(commands);
 }
@@ -158,16 +159,16 @@ void Controller::add_menu()
     do {
         std::cin >> user_choose;
 
-        if (user_choose == 'm' || user_choose == 'M') {
+        if (std::tolower(user_choose) == 'm') {
             // call movie constructor.
             this->add_movie();
             user_choice = true;
-        } else if (user_choose == 't' || user_choose == 'T') {
+        } else if (std::tolower(user_choose) == 't') {
             // call tvshow constructor.
             this->add_tv_show();
             user_choice = true;
 
-        } else if (user_choose == 'c' || user_choose == 'C') {
+        } else if (std::tolower(user_choose) == 'c') {
             user_choice = true;
             app->exit_application();
         } else {
@@ -193,14 +194,14 @@ void Controller::add_movie()
     int stats;
     char confirm;
 
-    if (option_creation == 'b' || option_creation == 'B') {
+    if (std::tolower(option_creation) == 'b') {
         fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
         do {
             fmt::print("-> ");
             std::cin >> name;
             fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
             std::cin >> confirm;
-            if (confirm == 'Y' || confirm == 'y') {
+            if (std::tolower(confirm) == 'y') {
                 break;
             }
         } while (true);
@@ -209,7 +210,7 @@ void Controller::add_movie()
         this->movies_list_.push_back(movie);
         database->save(movie);
 
-    } else if (option_creation == 'c' || option_creation == 'C') {
+    } else if (std::tolower(option_creation) == 'c') {
         fmt::print("Please enter the name, the rating, the year and the stats. in one "
                    "single line\nExample: "
                    "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
@@ -222,7 +223,7 @@ void Controller::add_movie()
                 "Confirm?[y/n]\n-> ",
                 name, rating, year, stats);
             std::cin >> confirm;
-            if (confirm == 'Y' || confirm == 'y') {
+            if (std::tolower(confirm) == 'y') {
                 break;
             }
         } while (true);
@@ -254,14 +255,14 @@ void Controller::add_tv_show()
     char confirm;
     std::map<int, int> seasons;
 
-    if (option_creation == 'b' || option_creation == 'B') {
+    if (std::tolower(option_creation) == 'b') {
         fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
         do {
             fmt::print("-> ");
             std::cin >> name;
             fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
             std::cin >> confirm;
-            if (confirm == 'Y' || confirm == 'y') {
+            if (std::tolower(confirm) == 'y') {
                 break;
             }
         } while (true);
@@ -271,7 +272,7 @@ void Controller::add_tv_show()
         this->tv_show_list_.push_back(show);
         database->save(show);
 
-    } else if (option_creation == 'c' || option_creation == 'C') {
+    } else if (std::tolower(option_creation) == 'c') {
         fmt::print(
             "Please enter a name, rating, year, and stats. in one single line\nExample: "
             "Two_and_a_half_man 10.0 2008 0\n.Use underscore instead of spaces.\nStats: "
@@ -284,7 +285,7 @@ void Controller::add_tv_show()
                 "Confirm?[y/n]\n-> ",
                 name, rating, year, stats);
             std::cin >> confirm;
-            if (confirm == 'Y' || confirm == 'y') {
+            if (std::tolower(confirm) == 'y') {
                 break;
             }
         } while (true);
