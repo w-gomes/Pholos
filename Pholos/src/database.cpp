@@ -10,7 +10,6 @@
 #include <functional>
 #include <iostream>
 #include <map>
-#include <utility>
 
 namespace Pholos {
 Database *Database::instance = nullptr;
