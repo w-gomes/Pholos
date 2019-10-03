@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <conio.h>
 #include <iostream>
 #include <map>
 #include <string>
@@ -19,13 +20,11 @@ void Controller::get_user_response()
 {
     auto app = get_application();
 
-    fmt::print("\n\nPress any letter to continue: ");
-    char response;
-    std::cin >> response;
-    if (response == 'N' || response == 'n') {
-        // exit application
+    fmt::print("\n\nPress any key to continue or [ESC] to leave!");
+    int input = _getch();
+    if (input == 0x1B)
         app->exit_application();
-    } else {
+    else {
         return;
     }
 }
