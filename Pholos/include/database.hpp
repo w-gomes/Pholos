@@ -31,6 +31,8 @@ class Database {
     void create_season_table();
 
   private:
+    std::string database_name_ = "data.db";
+
     const std::vector<std::string> table_names_ = { "movies", "tvshow", "season" };
 };
 
