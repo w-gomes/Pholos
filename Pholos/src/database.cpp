@@ -73,15 +73,17 @@ void Database::save(TvShow &show)
         name, rating, year, stats);
     db.exec(save_query);
 
-    const std::string query = fmt::format("SELECT id_tvshow FROM tvshow");
+    const std::string query =
+        fmt::format("SELECT id_tvshow FROM tvshow WHERE name = '{}'", name);
 
     int id = db.execAndGet(query);
 
     // s = season, epi = episode
     for (const auto &[s, epi] : season) {
-        std::string save_query2 = fmt::format("INSERT INTO season (id_season, nepisodes, "
-                                              "tvshow_id) VALUES ({0}, {1}, {2})",
-                                              s, epi, id);
+        std::string save_query2 = fmt::format(
+            "INSERT INTO season (id_season, nepisodes, tvshow_id) VALUES ({0}, {1}, {2})",
+            s, epi, id);
+
         db.exec(save_query2);
     }
 
