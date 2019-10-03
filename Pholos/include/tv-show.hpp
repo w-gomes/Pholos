@@ -11,6 +11,7 @@ namespace Pholos {
 class TvShow {
   public:
     TvShow() = default;
+
     explicit TvShow(std::string name);
     TvShow(std::string name, int year, double rating, std::map<int, int> season,
            Stats stats);
@@ -40,6 +41,6 @@ class TvShow {
     std::map<int, int> season_{};
     int year_{};
     double rating_{};
-    Stats stats_ = Stats::PlanToWatch;
+    Stats stats_ = Stats::NotSet;
 };
 }  // namespace Pholos
