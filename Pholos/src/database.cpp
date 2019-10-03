@@ -53,18 +53,39 @@ void Database::save(Movies &movie)
     const std::string save_query = fmt::format(
         "INSERT INTO movies (name, rating, year, stats) VALUES ('{0}', {1}, {2}, '{3}')",
         name, rating, year, stats);
-
     db.exec(save_query);
     transaction.commit();
 }
 
 void Database::save(TvShow &show)
 {
-    // std::string name          = show.get_name();
-    // double rating             = show.get_rating();
-    // int year                  = show.get_year();
-    // std::string stats         = show.get_stats();
-    // std::map<int, int> season = show.get_seasons();
+    std::string name          = show.get_name();
+    double rating             = show.get_rating();
+    int year                  = show.get_year();
+    std::string stats         = show.get_stats();
+    std::map<int, int> season = show.get_seasons();
+
+    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Transaction transaction(db);
+
+    const std::string save_query = fmt::format(
+        "INSERT INTO tvshow (name, rating, year, stats) VALUES ('{0}', {1}, {2}, '{3}')",
+        name, rating, year, stats);
+    db.exec(save_query);
+
+    const std::string query = fmt::format("SELECT id_tvshow FROM tvshow");
+
+    int id = db.execAndGet(query);
+
+    // s = season, epi = episode
+    for (const auto &[s, epi] : season) {
+        std::string save_query2 = fmt::format("INSERT INTO season (id_season, nepisodes, "
+                                              "tvshow_id) VALUES ({0}, {1}, {2})",
+                                              s, epi, id);
+        db.exec(save_query2);
+    }
+
+    transaction.commit();
 }
 
 void Database::create_table()
