@@ -195,7 +195,7 @@ void Controller::add_movie()
     char confirm;
 
     if (std::tolower(option_creation) == 'b') {
-        fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
+        fmt::print("\nPlease enter a name\nPlease add no spaces, use underscore\n");
         do {
             fmt::print("-> ");
             std::cin >> name;
@@ -211,7 +211,7 @@ void Controller::add_movie()
         database->save(movie);
 
     } else if (std::tolower(option_creation) == 'c') {
-        fmt::print("Please enter the name, the rating, the year and the stats. in one "
+        fmt::print("\nPlease enter the name, the rating, the year and the stats. in one "
                    "single line\nExample: "
                    "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
                    "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
