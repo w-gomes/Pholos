@@ -22,6 +22,8 @@ class Database {
 
     void save(Movies &movie);
     void save(TvShow &show);
+    bool search(const std::string &name, const char flag) const;
+    void delete_element(const std::string &name, const char flag) const;
     void init();
 
   private:

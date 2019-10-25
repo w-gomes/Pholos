@@ -2,8 +2,8 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cctype>
-#include <conio.h>
+#include <cctype>   // std::tolower()
+#include <conio.h>  // _getch()
 #include <iostream>
 #include <map>
 #include <string>
@@ -67,7 +67,7 @@ void Controller::draw_menu()
             break;
         case Command::Delete:
             // Delete a movie or a tvshow
-            // Unimplemented
+            this->delete_element();
             break;
         case Command::Search:
             // This search if movie exists
@@ -165,7 +165,7 @@ void Controller::add_menu()
             user_choice = true;
         } else if (std::tolower(user_choose) == 't') {
             // call tvshow constructor.
-            this->add_tv_show();
+            this->add_tvshow();
             user_choice = true;
 
         } else if (std::tolower(user_choose) == 'c') {
@@ -237,7 +237,7 @@ void Controller::add_movie()
     fmt::print("New movie, {}, has been added!\n", name);
 }
 
-void Controller::add_tv_show()
+void Controller::add_tvshow()
 {
     fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
     char option_creation;
@@ -313,5 +313,64 @@ void Controller::add_tv_show()
     }
 
     fmt::print("New Tv Show, {}, has been added!\n", name);
+}
+
+void Controller::delete_element()
+{
+    auto app = get_application();
+
+    fmt::print("Movie [m] or Tv Show [t]?  : ");
+    char user_choose;
+    bool user_choice = false;
+
+    do {
+        std::cin >> user_choose;
+
+        if (std::tolower(user_choose) == 'm') {
+            this->delete_movie();
+            user_choice = true;
+        } else if (std::tolower(user_choose) == 't') {
+            this->delete_tvshow();
+            user_choice = true;
+
+        } else if (std::tolower(user_choose) == 'c') {
+            user_choice = true;
+            app->exit_application();
+        } else {
+            fmt::print("Wrong option! Enter [m] or [t].\n");
+            fmt::print("Enter [c] to cancel. : ");
+        }
+    } while (!user_choice);
+}
+
+void Controller::delete_movie()
+{
+    auto database = get_database();
+    fmt::print("Enter the movie name. If name has spaces add _ (underscore)\n: ");
+    std::string name;
+    std::cin >> name;
+
+    const bool found = database->search(name, 'm');
+    if (!found) {
+        fmt::print("Movie {} not found", name);
+        return;
+    }
+
+    // Maybe a confirmation that the process worked.
+    database->delete_element(name, 'm');
+}
+
+void Controller::delete_tvshow()
+{
+    auto database = get_database();
+    fmt::print("Enter the tv show name. If name has spaces add _ (underscore)\n: ");
+    std::string name;
+    std::cin >> name;
+
+    const bool found = database->search(name, 't');
+    if (!found) {
+        fmt::print("Tv Show {} not found", name);
+        return;
+    }
 }
 }  // namespace Pholos

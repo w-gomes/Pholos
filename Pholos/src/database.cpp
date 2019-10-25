@@ -7,6 +7,7 @@
 #include "tv-show.hpp"
 
 #include <cassert>
+#include <cctype>  // std::tolower()
 #include <functional>
 #include <iostream>
 #include <map>
@@ -85,6 +86,62 @@ void Database::save(TvShow &show)
 
         db.exec(save_query2);
     }
+
+    transaction.commit();
+}
+
+bool Database::search(const std::string &name, const char flag) const
+{
+    const std::string query_type = [&] {
+        if (std::tolower(flag) == 'm') {
+            return "movies";
+        } else if (std::tolower(flag) == 't') {
+            return "tvshow";
+        } else {
+            return "";
+        }
+    }();
+    assert(query_type != "");
+
+    try {
+        SQLite::Database db(this->database_name_);
+
+        const std::string query =
+            fmt::format("SELECT name FROM {} WHERE name='{}'", query_type, name);
+        const std::string value = db.execAndGet(query);
+
+        if (value.size() == 0) {
+            return false;
+        }
+
+        return true;
+    } catch (std::exception &e) {
+#if defined(_DEBUG)
+        fmt::print("{}\n", e.what());
+#endif
+        return false;
+    }
+}
+
+void Database::delete_element(const std::string &name, const char flag) const
+{
+    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Transaction transaction(db);
+
+    const std::string query_type = [&] {
+        if (std::tolower(flag) == 'm') {
+            return "movies";
+        } else if (std::tolower(flag) == 't') {
+            return "tvshow";
+        } else {
+            return "";
+        }
+    }();
+    assert(query_type != "");
+
+    const std::string query =
+        fmt::format("DELETE FROM {} WHERE name='{}'", query_type, name);
+    db.exec(query);
 
     transaction.commit();
 }
