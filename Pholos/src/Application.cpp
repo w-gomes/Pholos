@@ -10,7 +10,6 @@ Application *Application::instance = nullptr;
 Application::Application()
 {
     this->instance = this;
-    this->database_.init();
 }
 
 void Application::welcome_message()
@@ -40,16 +39,29 @@ void Application::welcome_message()
                                              "\t -s \tsearch\n"
                                              "\t -q \tquery (advanced searching.)\n"
                                              "\t -A \tabout\n");
-    fmt::print("{}{}\n", logo, commands);
+
+    const std::string delimiter =
+        fmt::format("\n--------------------------------------------");
+    fmt::print("{}{}{}\n", logo, commands, delimiter);
 }
 
 // Main loop
 void Application::run_application()
 {
+    // Welcome message and logo
+    Application::welcome_message();
+
     this->running_ = true;
 
+    // Initializes database
+    this->database_.init(this->db_loaded_);
+
+    if (!this->is_db_loaded()) {
+        this->running_ = false;
+        fmt::print("Existing application! Press any key to leave.");
+    }
+
     // Application loop
-    Application::welcome_message();
     this->controller_.get_user_response();
     while (is_running()) {
         this->controller_.draw_menu();
@@ -59,6 +71,11 @@ void Application::run_application()
 bool Application::is_running() const
 {
     return this->running_;
+}
+
+bool Application::is_db_loaded() const
+{
+    return this->db_loaded_;
 }
 
 void Application::exit_application()
