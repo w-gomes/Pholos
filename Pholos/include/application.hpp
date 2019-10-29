@@ -19,11 +19,14 @@ class Application {
 
     void run_application();
     bool is_running() const;
+    bool is_db_loaded() const;
     void exit_application();
     static void welcome_message();
 
   private:
     bool running_{ false };
+    bool db_loaded_{ false };
+
     Controller controller_{};
     Database database_{};
 };

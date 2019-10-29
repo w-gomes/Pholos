@@ -24,7 +24,7 @@ class Database {
     void save(TvShow &show);
     bool search(const std::string &name, const char flag) const;
     void delete_element(const std::string &name, const char flag) const;
-    void init();
+    void init(bool &loaded);
 
   private:
     void create_table();

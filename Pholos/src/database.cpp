@@ -15,28 +15,34 @@
 namespace Pholos {
 Database *Database::instance = nullptr;
 
-/* Handle exception thrown when data.db doesn't exist or can't find it. */
 Database::Database()
 {
     this->instance = this;
 }
 
-void Database::init()
+void Database::init(bool &loaded)
 {
-    SQLite::Database db(this->database_name_);
-    fmt::print("Database file {} opened successfully.\nChecking database tables...\n",
-               "data.db");
-    bool table_exists = true;
-    for (const auto &t : this->table_names_) {
-        table_exists = db.tableExists(t);
-        if (!table_exists) {
-            fmt::print("Some tables are missing...\n");
-            break;
+    try {
+        SQLite::Database db(this->database_name_);
+        fmt::print("Database file {} opened successfully.\nChecking database tables...\n",
+                   "data.db");
+        bool table_exists = true;
+        for (const auto &t : this->table_names_) {
+            table_exists = db.tableExists(t);
+            if (!table_exists) {
+                fmt::print("Some tables are missing...\n");
+                break;
+            }
         }
-    }
 
-    if (!table_exists) {
-        this->create_table();
+        if (!table_exists) {
+            this->create_table();
+        }
+
+        loaded = true;
+    } catch (std::exception &e) {
+        fmt::print("{}\n", e.what());
+        loaded = false;
     }
 }
 
