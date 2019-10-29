@@ -2,4 +2,4 @@
 
 # Pholos
 
-- Work in progress
+Pholos is a mini project for me to learn c++ and some other things.
