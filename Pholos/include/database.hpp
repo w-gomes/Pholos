@@ -9,33 +9,33 @@ class Movies;
 class TvShow;
 
 class Database {
-  public:
-    static Database *instance;
-    Database();
+public:
+  static Database *instance;
+  Database();
 
-    Database(const Database &obj) = delete;
-    Database &operator=(const Database &obj) = delete;
-    Database(Database &&obj)                 = delete;
-    Database &operator=(Database &&obj) = delete;
+  Database(const Database &obj) = delete;
+  Database &operator=(const Database &obj) = delete;
+  Database(Database &&obj)                 = delete;
+  Database &operator=(Database &&obj) = delete;
 
-    ~Database() = default;
+  ~Database() = default;
 
-    void save(Movies &movie);
-    void save(TvShow &show);
-    bool search(const std::string &name, const char flag) const;
-    void delete_element(const std::string &name, const char flag) const;
-    void init(bool &loaded);
+  void save(Movies &movie);
+  void save(TvShow &show);
+  bool search(const std::string &name, const char flag) const;
+  void delete_element(const std::string &name, const char flag) const;
+  void init(bool &loaded);
 
-  private:
-    void create_table();
-    void create_movie_table();
-    void create_tvshow_table();
-    void create_season_table();
+private:
+  void create_table();
+  void create_movie_table();
+  void create_tvshow_table();
+  void create_season_table();
 
-  private:
-    std::string database_name_ = "data.db";
+private:
+  std::string database_name_ = "data.db";
 
-    const std::vector<std::string> table_names_ = { "movies", "tvshow", "season" };
+  const std::vector<std::string> table_names_ = { "movies", "tvshow", "season" };
 };
 
 Database *get_database();

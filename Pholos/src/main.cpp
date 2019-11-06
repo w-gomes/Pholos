@@ -9,15 +9,15 @@ using namespace Pholos;
 
 int main()
 {
-    //#if defined(_DEBUG)
-    //    Application app;
-    //    app.runApplication();
-    //
-    //#else
-    //    Application app;
-    //    app.runApplication();
-    //#endif
-    Application app;
-    app.run_application();
-    return 0;
+  //#if defined(_DEBUG)
+  //    Application app;
+  //    app.runApplication();
+  //
+  //#else
+  //    Application app;
+  //    app.runApplication();
+  //#endif
+  Application app;
+  app.run_application();
+  return 0;
 }
