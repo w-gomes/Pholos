@@ -190,6 +190,13 @@ void Database::delete_element(const std::string &name, const char flag) const
   }();
   assert(query_type != "");
 
+  if (std::tolower(flag) == 't') {
+    int id = this->get_element_id(name, 't');
+
+    const std::string query_season = fmt::format("DELETE FROM season WHERE tvshow_id='{}'", id);
+    db.exec(query_season);
+  }
+
   const std::string query = fmt::format("DELETE FROM {} WHERE name='{}'", query_type, name);
   db.exec(query);
 
