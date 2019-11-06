@@ -369,5 +369,8 @@ void Controller::delete_tvshow()
     fmt::print("Tv Show {} not found", name);
     return;
   }
+
+  // Maybe a confirmation that the process worked.
+  database->delete_element(name, 't');
 }
 }  // namespace Pholos

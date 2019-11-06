@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -31,6 +32,8 @@ private:
   void create_movie_table();
   void create_tvshow_table();
   void create_season_table();
+  int get_element_id(const std::string &name, const char flag) const;
+  void Database::add_season(const std::string &name, const std::map<int, int> &season);
 
 private:
   std::string database_name_ = "data.db";

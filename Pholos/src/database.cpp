@@ -11,6 +11,7 @@
 #include <functional>
 #include <iostream>
 #include <map>
+#include <tuple>
 
 namespace Pholos {
 Database *Database::instance = nullptr;
@@ -77,20 +78,68 @@ void Database::save(TvShow &show)
     fmt::format("INSERT INTO tvshow (name, rating, year, stats) VALUES ('{0}', {1}, {2}, '{3}')",
                 name, rating, year, stats);
   db.exec(save_query);
+  transaction.commit();
 
-  const std::string query = fmt::format("SELECT id_tvshow FROM tvshow WHERE name = '{}'", name);
+  this->add_season(name, season);
+}
 
-  int id = db.execAndGet(query);
+void Database::add_season(const std::string &name, const std::map<int, int> &season)
+{
+  int id = this->get_element_id(name, 't');
 
-  // s = season, epi = episode
-  for (const auto &[s, epi] : season) {
-    std::string save_query2 = fmt::format(
-      "INSERT INTO season (id_season, nepisodes, tvshow_id) VALUES ({0}, {1}, {2})", s, epi, id);
-
-    db.exec(save_query2);
+  if (id == -1) {
+    fmt::print("Element not found\n");
+    return;
   }
 
-  transaction.commit();
+  try {
+    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Transaction transaction(db);
+
+    // s = season, epi = episode
+    for (const auto &[s, epi] : season) {
+      std::string save_query = fmt::format(
+        "INSERT INTO season (id_season, nepisodes, tvshow_id) VALUES ({0}, {1}, {2})", s, epi, id);
+      db.exec(save_query);
+    }
+
+    transaction.commit();
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+#endif
+  }
+}
+
+int Database::get_element_id(const std::string &name, const char flag) const
+{
+  const std::tuple<std::string, std::string> query_type = [&] {
+    if (std::tolower(flag) == 'm') {
+      return std::make_tuple(std::string("movies"), std::string("id_movie"));
+    } else if (std::tolower(flag) == 't') {
+      return std::make_tuple(std::string("tvshow"), std::string("id_tvshow"));
+    } else {
+      return std::make_tuple(std::string(""), std::string(""));
+    }
+  }();
+  assert(std::get<0>(query_type) != "");
+
+  int id;
+  try {
+    SQLite::Database db(this->database_name_);
+
+    const std::string query = fmt::format("SELECT {} FROM {} WHERE name='{}'",
+                                          std::get<1>(query_type), std::get<0>(query_type), name);
+
+    id = db.execAndGet(query);
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+#endif
+    id = -1;
+  }
+
+  return id;
 }
 
 bool Database::search(const std::string &name, const char flag) const
