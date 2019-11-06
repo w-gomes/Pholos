@@ -242,7 +242,7 @@ void Database::create_season_table()
 
   const std::string season =
     fmt::format("CREATE TABLE {} (`id_season` INTEGER NOT NULL, `nepisodes` INTEGER NOT NULL, "
-                "`tvshow_id` INTEGER NOT NULL, PRIMARY KEY(`id_season`), FOREIGN KEY (tvshow_id) "
+                "`tvshow_id` INTEGER NOT NULL, FOREIGN KEY (tvshow_id) "
                 "REFERENCES tvshow(id_tvshow));",
                 this->table_names_[2]);
   db.exec(season);
