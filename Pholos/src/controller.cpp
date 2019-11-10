@@ -182,58 +182,71 @@ void Controller::add_movie()
 {
   fmt::print("Adding a new Movie...\n"
              "Basic or Complete creation? [b/c] : ");
-  char option_creation;
-  std::cin >> option_creation;
+  char option;
+  std::cin >> option;
   std::cin.get();
 
   auto database = get_database();
 
-  std::string name;
-  double rating;
-  int year;
-  int stats;
-  char confirm;
+  if (std::tolower(option) == 'b') {
+    fmt::print("----------------------------------------\nEnter the name, please.\n");
+    std::string name;
 
-  if (std::tolower(option_creation) == 'b') {
-    fmt::print("\nPlease enter a name\nPlease add no spaces, use underscore\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name;
-      fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
+    fmt::print("-> ");
+    std::getline(std::cin, name);
+    fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
 
-    Movies movie(name);
-    this->movies_list_.push_back(movie);
-    database->save(movie);
+    char confirm;
+    std::cin >> confirm;
 
-  } else if (std::tolower(option_creation) == 'c') {
-    fmt::print("\nPlease enter the name, the rating, the year and the stats. in one "
-               "single line\nExample: "
-               "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
-               "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name >> rating >> year >> stats;
-      fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
-                 "Confirm?[y/n]\n-> ",
-                 name, rating, year, stats);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
+    if (std::tolower(confirm) == 'y') {
+      Movies movie(name);
+      this->movies_list_.push_back(movie);
+      database->save(movie);
 
-    Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
-                 static_cast<Stats>(stats));
-    this->movies_list_.push_back(movie);
-    database->save(movie);
+      fmt::print("New movie, {}, has been added!\n", name);
+    } else if (std::tolower(confirm) == 'n') {
+      fmt::print("\nMovie not added. Please run the command again.\n");
+    } else {
+      fmt::print("\nWrong answer! Please run the command again.\n");
+    }
+
+  } else if (std::tolower(option) == 'c') {
+    fmt::print("----------------------------------------\nEnter the name, please.\n");
+    std::string name;
+
+    fmt::print("-> ");
+    std::getline(std::cin, name);
+
+    fmt::print("\nPlease enter the rating, the year and the stats in one single line.\n"
+               "Example: 10.0 2009 0\n"
+               "Stats: 0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
+    double rating;
+    int year;
+    int stats;
+
+    fmt::print("-> ");
+    std::cin >> rating >> year >> stats;
+    fmt::print("You entered... Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
+               "Confirm?[y/n]\n-> ",
+               name, rating, year, stats);
+
+    char confirm;
+    std::cin >> confirm;
+
+    if (std::tolower(confirm) == 'y') {
+      Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
+                   static_cast<Stats>(stats));
+      this->movies_list_.push_back(movie);
+      database->save(movie);
+
+      fmt::print("New movie, {}, has been added!\n", name);
+    } else if (std::tolower(confirm) == 'n') {
+      fmt::print("\nMovie not added. Please run the command again.\n");
+    } else {
+      fmt::print("\nWrong answer! Please run the command again.\n");
+    }
   }
-
-  fmt::print("New movie, {}, has been added!\n", name);
 }
 
 void Controller::add_tvshow()
