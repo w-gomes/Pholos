@@ -7,12 +7,29 @@ TvShow::TvShow(std::string name)
 {
 }
 
+TvShow::TvShow(std::string name, std::string alias)
+  : name_(std::move(name))
+  , alias_(std::move(alias))
+{
+}
+
 TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats)
   : name_(std::move(name))
   , year_(year)
   , rating_(rating)
   , season_{ season }
   , stats_{ stats }
+{
+}
+
+TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats,
+               std::string alias)
+  : name_(std::move(name))
+  , year_(year)
+  , rating_(rating)
+  , season_{ season }
+  , stats_{ stats }
+  , alias_{ alias }
 {
 }
 
@@ -23,6 +40,7 @@ TvShow::TvShow(const TvShow &other)
   this->rating_ = other.rating_;
   this->stats_  = other.stats_;
   this->season_ = other.season_;
+  this->alias_  = other.alias_;
 }
 
 TvShow &TvShow::operator=(const TvShow &other)
@@ -33,6 +51,7 @@ TvShow &TvShow::operator=(const TvShow &other)
     this->rating_ = other.rating_;
     this->stats_  = other.stats_;
     this->season_ = other.season_;
+    this->alias_  = other.alias_;
   }
 
   return *this;
@@ -45,6 +64,7 @@ TvShow::TvShow(TvShow &&other) noexcept
   this->rating_ = other.rating_;
   this->stats_  = other.stats_;
   this->season_ = other.season_;
+  this->alias_  = other.alias_;
 }
 
 TvShow &TvShow::operator=(TvShow &&other) noexcept
@@ -55,6 +75,7 @@ TvShow &TvShow::operator=(TvShow &&other) noexcept
     this->rating_ = other.rating_;
     this->stats_  = other.stats_;
     this->season_ = other.season_;
+    this->alias_  = other.alias_;
   }
 
   return *this;
@@ -104,6 +125,11 @@ std::map<int, int> TvShow::get_seasons() const
   return this->season_;
 }
 
+std::string TvShow::get_alias() const
+{
+  return this->alias_;
+}
+
 void TvShow::set_name(const std::string &name)
 {
   this->name_ = name;
@@ -145,5 +171,10 @@ void TvShow::set_stats(int response)
 void TvShow::add_season(int season, int episode)
 {
   this->season_.insert({ season, episode });
+}
+
+void TvShow::set_alias(const std::string &alias)
+{
+  this->alias_ = alias;
 }
 }  // namespace Pholos

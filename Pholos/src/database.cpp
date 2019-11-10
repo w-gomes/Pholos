@@ -71,17 +71,22 @@ void Database::save(TvShow &show)
   int year                  = show.get_year();
   std::string stats         = show.get_stats();
   std::map<int, int> season = show.get_seasons();
+  std::string alias         = show.get_alias();
 
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
-  const std::string save_query =
-    fmt::format("INSERT INTO tvshow (name, rating, year, stats) VALUES ('{0}', {1}, {2}, '{3}')",
-                name, rating, year, stats);
+  const std::string save_query = fmt::format(
+    "INSERT INTO tvshow (name, rating, year, stats, alias) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
+    name, rating, year, stats, alias);
   db.exec(save_query);
   transaction.commit();
 
-  this->add_season(name, season);
+  if (season.empty()) {
+    return;
+  }
+
+  this->add_season(alias, season);
 }
 
 void Database::add_season(const std::string &name, const std::map<int, int> &season)
@@ -129,7 +134,7 @@ int Database::get_element_id(const std::string &name, const char flag) const
   try {
     SQLite::Database db(this->database_name_);
 
-    const std::string query = fmt::format("SELECT {} FROM {} WHERE name='{}'",
+    const std::string query = fmt::format("SELECT {} FROM {} WHERE alias='{}'",
                                           std::get<1>(query_type), std::get<0>(query_type), name);
 
     id = db.execAndGet(query);
@@ -159,7 +164,8 @@ bool Database::search(const std::string &name, const char flag) const
   try {
     SQLite::Database db(this->database_name_);
 
-    const std::string query = fmt::format("SELECT name FROM {} WHERE name='{}'", query_type, name);
+    const std::string query =
+      fmt::format("SELECT alias FROM {} WHERE alias='{}'", query_type, name);
     const std::string value = db.execAndGet(query);
 
     if (value.size() == 0) {
@@ -198,7 +204,7 @@ void Database::delete_element(const std::string &name, const char flag) const
     db.exec(query_season);
   }
 
-  const std::string query = fmt::format("DELETE FROM {} WHERE name='{}'", query_type, name);
+  const std::string query = fmt::format("DELETE FROM {} WHERE alias='{}'", query_type, name);
   db.exec(query);
 
   transaction.commit();

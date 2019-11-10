@@ -188,25 +188,20 @@ void Controller::add_movie()
 
   auto database = get_database();
 
+  std::string name;
+  std::string alias = "";
+
   if (std::tolower(option) == 'b') {
     fmt::print("----------------------------------------\nEnter the name, please.\n");
-    std::string name;
-    std::string alias = "";
-
     fmt::print("-> ");
     std::getline(std::cin, name);
     fmt::print("Name:> {}\n", name);
 
-    fmt::print("Do you want to add alias? [y/n] : ");
-    char add_alias;
-    std::cin >> add_alias;
-    if (std::tolower(add_alias) == 'y') {
-      fmt::print("Alias should be lowercase and no spaces. "
-                 "Add underscore instead of spaces.\n");
-      fmt::print("-> ");
-      std::cin >> alias;
-      fmt::print("Alias:> {}\n", name);
-    }
+    fmt::print("Please add an alias.\nAlias should be lowercase and no spaces."
+               "Add underscore instead of spaces\n");
+    fmt::print("-> ");
+    std::cin >> alias;
+    fmt::print("Alias:> {}\n", name);
 
     fmt::print("You entered:> name = \"{}\", alias = \"{}\".\nDo you Confirm?[y/n]\n-> ", name,
                alias);
@@ -228,8 +223,6 @@ void Controller::add_movie()
 
   } else if (std::tolower(option) == 'c') {
     fmt::print("----------------------------------------\nEnter the name, please.\n");
-    std::string name;
-    std::string alias = "";
 
     fmt::print("-> ");
     std::getline(std::cin, name);
@@ -246,16 +239,11 @@ void Controller::add_movie()
     std::cin >> rating >> year >> stats;
     fmt::print("Rating, Year, Stats:> {} {} {}\n", rating, year, stats);
 
-    fmt::print("Do you want to add alias? [y/n] : ");
-    char add_alias;
-    std::cin >> add_alias;
-    if (std::tolower(add_alias) == 'y') {
-      fmt::print("Alias should be lowercase and no spaces."
-                 "Add underscore instead of spaces\n");
-      fmt::print("-> ");
-      std::cin >> alias;
-      fmt::print("Alias:> {}\n", name);
-    }
+    fmt::print("Please add an alias.\nAlias should be lowercase and no spaces. "
+               "Add underscore instead of spaces\n");
+    fmt::print("-> ");
+    std::cin >> alias;
+    fmt::print("Alias:> {}\n", name);
 
     fmt::print("You entered:> Name: {0}, Rating: {1}, Year: {2}, Stats: {3}, Alias: {4}."
                "\nDo you confirm?[y/n]\n-> ",
@@ -282,77 +270,110 @@ void Controller::add_movie()
 void Controller::add_tvshow()
 {
   fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
-  char option_creation;
-  std::cin >> option_creation;
+  char option;
+  std::cin >> option;
   std::cin.get();
 
   auto database = get_database();
 
   std::string name;
-  double rating;
-  int year;
-  int stats;
-  int season;
-  int episode;
-  char confirm;
-  std::map<int, int> seasons;
+  std::string alias = "";
 
-  if (std::tolower(option_creation) == 'b') {
-    fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name;
-      fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
+  if (std::tolower(option) == 'b') {
+    fmt::print("----------------------------------------\nEnter the name, please.\n");
+    fmt::print("-> ");
+    std::getline(std::cin, name);
+    fmt::print("Name:> {}\n", name);
 
-    TvShow show(name);
+    fmt::print("Please add an alias.\nAlias should be lowercase and no spaces."
+               "Add underscore instead of spaces\n");
+    fmt::print("-> ");
+    std::cin >> alias;
+    fmt::print("Alias:> {}\n", name);
 
-    this->tv_show_list_.push_back(show);
-    database->save(show);
+    fmt::print("You entered:> name = \"{}\", alias = \"{}\".\nDo you Confirm?[y/n]\n-> ", name,
+               alias);
 
-  } else if (std::tolower(option_creation) == 'c') {
-    fmt::print("Please enter a name, rating, year, and stats. in one single line\nExample: "
-               "Two_and_a_half_man 10.0 2008 0\n.Use underscore instead of spaces.\nStats: "
+    char confirm;
+    std::cin >> confirm;
+
+    if (std::tolower(confirm) == 'y') {
+      TvShow show(name, alias);
+
+      this->tv_show_list_.push_back(show);
+      database->save(show);
+
+      fmt::print("New Tv Show, {}, has been added!\n", name);
+    } else if (std::tolower(confirm) == 'n') {
+      fmt::print("\nTv Show not added. Please run the command again.\n");
+    } else {
+      fmt::print("\nWrong answer! Please run the command again.\n");
+    }
+
+  } else if (std::tolower(option) == 'c') {
+    fmt::print("----------------------------------------\nEnter the name, please.\n");
+
+    fmt::print("-> ");
+    std::getline(std::cin, name);
+    fmt::print("Name:> {}\n", name);
+
+    fmt::print("\nPlease enter the rating, the year, and the stats. in one single line\nExample: "
+               "10.0 2008 0\nStats: "
                "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name >> rating >> year >> stats;
-      fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
-                 "Confirm?[y/n]\n-> ",
-                 name, rating, year, stats);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
+    double rating;
+    int year;
+    int stats;
+
+    fmt::print("-> ");
+    std::cin >> rating >> year >> stats;
+    fmt::print("Rating, Year, Stats:> {} {} {}\n", rating, year, stats);
+
+    fmt::print("Please add an alias.\nAlias should be lowercase and no spaces. "
+               "Add underscore instead of spaces\n");
+    fmt::print("-> ");
+    std::cin >> alias;
+    fmt::print("Alias:> {}\n", name);
+
+    fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}, Alias: {4}\nDo you "
+               "Confirm?[y/n]\n-> ",
+               name, rating, year, stats, alias);
+
+    char confirm;
+    std::cin >> confirm;
+
+    if (std::tolower(confirm) == 'y') {
+      int season;
+      int episode;
+      std::map<int, int> seasons;
+
+      fmt::print("Please enter number of seasons\n-> ");
+      std::cin >> season;
+      fmt::print("Please enter number of episodes for each season\n");
+      for (int i = 1; i < season + 1; i++) {
+        fmt::print("Season {}\n-> ", i);
+        std::cin >> episode;
+        fmt::print("Season {0} : Episode(s) {1}\n", i, episode);
+        seasons.insert({ i, episode });
       }
-    } while (true);
 
-    fmt::print("Please enter number of seasons\n-> ");
-    std::cin >> season;
-    fmt::print("Please enter number of episodes for each season\n");
-    for (int i = 1; i < season + 1; i++) {
-      fmt::print("Season {}\n-> ", i);
-      std::cin >> episode;
-      fmt::print("Season {0} : Episode(s) {1}\n", i, episode);
-      seasons.insert({ i, episode });
+      fmt::print("You entered:\n");
+      for (std::map<int, int>::iterator iterMap = seasons.begin(); iterMap != seasons.end();
+           ++iterMap) {
+        fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
+      }
+
+      TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
+                  static_cast<Stats>(stats), alias);
+      this->tv_show_list_.push_back(show);
+      database->save(show);
+
+      fmt::print("New Tv Show, {}, has been added!\n", name);
+    } else if (std::tolower(confirm) == 'n') {
+      fmt::print("\nTv Show not added. Please run the command again.\n");
+    } else {
+      fmt::print("\nWrong answer! Please run the command again.\n");
     }
-
-    fmt::print("You entered:\n");
-    for (std::map<int, int>::iterator iterMap = seasons.begin(); iterMap != seasons.end();
-         ++iterMap) {
-      fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
-    }
-
-    TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
-                static_cast<Stats>(stats));
-    this->tv_show_list_.push_back(show);
-    database->save(show);
   }
-
-  fmt::print("New Tv Show, {}, has been added!\n", name);
 }
 
 void Controller::delete_element()
@@ -386,34 +407,37 @@ void Controller::delete_element()
 void Controller::delete_movie()
 {
   auto database = get_database();
-  fmt::print("Enter the movie name. If name has spaces add _ (underscore)\n: ");
-  std::string name;
-  std::cin >> name;
+  std::string alias;
 
-  const bool found = database->search(name, 'm');
+  fmt::print("Can only delete by Alias. Enter the movie alias. In lowercase and no spaces. Add "
+             "Underscore for spaces.\n-> ");
+  std::cin >> alias;
+
+  const bool found = database->search(alias, 'm');
   if (!found) {
-    fmt::print("Movie {} not found", name);
+    fmt::print("Movie {} not found", alias);
     return;
   }
 
   // Maybe a confirmation that the process worked.
-  database->delete_element(name, 'm');
+  database->delete_element(alias, 'm');
 }
 
 void Controller::delete_tvshow()
 {
   auto database = get_database();
-  fmt::print("Enter the tv show name. If name has spaces add _ (underscore)\n: ");
-  std::string name;
-  std::cin >> name;
+  std::string alias;
 
-  const bool found = database->search(name, 't');
+  fmt::print("Enter the tvshow alias. In lowercase and no spaces. Add Underscore for spaces.\n-> ");
+  std::cin >> alias;
+
+  const bool found = database->search(alias, 't');
   if (!found) {
-    fmt::print("Tv Show {} not found", name);
+    fmt::print("Tv Show {} not found", alias);
     return;
   }
 
   // Maybe a confirmation that the process worked.
-  database->delete_element(name, 't');
+  database->delete_element(alias, 't');
 }
 }  // namespace Pholos
