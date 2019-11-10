@@ -17,11 +17,11 @@ public:
   Movies(std::string name, double rating, int year, Stats stats, std::string alias);
   Movies(std::string name, double rating, int year, std::string alias);
 
-  Movies(const Movies &other);
-  Movies &operator=(const Movies &other);
+  Movies(const Movies &other) = default;
+  Movies &operator=(const Movies &other) = default;
 
-  Movies(Movies &&other) noexcept;
-  Movies &operator=(Movies &&other) noexcept;
+  Movies(Movies &&other) noexcept = default;
+  Movies &operator=(Movies &&other) noexcept = default;
 
   ~Movies() = default;
 

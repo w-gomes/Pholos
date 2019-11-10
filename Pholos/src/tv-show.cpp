@@ -33,54 +33,6 @@ TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> sea
 {
 }
 
-TvShow::TvShow(const TvShow &other)
-{
-  this->name_   = other.name_;
-  this->year_   = other.year_;
-  this->rating_ = other.rating_;
-  this->stats_  = other.stats_;
-  this->season_ = other.season_;
-  this->alias_  = other.alias_;
-}
-
-TvShow &TvShow::operator=(const TvShow &other)
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->year_   = other.year_;
-    this->rating_ = other.rating_;
-    this->stats_  = other.stats_;
-    this->season_ = other.season_;
-    this->alias_  = other.alias_;
-  }
-
-  return *this;
-}
-
-TvShow::TvShow(TvShow &&other) noexcept
-{
-  this->name_   = other.name_;
-  this->year_   = other.year_;
-  this->rating_ = other.rating_;
-  this->stats_  = other.stats_;
-  this->season_ = other.season_;
-  this->alias_  = other.alias_;
-}
-
-TvShow &TvShow::operator=(TvShow &&other) noexcept
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->year_   = other.year_;
-    this->rating_ = other.rating_;
-    this->stats_  = other.stats_;
-    this->season_ = other.season_;
-    this->alias_  = other.alias_;
-  }
-
-  return *this;
-}
-
 std::string TvShow::get_name() const
 {
   return this->name_;

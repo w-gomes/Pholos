@@ -46,50 +46,6 @@ Movies::Movies(std::string name, double rating, int year, std::string alias)
 {
 }
 
-Movies::Movies(const Movies &other)
-{
-  this->name_   = other.name_;
-  this->rating_ = other.rating_;
-  this->year_   = other.year_;
-  this->stats_  = other.stats_;
-  this->alias_  = other.alias_;
-}
-
-Movies &Movies::operator=(const Movies &other)
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->rating_ = other.rating_;
-    this->year_   = other.year_;
-    this->stats_  = other.stats_;
-    this->alias_  = other.alias_;
-  }
-
-  return *this;
-}
-
-Movies::Movies(Movies &&other) noexcept
-{
-  this->name_   = other.name_;
-  this->rating_ = other.rating_;
-  this->year_   = other.year_;
-  this->stats_  = other.stats_;
-  this->alias_  = other.alias_;
-}
-
-Movies &Movies::operator=(Movies &&other) noexcept
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->rating_ = other.rating_;
-    this->year_   = other.year_;
-    this->stats_  = other.stats_;
-    this->alias_  = other.alias_;
-  }
-
-  return *this;
-}
-
 std::string Movies::get_name() const
 {
   return this->name_;

@@ -19,11 +19,11 @@ public:
   TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats,
          std::string alias);
 
-  TvShow(const TvShow &other);
-  TvShow &operator=(const TvShow &other);
+  TvShow(const TvShow &other) = default;
+  TvShow &operator=(const TvShow &other) = default;
 
-  TvShow(TvShow &&obj) noexcept;
-  TvShow &operator=(TvShow &&obj) noexcept;
+  TvShow(TvShow &&obj) noexcept = default;
+  TvShow &operator=(TvShow &&obj) noexcept = default;
 
   ~TvShow() = default;
 
