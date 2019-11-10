@@ -7,6 +7,12 @@ Movies::Movies(std::string name)
 {
 }
 
+Movies::Movies(std::string name, std::string alias)
+  : name_(std::move(name))
+  , alias_(std::move(alias))
+{
+}
+
 Movies::Movies(std::string name, double rating, int year)
   : name_(std::move(name))
   , rating_(rating)
@@ -23,12 +29,30 @@ Movies::Movies(std::string name, double rating, int year, Stats stats)
 {
 }
 
+Movies::Movies(std::string name, double rating, int year, Stats stats, std::string alias)
+  : name_(std::move(name))
+  , rating_(rating)
+  , year_(year)
+  , stats_(stats)
+  , alias_(std::move(alias))
+{
+}
+
+Movies::Movies(std::string name, double rating, int year, std::string alias)
+  : name_(std::move(name))
+  , rating_(rating)
+  , year_(year)
+  , alias_(std::move(alias))
+{
+}
+
 Movies::Movies(const Movies &other)
 {
   this->name_   = other.name_;
   this->rating_ = other.rating_;
   this->year_   = other.year_;
   this->stats_  = other.stats_;
+  this->alias_  = other.alias_;
 }
 
 Movies &Movies::operator=(const Movies &other)
@@ -38,6 +62,7 @@ Movies &Movies::operator=(const Movies &other)
     this->rating_ = other.rating_;
     this->year_   = other.year_;
     this->stats_  = other.stats_;
+    this->alias_  = other.alias_;
   }
 
   return *this;
@@ -49,6 +74,7 @@ Movies::Movies(Movies &&other) noexcept
   this->rating_ = other.rating_;
   this->year_   = other.year_;
   this->stats_  = other.stats_;
+  this->alias_  = other.alias_;
 }
 
 Movies &Movies::operator=(Movies &&other) noexcept
@@ -58,6 +84,7 @@ Movies &Movies::operator=(Movies &&other) noexcept
     this->rating_ = other.rating_;
     this->year_   = other.year_;
     this->stats_  = other.stats_;
+    this->alias_  = other.alias_;
   }
 
   return *this;
@@ -78,9 +105,19 @@ double Movies::get_rating() const
   return this->rating_;
 }
 
+std::string Movies::get_alias() const
+{
+  return this->alias_;
+}
+
 void Movies::set_name(const std::string &name)
 {
   this->name_ = name;
+}
+
+void Movies::set_alias(const std::string &alias)
+{
+  this->alias_ = alias;
 }
 
 std::string Movies::get_stats() const

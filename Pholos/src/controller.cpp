@@ -191,16 +191,31 @@ void Controller::add_movie()
   if (std::tolower(option) == 'b') {
     fmt::print("----------------------------------------\nEnter the name, please.\n");
     std::string name;
+    std::string alias = "";
 
     fmt::print("-> ");
     std::getline(std::cin, name);
-    fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
+    fmt::print("Name:> {}\n", name);
+
+    fmt::print("Do you want to add alias? [y/n] : ");
+    char add_alias;
+    std::cin >> add_alias;
+    if (std::tolower(add_alias) == 'y') {
+      fmt::print("Alias should be lowercase and no spaces. "
+                 "Add underscore instead of spaces.\n");
+      fmt::print("-> ");
+      std::cin >> alias;
+      fmt::print("Alias:> {}\n", name);
+    }
+
+    fmt::print("You entered:> name = \"{}\", alias = \"{}\".\nDo you Confirm?[y/n]\n-> ", name,
+               alias);
 
     char confirm;
     std::cin >> confirm;
 
     if (std::tolower(confirm) == 'y') {
-      Movies movie(name);
+      Movies movie(name, alias);
       this->movies_list_.push_back(movie);
       database->save(movie);
 
@@ -214,9 +229,11 @@ void Controller::add_movie()
   } else if (std::tolower(option) == 'c') {
     fmt::print("----------------------------------------\nEnter the name, please.\n");
     std::string name;
+    std::string alias = "";
 
     fmt::print("-> ");
     std::getline(std::cin, name);
+    fmt::print("Name:> {}\n", name);
 
     fmt::print("\nPlease enter the rating, the year and the stats in one single line.\n"
                "Example: 10.0 2009 0\n"
@@ -227,16 +244,29 @@ void Controller::add_movie()
 
     fmt::print("-> ");
     std::cin >> rating >> year >> stats;
-    fmt::print("You entered... Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
-               "Confirm?[y/n]\n-> ",
-               name, rating, year, stats);
+    fmt::print("Rating, Year, Stats:> {} {} {}\n", rating, year, stats);
+
+    fmt::print("Do you want to add alias? [y/n] : ");
+    char add_alias;
+    std::cin >> add_alias;
+    if (std::tolower(add_alias) == 'y') {
+      fmt::print("Alias should be lowercase and no spaces."
+                 "Add underscore instead of spaces\n");
+      fmt::print("-> ");
+      std::cin >> alias;
+      fmt::print("Alias:> {}\n", name);
+    }
+
+    fmt::print("You entered:> Name: {0}, Rating: {1}, Year: {2}, Stats: {3}, Alias: {4}."
+               "\nDo you confirm?[y/n]\n-> ",
+               name, rating, year, stats, alias);
 
     char confirm;
     std::cin >> confirm;
 
     if (std::tolower(confirm) == 'y') {
       Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
-                   static_cast<Stats>(stats));
+                   static_cast<Stats>(stats), alias);
       this->movies_list_.push_back(movie);
       database->save(movie);
 

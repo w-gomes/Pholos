@@ -52,13 +52,14 @@ void Database::save(Movies &movie)
   double rating     = movie.get_rating();
   int year          = movie.get_year();
   std::string stats = movie.get_stats();
+  std::string alias = movie.get_alias();
 
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
-  const std::string save_query =
-    fmt::format("INSERT INTO movies (name, rating, year, stats) VALUES ('{0}', {1}, {2}, '{3}')",
-                name, rating, year, stats);
+  const std::string save_query = fmt::format(
+    "INSERT INTO movies (name, rating, year, stats, alias) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
+    name, rating, year, stats, alias);
   db.exec(save_query);
   transaction.commit();
 }
@@ -221,7 +222,7 @@ void Database::create_movie_table()
     fmt::format("CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER NOT NULL "
                 "PRIMARY KEY AUTOINCREMENT, `name` TEXT "
                 "NOT "
-                "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT);",
+                "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
                 this->table_names_[0]);
   db.exec(movie_query);
   transaction.commit();
@@ -236,7 +237,7 @@ void Database::create_tvshow_table()
     fmt::format("CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER NOT NULL PRIMARY "
                 "KEY AUTOINCREMENT, `name` TEXT "
                 "NOT "
-                "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT);",
+                "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
                 this->table_names_[1]);
   db.exec(tv_query);
   transaction.commit();
