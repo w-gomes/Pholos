@@ -16,7 +16,7 @@
 namespace Pholos {
 
 namespace Detail {
-  inline std::string what_type(const char flag)
+  const inline std::string what_type(const char flag)
   {
     if (std::tolower(flag) == 'm') {
       return "movies";
