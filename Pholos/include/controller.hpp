@@ -19,7 +19,8 @@ class Controller {
     Delete = 4,
     Search = 5,
     Query  = 6,
-    About  = 7
+    About  = 7,
+    List   = 8
   };
 
 public:
@@ -39,6 +40,7 @@ public:
   void add_menu();
   void delete_element();
   int get_command(const std::string &command);
+  void list_all();
 
 private:
   void add_movie();
@@ -48,7 +50,8 @@ private:
 
 private:
   Command commands_{};
-  const std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
+  const std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e", "-d",
+                                                   "-s", "-q", "-A", "-l" };
   std::vector<Movies> movies_list_;
   std::vector<TvShow> tv_show_list_;
 };

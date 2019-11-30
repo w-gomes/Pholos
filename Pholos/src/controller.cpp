@@ -82,6 +82,10 @@ void Controller::draw_menu()
       // Show application information
       // Unimplemented
       break;
+    case Command::List:
+      // List all Elements
+      this->list_all();
+      break;
   }
 }
 
@@ -105,6 +109,8 @@ int Controller::get_command(const std::string &command)
     x = 6;
   } else if (command == "-A") {
     x = 7;
+  } else if (command == "-l") {
+    x = 8;
   }
 
   return x;
@@ -439,5 +445,27 @@ void Controller::delete_tvshow()
 
   // Maybe a confirmation that the process worked.
   database->delete_element(alias, 't');
+}
+
+// Add better formatting
+void Controller::list_all()
+{
+  auto database = get_database();
+  char list_what;
+
+  fmt::print("List Movies or TvShow? ");
+  std::cin >> list_what;
+
+  if (std::tolower(list_what) == 'm') {
+    std::vector<std::string> message_vector;
+    database->list_all_movies(message_vector);
+    for (const auto &msg : message_vector) {
+      fmt::print(msg);
+    }
+  } else if (std::tolower(list_what) == 't') {
+    // call list_all_tvshows
+  } else {
+    // should never happen
+  }
 }
 }  // namespace Pholos

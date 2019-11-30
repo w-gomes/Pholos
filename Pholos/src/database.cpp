@@ -261,6 +261,49 @@ void Database::create_season_table()
   transaction.commit();
 }
 
+/* To list all elements in database, it is needed to create a local object of Movies
+ * or TvShow and then save it in a container and print them afterwards.
+ * Because we have to query each field in the database using getColumn() method.
+ * We pass in the column index. For instance:
+ *   0 -> id
+ *   1 -> name
+ *   2 -> rating
+ *   3 -> year
+ *   4 -> stats
+ *   5 -> alias
+ */
+void Database::list_all_movies(std::vector<std::string> &message_vector)
+{
+  try {
+    SQLite::Database db(this->database_name_);
+    fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
+
+#if defined(_DEBUG)
+    SQLite::Statement query(db, "SELECT * from movies");
+    fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
+               query.getColumnCount());
+#endif
+
+    while (query.executeStep()) {
+      const int id            = query.getColumn(0);
+      const std::string name  = query.getColumn(1);
+      const double rating     = query.getColumn(2);
+      const int year          = query.getColumn(3);
+      const std::string stats = query.getColumn(4);
+      const std::string alias = query.getColumn(5);
+
+      auto fmt = fmt::format("ID: {0} - Name: {1} - Rating: {2} - Year: {3} - "
+                             "Stats: {4} - Alias: {5}\n",
+                             id, name, rating, year, stats, alias);
+      message_vector.push_back(fmt);
+    }
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+#endif
+  }
+}
+
 // is this really necessary?
 Database *get_database()
 {
