@@ -14,6 +14,20 @@
 #include <tuple>
 
 namespace Pholos {
+
+namespace Detail {
+  inline std::string what_type(const char flag)
+  {
+    if (std::tolower(flag) == 'm') {
+      return "movies";
+    } else if (std::tolower(flag) == 't') {
+      return "tvshow";
+    } else {
+      return "";
+    }
+  }
+}  // namespace Detail
+
 Database *Database::instance = nullptr;
 
 Database::Database()
@@ -148,17 +162,9 @@ int Database::get_element_id(const std::string &name, const char flag) const
   return id;
 }
 
-bool Database::search(const std::string &name, const char flag) const
+bool Database::is_in_database(const std::string &name, const char flag) const
 {
-  const std::string query_type = [&] {
-    if (std::tolower(flag) == 'm') {
-      return "movies";
-    } else if (std::tolower(flag) == 't') {
-      return "tvshow";
-    } else {
-      return "";
-    }
-  }();
+  const std::string query_type = Detail::what_type(flag);
   assert(query_type != "");
 
   try {
@@ -186,15 +192,7 @@ void Database::delete_element(const std::string &name, const char flag) const
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
-  const std::string query_type = [&] {
-    if (std::tolower(flag) == 'm') {
-      return "movies";
-    } else if (std::tolower(flag) == 't') {
-      return "tvshow";
-    } else {
-      return "";
-    }
-  }();
+  const std::string query_type = Detail::what_type(flag);
   assert(query_type != "");
 
   if (std::tolower(flag) == 't') {
