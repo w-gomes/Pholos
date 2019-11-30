@@ -48,7 +48,7 @@ private:
 
 private:
   Command commands_{};
-  std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
+  const std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e", "-d", "-s", "-q", "-A" };
   std::vector<Movies> movies_list_;
   std::vector<TvShow> tv_show_list_;
 };
