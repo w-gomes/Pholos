@@ -23,7 +23,7 @@ public:
 
   void save(Movies &movie);
   void save(TvShow &show);
-  bool search(const std::string &name, const char flag) const;
+  bool is_in_database(const std::string &name, const char flag) const;
   void delete_element(const std::string &name, const char flag) const;
   void init(bool &loaded);
 

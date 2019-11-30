@@ -414,7 +414,7 @@ void Controller::delete_movie()
              "Underscore for spaces.\n-> ");
   std::cin >> alias;
 
-  const bool found = database->search(alias, 'm');
+  const bool found = database->is_in_database(alias, 'm');
   if (!found) {
     fmt::print("Movie {} not found", alias);
     return;
@@ -432,7 +432,7 @@ void Controller::delete_tvshow()
   fmt::print("Enter the tvshow alias. In lowercase and no spaces. Add Underscore for spaces.\n-> ");
   std::cin >> alias;
 
-  const bool found = database->search(alias, 't');
+  const bool found = database->is_in_database(alias, 't');
   if (!found) {
     fmt::print("Tv Show {} not found", alias);
     return;
