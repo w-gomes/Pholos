@@ -14,6 +14,7 @@
 #include "fmt/core.h"
 #include "movies.hpp"
 #include "stats.hpp"
+#include "tv-show.hpp"
 
 namespace Pholos {
 
