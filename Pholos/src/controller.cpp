@@ -41,10 +41,9 @@ void Controller::draw_menu()
   std::string command;
   std::cin >> command;
 
-  auto findResult =
-    std::find(this->commands_vector_.begin(), this->commands_vector_.end(), command);
-
-  if (findResult == this->commands_vector_.end()) {
+  if (auto findResult =
+        std::find(this->commands_vector_.begin(), this->commands_vector_.end(), command);
+      findResult == this->commands_vector_.end()) {
     fmt::print("Command not found!\n");
     return;
   }
