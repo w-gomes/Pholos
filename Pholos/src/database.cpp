@@ -261,17 +261,6 @@ void Database::create_season_table()
   transaction.commit();
 }
 
-/* To list all elements in database, it is needed to create a local object of Movies
- * or TvShow and then save it in a container and print them afterwards.
- * Because we have to query each field in the database using getColumn() method.
- * We pass in the column index. For instance:
- *   0 -> id
- *   1 -> name
- *   2 -> rating
- *   3 -> year
- *   4 -> stats
- *   5 -> alias
- */
 void Database::list_all_movies(std::vector<std::string> &message_vector)
 {
   try {
