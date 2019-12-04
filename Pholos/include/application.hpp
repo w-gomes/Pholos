@@ -5,7 +5,7 @@
 namespace Pholos {
 
 class Application {
-public:
+ public:
   static Application *instance;
 
   Application();
@@ -23,9 +23,9 @@ public:
   void exit_application();
   static void welcome_message();
 
-private:
-  bool running_{ false };
-  bool db_loaded_{ false };
+ private:
+  bool running_{false};
+  bool db_loaded_{false};
 
   Controller controller_{};
   Database database_{};

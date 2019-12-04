@@ -10,8 +10,7 @@
 namespace Pholos {
 
 class Controller {
-  enum class Command
-  {
+  enum class Command {
     Help   = 0,
     Exit   = 1,
     Add    = 2,
@@ -23,7 +22,7 @@ class Controller {
     List   = 8
   };
 
-public:
+ public:
   Controller() = default;
 
   Controller(const Controller &obj) = delete;
@@ -42,16 +41,16 @@ public:
   int get_command(const std::string &command);
   void list_all();
 
-private:
+ private:
   void add_movie();
   void add_tvshow();
   void delete_movie();
   void delete_tvshow();
 
-private:
+ private:
   Command commands_{};
-  const std::vector<std::string> commands_vector_{ "-h", "-x", "-a", "-e", "-d",
-                                                   "-s", "-q", "-A", "-l" };
+  const std::vector<std::string> commands_vector_{"-h", "-x", "-a", "-e", "-d",
+                                                  "-s", "-q", "-A", "-l"};
   std::vector<Movies> movies_list_;
   std::vector<TvShow> tv_show_list_;
 };

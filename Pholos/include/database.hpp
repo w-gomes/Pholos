@@ -10,7 +10,7 @@ class Movies;
 class TvShow;
 
 class Database {
-public:
+ public:
   static Database *instance;
   Database();
 
@@ -28,7 +28,7 @@ public:
   void list_all_movies(std::vector<std::string> &message_vector);
   void init(bool &loaded);
 
-private:
+ private:
   void create_table();
   void create_movie_table();
   void create_tvshow_table();
@@ -36,10 +36,10 @@ private:
   int get_element_id(const std::string &name, const char flag) const;
   void Database::add_season(const std::string &name, const std::map<int, int> &season);
 
-private:
+ private:
   std::string database_name_ = "data.db";
 
-  const std::vector<std::string> table_names_ = { "movies", "tvshow", "season" };
+  const std::vector<std::string> table_names_ = {"movies", "tvshow", "season"};
 };
 
 Database *get_database();

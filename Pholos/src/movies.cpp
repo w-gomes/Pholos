@@ -2,82 +2,40 @@
 
 namespace Pholos {
 
-Movies::Movies(std::string name)
-  : name_(std::move(name))
-{
-}
+Movies::Movies(std::string name) : name_(std::move(name)) {}
 
 Movies::Movies(std::string name, std::string alias)
-  : name_(std::move(name))
-  , alias_(std::move(alias))
-{
-}
+    : name_(std::move(name)), alias_(std::move(alias)) {}
 
 Movies::Movies(std::string name, double rating, int year)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , stats_(Stats::NotSet)
-{
-}
+    : name_(std::move(name)), rating_(rating), year_(year), stats_(Stats::NotSet) {}
 
 Movies::Movies(std::string name, double rating, int year, Stats stats)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , stats_(stats)
-{
-}
+    : name_(std::move(name)), rating_(rating), year_(year), stats_(stats) {}
 
 Movies::Movies(std::string name, double rating, int year, Stats stats, std::string alias)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , stats_(stats)
-  , alias_(std::move(alias))
-{
-}
+    : name_(std::move(name))
+    , rating_(rating)
+    , year_(year)
+    , stats_(stats)
+    , alias_(std::move(alias)) {}
 
 Movies::Movies(std::string name, double rating, int year, std::string alias)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , alias_(std::move(alias))
-{
-}
+    : name_(std::move(name)), rating_(rating), year_(year), alias_(std::move(alias)) {}
 
-std::string Movies::get_name() const
-{
-  return this->name_;
-}
+std::string Movies::get_name() const { return this->name_; }
 
-int Movies::get_year() const
-{
-  return this->year_;
-}
+int Movies::get_year() const { return this->year_; }
 
-double Movies::get_rating() const
-{
-  return this->rating_;
-}
+double Movies::get_rating() const { return this->rating_; }
 
-std::string Movies::get_alias() const
-{
-  return this->alias_;
-}
+std::string Movies::get_alias() const { return this->alias_; }
 
-void Movies::set_name(const std::string &name)
-{
-  this->name_ = name;
-}
+void Movies::set_name(const std::string &name) { this->name_ = name; }
 
-void Movies::set_alias(const std::string &alias)
-{
-  this->alias_ = alias;
-}
+void Movies::set_alias(const std::string &alias) { this->alias_ = alias; }
 
-std::string Movies::get_stats() const
-{
+std::string Movies::get_stats() const {
   std::string stats;
   switch (this->stats_) {
     case Stats::PlanToWatch:
@@ -100,8 +58,7 @@ std::string Movies::get_stats() const
   return stats;
 }
 
-void Movies::set_stats(int response)
-{
+void Movies::set_stats(int response) {
   switch (static_cast<Stats>(response)) {
     case Stats::NotSet:
       this->stats_ = Stats::NotSet;
@@ -123,14 +80,8 @@ void Movies::set_stats(int response)
   }
 }
 
-void Movies::set_rating(double rating)
-{
-  this->rating_ = rating;
-}
+void Movies::set_rating(double rating) { this->rating_ = rating; }
 
-void Movies::set_year(int year)
-{
-  this->year_ = year;
-}
+void Movies::set_year(int year) { this->year_ = year; }
 
 }  // namespace Pholos

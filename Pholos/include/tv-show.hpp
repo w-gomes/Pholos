@@ -8,7 +8,7 @@
 namespace Pholos {
 
 class TvShow {
-public:
+ public:
   TvShow() = default;
 
   explicit TvShow(std::string name);
@@ -40,12 +40,12 @@ public:
   void add_season(int season, int episode);
   void set_alias(const std::string &alias);
 
-private:
-  std::string name_{ "None" };
+ private:
+  std::string name_{"None"};
   std::map<int, int> season_{};
   int year_{};
   double rating_{};
-  std::string alias_{ "None" };
+  std::string alias_{"None"};
   Stats stats_ = Stats::NotSet;
 };
 }  // namespace Pholos

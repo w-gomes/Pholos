@@ -7,46 +7,43 @@
 namespace Pholos {
 Application *Application::instance = nullptr;
 
-Application::Application()
-{
-  this->instance = this;
-}
+Application::Application() { this->instance = this; }
 
-void Application::welcome_message()
-{
-  const std::string logo = fmt::format("\n\tWelcome to Pholos Application!\n"
-                                       "\tYour movie and tv show tracker!\n"
-                                       "\n\t:::::::::::::::::"
-                                       "\n\t::::::::::::::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t::::::::::::::::::"
-                                       "\n\t:::::::::::::::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::\n\n");
+void Application::welcome_message() {
+  const std::string logo = fmt::format(
+    "\n\tWelcome to Pholos Application!\n"
+    "\tYour movie and tv show tracker!\n"
+    "\n\t:::::::::::::::::"
+    "\n\t::::::::::::::::::"
+    "\n\t:::::        ::::::"
+    "\n\t:::::        ::::::"
+    "\n\t:::::        ::::::"
+    "\n\t::::::::::::::::::"
+    "\n\t:::::::::::::::::"
+    "\n\t:::::"
+    "\n\t:::::"
+    "\n\t:::::"
+    "\n\t:::::"
+    "\n\t:::::"
+    "\n\t:::::\n\n");
 
-  const std::string commands = fmt::format("- Usage:\n"
-                                           "\t -h \thelp\n"
-                                           "\t -x \texit\n"
-                                           "\t -a \tadd\n"
-                                           "\t -e \tedit\n"
-                                           "\t -d \tdelete\n"
-                                           "\t -s \tsearch\n"
-                                           "\t -q \tquery (advanced searching.)\n"
-                                           "\t -A \tabout\n");
+  const std::string commands = fmt::format(
+    "- Usage:\n"
+    "\t -h \thelp\n"
+    "\t -x \texit\n"
+    "\t -a \tadd\n"
+    "\t -e \tedit\n"
+    "\t -d \tdelete\n"
+    "\t -s \tsearch\n"
+    "\t -q \tquery (advanced searching.)\n"
+    "\t -A \tabout\n");
 
   const std::string delimiter = fmt::format("\n--------------------------------------------");
   fmt::print("{}{}{}\n", logo, commands, delimiter);
 }
 
 // Main loop
-void Application::run_application()
-{
+void Application::run_application() {
   // Welcome message and logo
   Application::welcome_message();
 
@@ -67,24 +64,16 @@ void Application::run_application()
   }
 }
 
-bool Application::is_running() const
-{
-  return this->running_;
-}
+bool Application::is_running() const { return this->running_; }
 
-bool Application::is_db_loaded() const
-{
-  return this->db_loaded_;
-}
+bool Application::is_db_loaded() const { return this->db_loaded_; }
 
-void Application::exit_application()
-{
+void Application::exit_application() {
   fmt::print("\nBye!\n");
   this->running_ = false;
 }
 
-Application *get_application()
-{
+Application *get_application() {
   assert(Application::instance != nullptr);
   return Application::instance;
 }

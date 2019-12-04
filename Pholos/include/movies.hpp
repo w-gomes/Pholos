@@ -6,7 +6,7 @@
 namespace Pholos {
 
 class Movies {
-public:
+ public:
   Movies() = default;
 
   explicit Movies(std::string name);
@@ -37,11 +37,11 @@ public:
   void set_year(int year);
   void set_alias(const std::string &alias);
 
-private:
-  std::string name_{ "None" };
+ private:
+  std::string name_{"None"};
   double rating_{};
   int year_{};
-  std::string alias_{ "None" };
+  std::string alias_{"None"};
   Stats stats_ = Stats::NotSet;
 };
 }  // namespace Pholos

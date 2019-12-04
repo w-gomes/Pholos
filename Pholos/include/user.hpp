@@ -7,7 +7,7 @@
 
 namespace Pholos {
 class Users {
-public:
+ public:
   Users() = default;
   explicit Users(std::string name);
   Users(std::string name, std::vector<Movies> &movieList, std::vector<TvShow> &tvShowList);
@@ -26,8 +26,8 @@ public:
       return user.name_ == other.name_;
   }*/
 
-private:
-  std::string name_{ "No_name" };
+ private:
+  std::string name_{"No_name"};
   std::vector<Movies> moviesList_;
   std::vector<TvShow> tvShowList_;
 };
