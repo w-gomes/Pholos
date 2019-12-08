@@ -35,7 +35,8 @@ void Application::welcome_message() {
     "\t -e \tedit\n"
     "\t -d \tdelete\n"
     "\t -s \tsearch\n"
-    "\t -q \tquery (advanced searching.)\n"
+    "\t -q \tquery (more specific)\n"
+    "\t -l \tlist all movies or tvshow\n"
     "\t -A \tabout\n");
 
   const std::string delimiter = fmt::format("\n--------------------------------------------");
