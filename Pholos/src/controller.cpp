@@ -19,6 +19,21 @@
 
 namespace Pholos {
 
+namespace Internal {
+void format_objects(const std::vector<std::string> &message) {
+  // the size of the header and footer should be the size of the longest string
+  const int header_and_footer_size = 100;
+  // @Incomplete
+  const std::string header = fmt::format("{:#^{}}\n", " List of Movies ", header_and_footer_size);
+  fmt::print(header);
+  for (const auto &msg : message) {
+    fmt::print(msg);
+  }
+  const std::string footer = fmt::format("{:#^{}}", "", header_and_footer_size);
+  fmt::print(footer);
+}
+}  // namespace Internal
+
 void Controller::get_user_response() {
   auto app = get_application();
 
@@ -452,15 +467,14 @@ void Controller::list_all() {
   auto database = get_database();
   char list_what;
 
-  fmt::print("List Movies or TvShow? ");
+  fmt::print("List Movies or TvShow? [m/t] ");
   std::cin >> list_what;
 
   if (std::tolower(list_what) == 'm') {
-    std::vector<std::string> message_vector;
-    database->list_all_movies(message_vector);
-    for (const auto &msg : message_vector) {
-      fmt::print(msg);
-    }
+    auto uh = database->list_all_movies();
+    // @HACK, handle this. std::optinal may not hold a vector.
+    std::vector<std::string> message_vector = uh.value();
+    Internal::format_objects(message_vector);
   } else if (std::tolower(list_what) == 't') {
     // call list_all_tvshows
   } else {
