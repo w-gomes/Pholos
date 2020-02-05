@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include "movies.hpp"
@@ -38,7 +39,7 @@ class Controller {
   void exit();
   void add_menu();
   void delete_element();
-  int get_command(const std::string &command);
+  int get_command(std::string_view command);
   void list_all();
 
  private:

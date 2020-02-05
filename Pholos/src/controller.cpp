@@ -103,7 +103,7 @@ void Controller::draw_menu() {
   }
 }
 
-int Controller::get_command(const std::string &command) {
+int Controller::get_command(std::string_view command) {
   int x = -1;
   // Can't use switch with strings
   if (command == "-h") {
