@@ -7,8 +7,6 @@
 namespace Pholos {
 Application *Application::instance = nullptr;
 
-Application::Application() { this->instance = this; }
-
 void Application::welcome_message() {
   const std::string logo = fmt::format(
     "\n\tWelcome to Pholos Application!\n"
@@ -78,4 +76,6 @@ Application *get_application() {
   assert(Application::instance != nullptr);
   return Application::instance;
 }
+
+void Application::init() { this->instance = this; }
 }  // namespace Pholos

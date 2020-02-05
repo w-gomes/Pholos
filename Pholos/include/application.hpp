@@ -7,21 +7,21 @@ namespace Pholos {
 class Application {
  public:
   static Application *instance;
+  static void welcome_message();
 
-  Application();
+  Application()  = default;
+  ~Application() = default;
 
   Application(const Application &obj) = delete;
   Application &operator=(const Application &obj) = delete;
   Application(Application &&obj)                 = delete;
   Application &operator=(Application &&obj) = delete;
 
-  ~Application() = default;
-
   void run_application();
   bool is_running() const;
   bool is_db_loaded() const;
   void exit_application();
-  static void welcome_message();
+  void init();
 
  private:
   bool running_{false};

@@ -16,6 +16,7 @@ int main() {
   //    app.runApplication();
   //#endif
   Application app;
+  app.init();
   app.run_application();
   return 0;
 }
