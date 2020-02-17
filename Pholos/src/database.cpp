@@ -248,18 +248,16 @@ void Database::create_season_table() {
   transaction.commit();
 }
 
-std::optional<std::vector<std::string>> Database::list_all_movies() {
-  std::vector<std::string> message_vector;
+std::vector<std::string> Database::list_all_movies() {
   try {
     SQLite::Database db(this->database_name_);
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
-
-#if defined(_DEBUG)
     SQLite::Statement query(db, "SELECT * from movies");
+#if defined(_DEBUG)
     fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
                query.getColumnCount());
 #endif
-
+    std::vector<std::string> message_vector;
     while (query.executeStep()) {
       const int id            = query.getColumn(0);
       const std::string name  = query.getColumn(1);
@@ -268,19 +266,20 @@ std::optional<std::vector<std::string>> Database::list_all_movies() {
       const std::string stats = query.getColumn(4);
       const std::string alias = query.getColumn(5);
 
-      // This should be handled by format_objects()
+      // This should be handled by a different procedure like format_objects()
       auto fmt = fmt::format(
         "ID: {0} - Name: {1} - Rating: {2} - Year: {3} - "
         "Stats: {4} - Alias: {5}\n",
         id, name, rating, year, stats, alias);
       message_vector.push_back(fmt);
     }
+    return message_vector;
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
+    return std::vector<std::string>{};
 #endif
   }
-  return message_vector;
 }
 
 // is this really necessary?

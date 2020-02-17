@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "application.hpp"
+#include "common.hpp"
 #include "database.hpp"
 #include "fmt/core.h"
 #include "movies.hpp"
@@ -19,7 +20,9 @@
 
 namespace Pholos {
 
+/*
 namespace Internal {
+// @Incomplete implementation of formatting output
 void format_objects(const std::vector<std::string> &message) {
   // the size of the header and footer should be the size of the longest string
   const int header_and_footer_size = 100;
@@ -89,8 +92,8 @@ void Controller::draw_menu() {
       // Unimplemented
       break;
     case Command::Query:
-      // This query for specific, i.e., query all movies watching
-      // probly hard to implement
+      // This query is more complete. You can query for specific things.
+      // Like, list all movies tagged as watching.
       // Unimplemented
       break;
     case Command::About:
@@ -230,7 +233,7 @@ void Controller::add_movie() {
     std::cin >> confirm;
 
     if (std::tolower(confirm) == 'y') {
-      Movies movie(name, alias);
+      Movies movie = common::add_movie(name, alias);
       this->movies_list_.push_back(movie);
       database->save(movie);
 
@@ -465,7 +468,7 @@ void Controller::delete_tvshow() {
   database->delete_element(alias, 't');
 }
 
-// Add better formatting
+// Make this Generic, works for movies and tvshows.
 void Controller::list_all() {
   auto database = get_database();
   char list_what;
@@ -474,10 +477,10 @@ void Controller::list_all() {
   std::cin >> list_what;
 
   if (std::tolower(list_what) == 'm') {
-    auto uh = database->list_all_movies();
-    // @HACK, handle this. std::optinal may not hold a vector.
-    std::vector<std::string> message_vector = uh.value();
-    Internal::format_objects(message_vector);
+    std::vector<std::string> message_vector = database->list_all_movies();
+    // This should be a
+    std::for_each(message_vector.begin(), message_vector.end(),
+                  [](std::string_view s) { fmt::print(s); });
   } else if (std::tolower(list_what) == 't') {
     // call list_all_tvshows
   } else {

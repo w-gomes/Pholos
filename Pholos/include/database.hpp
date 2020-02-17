@@ -26,7 +26,7 @@ class Database {
   void save(TvShow &show);
   bool is_in_database(const std::string &name, const char flag) const;
   void delete_element(const std::string &name, const char flag) const;
-  std::optional<std::vector<std::string>> list_all_movies();
+  std::vector<std::string> list_all_movies();
   void init(bool &loaded);
 
  private:
