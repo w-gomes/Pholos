@@ -57,7 +57,7 @@ void Application::run_application() {
   }
 
   // Application loop
-  this->controller_.get_user_response();
+  this->controller_.press_any_key();
   while (is_running()) {
     this->controller_.draw_menu();
   }

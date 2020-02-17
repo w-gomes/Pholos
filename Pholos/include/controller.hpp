@@ -33,7 +33,7 @@ class Controller {
 
   ~Controller() = default;
 
-  void get_user_response();  // This needs a better name
+  void press_any_key();  // This needs a better name
   void draw_menu();
   void help();
   void exit();

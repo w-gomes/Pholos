@@ -32,9 +32,10 @@ void format_objects(const std::vector<std::string> &message) {
   const std::string footer = fmt::format("{:#^{}}", "", header_and_footer_size);
   fmt::print(footer);
 }
-}  // namespace Internal
+}  // namespace Pholos
+*/
 
-void Controller::get_user_response() {
+void Controller::press_any_key() {
   auto app = get_application();
 
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
