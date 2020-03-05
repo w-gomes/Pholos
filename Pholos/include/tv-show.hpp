@@ -26,6 +26,7 @@ class TvShow {
 
   ~TvShow() = default;
 
+  unsigned long long get_id() const;
   std::string get_name() const;
   int get_year() const;
   double get_rating() const;
@@ -33,6 +34,7 @@ class TvShow {
   std::map<int, int> get_seasons() const;
   std::string get_alias() const;
 
+  void set_id(unsigned long long id);
   void set_name(const std::string &name);
   void set_year(int year);
   void set_rating(double rating);
@@ -41,6 +43,7 @@ class TvShow {
   void set_alias(const std::string &alias);
 
  private:
+  unsigned long long ID_{0};
   std::string name_{"None"};
   std::map<int, int> season_{};
   int year_{};

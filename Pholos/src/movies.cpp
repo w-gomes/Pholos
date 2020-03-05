@@ -31,6 +31,10 @@ double Movies::get_rating() const { return this->rating_; }
 
 std::string Movies::get_alias() const { return this->alias_; }
 
+unsigned long long Movies::get_id() const { return this->ID_; }
+
+void Movies::set_id(unsigned long long id) { this->ID_ = id; }
+
 void Movies::set_name(const std::string &name) { this->name_ = name; }
 
 void Movies::set_alias(const std::string &alias) { this->alias_ = alias; }

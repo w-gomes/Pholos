@@ -25,12 +25,14 @@ class Movies {
 
   ~Movies() = default;
 
+  unsigned long long get_id() const;
   std::string get_name() const;
   int get_year() const;
   double get_rating() const;
   std::string get_stats() const;
   std::string get_alias() const;
 
+  void set_id(unsigned long long id);
   void set_name(const std::string &name);
   void set_stats(int response);
   void set_rating(double rating);
@@ -38,6 +40,7 @@ class Movies {
   void set_alias(const std::string &alias);
 
  private:
+  unsigned long long ID_{0};
   std::string name_{"None"};
   double rating_{};
   int year_{};

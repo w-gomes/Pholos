@@ -19,6 +19,8 @@ TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> sea
     , stats_{stats}
     , alias_{alias} {}
 
+unsigned long long TvShow::get_id() const { return this->ID_; }
+
 std::string TvShow::get_name() const { return this->name_; }
 
 int TvShow::get_year() const { return this->year_; }
@@ -51,6 +53,8 @@ std::string TvShow::get_stats() const {
 std::map<int, int> TvShow::get_seasons() const { return this->season_; }
 
 std::string TvShow::get_alias() const { return this->alias_; }
+
+void TvShow::set_id(unsigned long long id) { this->ID_ = id; }
 
 void TvShow::set_name(const std::string &name) { this->name_ = name; }
 

@@ -6,6 +6,8 @@ set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(ENABLE_TEST "Enable Test" ON)
+
 add_subdirectory(Pholos/external/fmt)
 add_subdirectory(Pholos/external/SQLiteCPP)
 
@@ -17,9 +19,16 @@ set(Pholos_SOURCES
     Pholos/src/database.cpp
     Pholos/src/controller.cpp
     Pholos/src/movies.cpp
+    Pholos/src/common.cpp
     )
 
 add_executable(Pholos ${Pholos_SOURCES})
 target_compile_options(Pholos PUBLIC /W4)
 target_include_directories(Pholos PUBLIC Pholos/include Pholos/external/SQLiteCpp/include)
 target_link_libraries(Pholos PRIVATE fmt::fmt SQLiteCPP sqlite3)
+
+if(ENABLE_TEST)
+  enable_testing()
+  message("Building tests")
+  add_subdirectory(Pholos/test)
+endif()

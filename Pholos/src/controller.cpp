@@ -200,6 +200,18 @@ void Controller::add_menu() {
   } while (!user_choice);
 }
 
+/*
+void Controller::add_movie() {
+  fmt::print(
+    "Adding a new Movie...\nPlease, Enter the name. Optionally, you can enter the rating, the "
+    "year, the status(0, 1, 2, or 3), and an alias.\n-> ");
+  std::string args;
+  std::cin >> std::ws;
+  std::getline(std::cin, args);
+  fmt::print("You entered: {}", args);
+}
+*/
+
 void Controller::add_movie() {
   fmt::print(
     "Adding a new Movie...\n"
@@ -207,8 +219,6 @@ void Controller::add_movie() {
   char option;
   std::cin >> option;
   std::cin.get();
-
-  auto database = get_database();
 
   std::string name;
   std::string alias = "";
@@ -220,7 +230,7 @@ void Controller::add_movie() {
     fmt::print("Name:> {}\n", name);
 
     fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces."
+      "Please add an alias.\nAlias should be lowercase and no spaces. "
       "Add underscore instead of spaces\n");
     fmt::print("-> ");
     std::cin >> alias;
@@ -233,8 +243,9 @@ void Controller::add_movie() {
     std::cin >> confirm;
 
     if (std::tolower(confirm) == 'y') {
-      Movies movie = common::add_movie(name, alias);
+      Movies movie(common::add_context<Movies>(name, alias));
       this->movies_list_.push_back(movie);
+      auto database = get_database();
       database->save(movie);
 
       fmt::print("New movie, {}, has been added!\n", name);
@@ -279,9 +290,10 @@ void Controller::add_movie() {
     std::cin >> confirm;
 
     if (std::tolower(confirm) == 'y') {
-      Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
-                   static_cast<Stats>(stats), alias);
+      Movies movie(
+        common::add_context<Movies>(name, rating, year, static_cast<Stats>(stats), alias));
       this->movies_list_.push_back(movie);
+      auto database = get_database();
       database->save(movie);
 
       fmt::print("New movie, {}, has been added!\n", name);
@@ -311,7 +323,7 @@ void Controller::add_tvshow() {
     fmt::print("Name:> {}\n", name);
 
     fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces."
+      "Please add an alias.\nAlias should be lowercase and no spaces. "
       "Add underscore instead of spaces\n");
     fmt::print("-> ");
     std::cin >> alias;

@@ -11,6 +11,7 @@
 #include <tuple>
 #include <vector>
 
+#include "common.hpp"
 #include "fmt/core.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
@@ -63,13 +64,16 @@ void Database::save(Movies &movie) {
   int year          = movie.get_year();
   std::string stats = movie.get_stats();
   std::string alias = movie.get_alias();
+  std::size_t ID    = common::generate_id(name);
+  movie.set_id(common::convert<unsigned long long, std::size_t>(ID));
 
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
   const std::string save_query = fmt::format(
-    "INSERT INTO movies (name, rating, year, stats, alias) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
-    name, rating, year, stats, alias);
+    "INSERT INTO movies (id_movie, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
+    "{3}, '{4}', '{5}')",
+    ID, name, rating, year, stats, alias);
   db.exec(save_query);
   transaction.commit();
 }
@@ -81,13 +85,16 @@ void Database::save(TvShow &show) {
   std::string stats         = show.get_stats();
   std::map<int, int> season = show.get_seasons();
   std::string alias         = show.get_alias();
+  std::size_t ID            = common::generate_id(name);
+  show.set_id(common::convert<unsigned long long, std::size_t>(ID));
 
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
   const std::string save_query = fmt::format(
-    "INSERT INTO tvshow (name, rating, year, stats, alias) VALUES ('{0}', {1}, {2}, '{3}', '{4}')",
-    name, rating, year, stats, alias);
+    "INSERT INTO tvshow (id_tvshow, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
+    "{3}, '{4}', '{5}')",
+    ID, name, rating, year, stats, alias);
   db.exec(save_query);
   transaction.commit();
 
@@ -99,7 +106,7 @@ void Database::save(TvShow &show) {
 }
 
 void Database::add_season(const std::string &name, const std::map<int, int> &season) {
-  int id = this->get_element_id(name, 't');
+  std::size_t id = this->get_element_id(name, 't');
 
   if (id == -1) {
     fmt::print("Element not found\n");
@@ -125,7 +132,7 @@ void Database::add_season(const std::string &name, const std::map<int, int> &sea
   }
 }
 
-int Database::get_element_id(const std::string &name, const char flag) const {
+unsigned long long Database::get_element_id(const std::string &name, const char flag) const {
   const std::tuple<std::string, std::string> query_type = [&] {
     if (std::tolower(flag) == 'm') {
       return std::make_tuple(std::string("movies"), std::string("id_movie"));
@@ -137,7 +144,7 @@ int Database::get_element_id(const std::string &name, const char flag) const {
   }();
   assert(std::get<0>(query_type) != "");
 
-  int id;
+  auto id = 0;
   try {
     SQLite::Database db(this->database_name_);
 
@@ -145,6 +152,7 @@ int Database::get_element_id(const std::string &name, const char flag) const {
                                           std::get<1>(query_type), std::get<0>(query_type), name);
 
     id = db.execAndGet(query);
+    fmt::print("id {}.\n", id);
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
@@ -187,7 +195,7 @@ void Database::delete_element(const std::string &name, const char flag) const {
   assert(query_type != "");
 
   if (std::tolower(flag) == 't') {
-    int id = this->get_element_id(name, 't');
+    unsigned long long id = this->get_element_id(name, 't');
 
     const std::string query_season = fmt::format("DELETE FROM season WHERE tvshow_id='{}'", id);
     db.exec(query_season);
@@ -212,8 +220,8 @@ void Database::create_movie_table() {
   SQLite::Transaction transaction(db);
 
   const std::string movie_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER NOT NULL "
-    "PRIMARY KEY AUTOINCREMENT, `name` TEXT "
+    "CREATE TABLE IF NOT EXISTS {} (`id_movie` UNSIGNED BIG INT NOT NULL UNIQUE "
+    "PRIMARY KEY, `name` TEXT "
     "NOT "
     "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
     this->table_names_[0]);
@@ -226,8 +234,8 @@ void Database::create_tvshow_table() {
   SQLite::Transaction transaction(db);
 
   const std::string tv_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER NOT NULL PRIMARY "
-    "KEY AUTOINCREMENT, `name` TEXT "
+    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` UNSIGNED BIG INT NOT NULL UNIQUE PRIMARY "
+    "KEY, `name` TEXT "
     "NOT "
     "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
     this->table_names_[1]);
@@ -259,7 +267,8 @@ std::vector<std::string> Database::list_all_movies() {
 #endif
     std::vector<std::string> message_vector;
     while (query.executeStep()) {
-      const int id            = query.getColumn(0);
+      const auto id = query.getColumn(0);
+      fmt::print("id {}.\n", id);
       const std::string name  = query.getColumn(1);
       const double rating     = query.getColumn(2);
       const int year          = query.getColumn(3);
