@@ -16,7 +16,12 @@ before_build:
     - cmake .. -DCMAKE_GENERATOR_PLATFORM=x64 -DENABLE_TEST=ON
 
 build_script:
-    - cmake --build . --config %configuration%
+    - cmake --build . --config %CONFIGURATION%
+
+before_test:
+    - cd Pholos
+    - cd test
+    - cd %CONFIGURATION%
 
 test_script:
-    - '%APPVEYOR_BUILD_FOLDER\Pholos\test\%CONFIGURATION%\Tests.exe'
+    - Tests.exe
