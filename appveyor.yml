@@ -19,4 +19,4 @@ build_script:
     - cmake --build . --config %configuration%
 
 test_script:
-    - Pholos/test/Debug/Tests.exe
+    - ./Pholos/test/Debug/Tests.exe
