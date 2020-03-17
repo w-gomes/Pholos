@@ -2,7 +2,6 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Pholos LANGUAGES CXX)
 
-set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -26,6 +25,7 @@ add_executable(Pholos ${Pholos_SOURCES})
 target_compile_options(Pholos PUBLIC /W4)
 target_include_directories(Pholos PUBLIC Pholos/include Pholos/external/SQLiteCpp/include)
 target_link_libraries(Pholos PRIVATE fmt::fmt SQLiteCPP sqlite3)
+target_compile_features(Pholos PUBLIC cxx_std_17)
 
 if(ENABLE_TEST)
   enable_testing()

@@ -1,10 +1,10 @@
 branches:
     only:
-        - Dev
-        - master
+      - Dev
+      - master
 image: 
-  - Visual Studio 2017
-  - Visual Studio 2019
+    - Visual Studio 2017
+    - Visual Studio 2019
 
 configuration:
     - Debug
