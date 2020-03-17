@@ -6,6 +6,9 @@ image:
   - Visual Studio 2017
   - Visual Studio 2019
 
+plataform:
+  - x64
+
 configuration:
     - Debug
     - Release
@@ -19,4 +22,4 @@ build_script:
     - cmake --build . --config %configuration%
 
 test_script:
-    - ./Pholos/test/Debug/Tests.exe
+    - '%APPVEYOR_BUILD_FOLDER\Pholos\test\%CONFIGURATION%\Tests.exe'
