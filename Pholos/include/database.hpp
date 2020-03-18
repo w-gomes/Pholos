@@ -12,7 +12,7 @@ class Movies;
 class TvShow;
 
 // - Database API
-// All the database access are provided by this module
+// All the database calls are provided by this module
 class Database {
  public:
   // There should be only one object of Database type.
