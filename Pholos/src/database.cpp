@@ -30,8 +30,6 @@ const inline std::string what_type(const char flag) {
 }
 }  // namespace Internal
 
-Database *Database::instance = nullptr;
-
 Database::Database() { this->instance = this; }
 
 void Database::init(bool &loaded) {

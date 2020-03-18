@@ -5,7 +5,6 @@
 #include "fmt/core.h"
 
 namespace Pholos {
-Application *Application::instance = nullptr;
 
 void Application::welcome_message() {
   const std::string logo = fmt::format(

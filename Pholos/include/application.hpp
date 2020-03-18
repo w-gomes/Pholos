@@ -6,7 +6,7 @@ namespace Pholos {
 
 class Application {
  public:
-  static Application *instance;
+  inline static Application *instance = nullptr;
   static void welcome_message();
 
   Application()  = default;

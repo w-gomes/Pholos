@@ -12,7 +12,7 @@ class TvShow;
 
 class Database {
  public:
-  static Database *instance;
+  inline static Database *instance = nullptr;
   Database();
 
   Database(const Database &obj) = delete;
