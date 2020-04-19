@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <memory>
 #include <string>
 #include <string_view>
@@ -50,8 +51,8 @@ class Controller {
 
  private:
   Command commands_{};
-  const std::vector<std::string> commands_vector_{"-h", "-x", "-a", "-e", "-d",
-                                                  "-s", "-q", "-A", "-l"};
+  static constexpr std::array commands_list = {"HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
+                                               "SEARCH", "QUERY", "ABOUT", "LIST"};
   std::vector<Movies> movies_list_;
   std::vector<TvShow> tv_show_list_;
 };
