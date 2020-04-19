@@ -7,37 +7,43 @@
 namespace Pholos {
 
 void Application::welcome_message() {
-  const std::string logo = fmt::format(
-    "\n\tWelcome to Pholos Application!\n"
-    "\tYour movie and tv show tracker!\n"
-    "\n\t:::::::::::::::::"
-    "\n\t::::::::::::::::::"
-    "\n\t:::::        ::::::"
-    "\n\t:::::        ::::::"
-    "\n\t:::::        ::::::"
-    "\n\t::::::::::::::::::"
-    "\n\t:::::::::::::::::"
-    "\n\t:::::"
-    "\n\t:::::"
-    "\n\t:::::"
-    "\n\t:::::"
-    "\n\t:::::"
-    "\n\t:::::\n\n");
+  const std::string welcome = R"(
+      Welcome to Pholos Application!
+      Your movie and tv show tracker!
 
-  const std::string commands = fmt::format(
-    "- Usage:\n"
-    "\t -h \thelp\n"
-    "\t -x \texit\n"
-    "\t -a \tadd\n"
-    "\t -e \tedit\n"
-    "\t -d \tdelete\n"
-    "\t -s \tsearch\n"
-    "\t -q \tquery (more specific)\n"
-    "\t -l \tlist all movies or tvshow\n"
-    "\t -A \tabout\n");
+           :::::::::::::::::
+           ::::::::::::::::::
+           :::::        ::::::
+           :::::        ::::::
+           :::::        ::::::
+           ::::::::::::::::::
+           :::::::::::::::::
+           :::::
+           :::::
+           :::::
+           :::::
+           :::::
+           :::::
 
-  const std::string delimiter = fmt::format("\n--------------------------------------------");
-  fmt::print("{}{}{}\n", logo, commands, delimiter);
+  )";
+
+  const std::string commands = R"(
+  - Usage:
+
+      -h  help
+      -x  exit
+      -a  add
+      -e  edit
+      -d  delete
+      -s  search
+      -q  query (more specific)
+      -l  list all movies or tvshow
+      -A  about
+
+------------------------------------------------
+  )";
+
+  fmt::print("{}{}\n", welcome, commands);
 }
 
 // Main loop

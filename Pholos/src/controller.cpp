@@ -140,33 +140,44 @@ void Controller::exit() {
 
 // TODO: incomplete, change the wordings.
 void Controller::help() {
-  const std::string commands = fmt::format(
-    "\n\t - Usage:\n\n"
-    "\t -a \tadd.\n"
-    "\t\t Add a new object to your track database.\n"
-    "\t\t\t User can add movie or tv show.\n"
-    "\t\t\t There are two ways to add a new object.\n"
-    "\t\t\t Basic: you're asked to enter a name.\n"
-    "\t\t\t Full: you're asked to enter name, rating, year, stats(optional).\n\n"
-    "\t -e \tedit.\n"
-    "\t\t Edit an object.\n\n"
-    "\t -d \tdelete.\n"
-    "\t\t Delete an object.\n\n"
-    "\t -s \tsearch.\n"
-    "\t\t Search for an object.\n\n"
-    "\t -q \tquery.\n"
-    "\t\t Search for objects.\n"
-    "\t\t\t Search for objects with specific parameters. E.g. search movies whose status is "
-    "'Watching'.\n\n"
-    "\t -l \tlist.\n"
-    "\t\t List all movies or tv show in saved.\n\n"
-    "\t -A \tabout.\n"
-    "\t\t Information about the application.\n\n"
-    "\t -x \texit.\n"
-    "\t\t Exit the application.\n\n"
-    "\t -h = \thelp.\n"
-    "\t\t Show command instructions.\n\n");
+  const std::string commands = R"(
+    - Usage:
 
+        -a  add
+            Add a new object to your track database.
+            User can add movie or tv show.
+            There two ways to add a new object.
+            Basic: you're asked to enter a name.
+            Full: you're asked to enter name, rating, year, stats(optional).
+
+        -e  edit
+            Edit an object.
+
+        -d  delete
+            Delete an object.
+
+        -s  search
+            Search for an object.
+
+        -q  query
+            Search for objects.
+            Search for objects with specific parameters.
+            E.g. search movies whose status is watching.
+
+        -l  list
+            List all movies or tv show.
+
+        -A  about
+            Information about the application.
+
+        -x  exit
+            Exit the application.
+
+        -h  help
+            Show this command list.
+
+
+  )";
   fmt::print(commands);
 }
 
