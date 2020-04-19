@@ -18,10 +18,12 @@ class Application {
   Application &operator=(Application &&obj) = delete;
 
   void run_application();
-  bool is_running() const;
-  bool is_db_loaded() const;
   void exit_application();
   void init();
+
+ private:
+  bool is_running() const;
+  bool is_db_loaded() const;
 
  private:
   bool running_{false};
