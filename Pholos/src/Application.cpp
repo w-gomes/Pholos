@@ -30,15 +30,15 @@ void Application::welcome_message() {
   const std::string commands = R"(
   - Usage:
 
-      -h  help
-      -x  exit
-      -a  add
-      -e  edit
-      -d  delete
-      -s  search
-      -q  query (more specific)
-      -l  list all movies or tvshow
-      -A  about
+      HELP      help
+      EXIT      exit
+      ADD       add
+      EDIT      edit
+      DELETE    delete
+      SEARCH    search
+      QUERY     query (more specific)
+      LIST      list all movies or tvshow
+      ABOUT     about
 
 ------------------------------------------------
   )";

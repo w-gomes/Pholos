@@ -109,23 +109,23 @@ void Controller::draw_menu() {
 int Controller::get_command(std::string_view command) {
   int x = -1;
   // Can't use switch with strings
-  if (command == "-h") {
+  if (command == "HELP") {
     x = 0;
-  } else if (command == "-x") {
+  } else if (command == "EXIT") {
     x = 1;
-  } else if (command == "-a") {
+  } else if (command == "ADD") {
     x = 2;
-  } else if (command == "-e") {
+  } else if (command == "EDIT") {
     x = 3;
-  } else if (command == "-d") {
+  } else if (command == "DELETE") {
     x = 4;
-  } else if (command == "-s") {
+  } else if (command == "SEARCH") {
     x = 5;
-  } else if (command == "-q") {
+  } else if (command == "QUERY") {
     x = 6;
-  } else if (command == "-A") {
+  } else if (command == "ABOUT") {
     x = 7;
-  } else if (command == "-l") {
+  } else if (command == "LIST") {
     x = 8;
   }
 
@@ -142,38 +142,38 @@ void Controller::help() {
   const std::string commands = R"(
     - Usage:
 
-        -a  add
-            Add a new object to your track database.
-            User can add movie or tv show.
-            There two ways to add a new object.
-            Basic: you're asked to enter a name.
-            Full: you're asked to enter name, rating, year, stats(optional).
+        ADD     add
+                Add a new object to your track database.
+                User can add movie or tv show.
+                There two ways to add a new object.
+                Basic: you're asked to enter a name.
+                Full: you're asked to enter name, rating, year, stats(optional).
 
-        -e  edit
-            Edit an object.
+        EDIT    edit
+                Edit an object.
 
-        -d  delete
-            Delete an object.
+        DELETE  delete
+                Delete an object.
 
-        -s  search
-            Search for an object.
+        SEARCH  search
+                Search for an object.
 
-        -q  query
-            Search for objects.
-            Search for objects with specific parameters.
-            E.g. search movies whose status is watching.
+        QUERY   query
+                Search for objects.
+                Search for objects with specific parameters.
+                E.g. search movies whose status is watching.
 
-        -l  list
-            List all movies or tv show.
+        LIST    list
+                List all movies or tv show.
 
-        -A  about
-            Information about the application.
+        ABOUT   about
+                Information about the application.
 
-        -x  exit
-            Exit the application.
+        EXIT    exit
+                Exit the application.
 
-        -h  help
-            Show this command list.
+        HELP    help
+                Show this command list.
 
 
   )";
