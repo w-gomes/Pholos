@@ -10,6 +10,7 @@ add_library(SQLiteCPP STATIC
     src/Statement.cpp
     src/Transaction.cpp
     )
+add_library(SQLiteCPP::SQLiteCPP ALIAS SQLiteCPP)
 
 
 add_subdirectory(sqlite3)
