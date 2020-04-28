@@ -1,90 +1,23 @@
 #include "tv-show.hpp"
 
+#include <string>
+
+#include "fmt/core.h"
+
 namespace Pholos {
-
-TvShow::TvShow(std::string name) : name_(std::move(name)) {}
-
-TvShow::TvShow(std::string name, std::string alias)
-    : name_(std::move(name)), alias_(std::move(alias)) {}
-
-TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats)
-    : name_(std::move(name)), year_(year), rating_(rating), season_{season}, stats_{stats} {}
-
-TvShow::TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats,
-               std::string alias)
-    : name_(std::move(name))
-    , year_(year)
-    , rating_(rating)
-    , season_{season}
-    , stats_{stats}
-    , alias_{alias} {}
-
-unsigned long long TvShow::get_id() const { return this->ID_; }
-
-std::string TvShow::get_name() const { return this->name_; }
-
-int TvShow::get_year() const { return this->year_; }
-
-double TvShow::get_rating() const { return this->rating_; }
-
-std::string TvShow::get_stats() const {
-  std::string stats;
-  switch (this->stats_) {
-    case Stats::PlanToWatch:
-      stats = "Plan to watch";
-      break;
-    case Stats::Watching:
-      stats = "Watching";
-      break;
-    case Stats::Completed:
-      stats = "Completed";
-      break;
-    case Stats::Dropped:
-      stats = "Dropped";
-      break;
-    case Stats::NotSet:
-      stats = "Not set";
-      break;
-  }
-
-  return stats;
+TvShow::TvShow(const std::string &name, int stat, double rating, int episode, int last_episode) {
+  this->set_members(name, rating, stat);
+  this->episode_      = episode;
+  this->last_episode_ = last_episode;
 }
 
-std::map<int, int> TvShow::get_seasons() const { return this->season_; }
-
-std::string TvShow::get_alias() const { return this->alias_; }
-
-void TvShow::set_id(unsigned long long id) { this->ID_ = id; }
-
-void TvShow::set_name(const std::string &name) { this->name_ = name; }
-
-void TvShow::set_year(int year) { this->year_ = year; }
-
-void TvShow::set_rating(double rating) { this->rating_ = rating; }
-
-void TvShow::set_stats(int response) {
-  switch (static_cast<Stats>(response)) {
-    case Stats::NotSet:
-      this->stats_ = Stats::NotSet;
-      break;
-    case Stats::PlanToWatch:
-      this->stats_ = Stats::PlanToWatch;
-      break;
-    case Stats::Watching:
-      this->stats_ = Stats::Watching;
-      break;
-    case Stats::Completed:
-      this->stats_ = Stats::Completed;
-      break;
-    case Stats::Dropped:
-      this->stats_ = Stats::Dropped;
-      break;
-    default:
-      break;
-  }
+void TvShow::print() {
+  fmt::print("Name: {} | Rating: {} | Stat: {}", this->name_, this->rating_, this->stat());
 }
 
-void TvShow::add_season(int season, int episode) { this->season_.insert({season, episode}); }
+std::string TvShow::name() const { return this->name_; }
 
-void TvShow::set_alias(const std::string &alias) { this->alias_ = alias; }
+double TvShow::rating() const { return this->rating_; }
+
+int TvShow::stat() const { return static_cast<int>(this->stat_); }
 }  // namespace Pholos

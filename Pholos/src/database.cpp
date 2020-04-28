@@ -8,6 +8,7 @@
 #include <iostream>
 #include <map>
 #include <optional>
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -57,77 +58,44 @@ void Database::init(bool &loaded) {
 }
 
 void Database::save(Movies &movie) {
-  std::string name  = movie.get_name();
-  double rating     = movie.get_rating();
-  int year          = movie.get_year();
-  std::string stats = movie.get_stats();
-  std::string alias = movie.get_alias();
-  std::size_t ID    = common::generate_id(name);
-  movie.set_id(common::convert<unsigned long long, std::size_t>(ID));
+  std::string name = movie.name();
+  double rating    = movie.rating();
+  int stat         = movie.stat();
 
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
   const std::string save_query = fmt::format(
-    "INSERT INTO movies (id_movie, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
-    "{3}, '{4}', '{5}')",
-    ID, name, rating, year, stats, alias);
+    "INSERT INTO movies (name, rating, stats) VALUES ('{0}', {1}, {2})", name, rating, stat);
   db.exec(save_query);
   transaction.commit();
 }
 
 void Database::save(TvShow &show) {
-  std::string name          = show.get_name();
-  double rating             = show.get_rating();
-  int year                  = show.get_year();
-  std::string stats         = show.get_stats();
-  std::map<int, int> season = show.get_seasons();
-  std::string alias         = show.get_alias();
-  std::size_t ID            = common::generate_id(name);
-  show.set_id(common::convert<unsigned long long, std::size_t>(ID));
+  // std::string name          = show.get_name();
+  // double rating             = show.get_rating();
+  // int year                  = show.get_year();
+  // std::string stats         = show.get_stats();
+  // std::map<int, int> season = show.get_seasons();
+  // std::string alias         = show.get_alias();
+  // std::size_t ID            = common::generate_id(name);
+  // show.set_id(common::convert<unsigned long long, std::size_t>(ID));
 
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
-  SQLite::Transaction transaction(db);
+  // SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+  // SQLite::Transaction transaction(db);
 
-  const std::string save_query = fmt::format(
-    "INSERT INTO tvshow (id_tvshow, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
-    "{3}, '{4}', '{5}')",
-    ID, name, rating, year, stats, alias);
-  db.exec(save_query);
-  transaction.commit();
+  // const std::string save_query = fmt::format(
+  //   "INSERT INTO tvshow (id_tvshow, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
+  //   "{3}, '{4}', '{5}')",
+  //   ID, name, rating, year, stats, alias);
+  // db.exec(save_query);
+  // transaction.commit();
 
-  if (season.empty()) {
-    return;
-  }
+  // if (season.empty()) {
+  //   return;
+  // }
 
-  this->add_season(alias, season);
-}
-
-void Database::add_season(const std::string &name, const std::map<int, int> &season) {
-  std::size_t id = this->get_element_id(name, 't');
-
-  if (id == -1) {
-    fmt::print("Element not found\n");
-    return;
-  }
-
-  try {
-    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
-    SQLite::Transaction transaction(db);
-
-    // s = season, epi = episode
-    for (const auto &[s, epi] : season) {
-      std::string save_query = fmt::format(
-        "INSERT INTO season (id_season, nepisodes, tvshow_id) VALUES ({0}, {1}, {2})", s, epi, id);
-      db.exec(save_query);
-    }
-
-    transaction.commit();
-  } catch (std::exception &e) {
-#if defined(_DEBUG)
-    fmt::print("{}\n", e.what());
-#endif
-  }
+  // this->add_season(alias, season);
 }
 
 unsigned long long Database::get_element_id(const std::string &name, const char flag) const {
@@ -209,7 +177,6 @@ void Database::create_table() {
   fmt::print("Creating tables now...\n");
   this->create_movie_table();
   this->create_tvshow_table();
-  this->create_season_table();
   fmt::print("Done\n");
 }
 
@@ -218,11 +185,10 @@ void Database::create_movie_table() {
   SQLite::Transaction transaction(db);
 
   const std::string movie_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_movie` UNSIGNED BIG INT NOT NULL UNIQUE "
-    "PRIMARY KEY, `name` TEXT "
-    "NOT "
-    "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
+    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "NULL, `rating` REAL, `stats` INTEGER);",
     this->table_names_[0]);
+
   db.exec(movie_query);
   transaction.commit();
 }
@@ -232,25 +198,10 @@ void Database::create_tvshow_table() {
   SQLite::Transaction transaction(db);
 
   const std::string tv_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` UNSIGNED BIG INT NOT NULL UNIQUE PRIMARY "
-    "KEY, `name` TEXT "
-    "NOT "
-    "NULL, `rating` REAL, `year` INTEGER, `stats` TEXT, `alias` TEXT);",
+    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "NULL, `rating` REAL, `stats` INTEGER, `episode`, `last_episode` INTEGER);",
     this->table_names_[1]);
   db.exec(tv_query);
-  transaction.commit();
-}
-
-void Database::create_season_table() {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-  SQLite::Transaction transaction(db);
-
-  const std::string season = fmt::format(
-    "CREATE TABLE {} (`id_season` INTEGER NOT NULL, `nepisodes` INTEGER NOT NULL, "
-    "`tvshow_id` INTEGER NOT NULL, FOREIGN KEY (tvshow_id) "
-    "REFERENCES tvshow(id_tvshow));",
-    this->table_names_[2]);
-  db.exec(season);
   transaction.commit();
 }
 

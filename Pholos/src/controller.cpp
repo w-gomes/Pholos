@@ -55,7 +55,7 @@ void Controller::draw_menu() {
   // Maybe we don't need this.
   // auto app = get_application();
 
-  fmt::print("\nEnter an option! Type [-h] for command list : ");
+  fmt::print("\nEnter an option! Type [HELP] for command list : ");
   std::string command;
   std::cin >> command;
 
@@ -84,8 +84,7 @@ void Controller::draw_menu() {
       break;
     case Command::Delete:
       // Delete a movie or a tvshow
-      this->delete_element();
-      break;
+      // Unimplemented
     case Command::Search:
       // This search if movie exists
       // Unimplemented
@@ -101,7 +100,7 @@ void Controller::draw_menu() {
       break;
     case Command::List:
       // List all Elements
-      this->list_all();
+      // Unimplemented
       break;
   }
 }
@@ -184,7 +183,7 @@ void Controller::help() {
 void Controller::add_menu() {
   auto app = get_application();
 
-  fmt::print("Movie [m] or Tv Show [t]?  : ");
+  fmt::print("Movie [m] or Tv Show [t]? : ");
   char user_choose;
   bool user_choice = false;
 
@@ -192,11 +191,9 @@ void Controller::add_menu() {
     std::cin >> user_choose;
 
     if (std::tolower(user_choose) == 'm') {
-      // call movie constructor.
       this->add_movie();
       user_choice = true;
     } else if (std::tolower(user_choose) == 't') {
-      // call tvshow constructor.
       this->add_tvshow();
       user_choice = true;
 
@@ -208,286 +205,80 @@ void Controller::add_menu() {
       fmt::print("Enter [c] to cancel. : ");
     }
   } while (!user_choice);
+  std::cin.clear();
 }
 
-/*
 void Controller::add_movie() {
-  fmt::print(
-    "Adding a new Movie...\nPlease, Enter the name. Optionally, you can enter the rating, the "
-    "year, the status(0, 1, 2, or 3), and an alias.\n-> ");
-  std::string args;
-  std::cin >> std::ws;
-  std::getline(std::cin, args);
-  fmt::print("You entered: {}", args);
-}
-*/
+  int stat{-1};
+  double rating{0.0};
 
-void Controller::add_movie() {
-  fmt::print(
-    "Adding a new Movie...\n"
-    "Basic or Complete creation? [b/c] : ");
-  char option;
-  std::cin >> option;
-  std::cin.get();
-
+  fmt::print("Adding a new Movie...\nEnter the name, please.\n-> ");
   std::string name;
-  std::string alias = "";
+  std::cin.get();  // to consume enter.
+  std::getline(std::cin, name);
 
-  if (std::tolower(option) == 'b') {
-    fmt::print("----------------------------------------\nEnter the name, please.\n");
-    fmt::print("-> ");
-    std::getline(std::cin, name);
-    fmt::print("Name:> {}\n", name);
+  fmt::print("Do you want to add a stat? (y/n) : ");
 
-    fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces. "
-      "Add underscore instead of spaces\n");
-    fmt::print("-> ");
-    std::cin >> alias;
-    fmt::print("Alias:> {}\n", name);
-
-    fmt::print("You entered:> name = \"{}\", alias = \"{}\".\nDo you Confirm?[y/n]\n-> ", name,
-               alias);
-
-    char confirm;
-    std::cin >> confirm;
-
-    if (std::tolower(confirm) == 'y') {
-      Movies movie(common::add_context<Movies>(name, alias));
-      this->movies_list_.push_back(movie);
-      auto database = get_database();
-      database->save(movie);
-
-      fmt::print("New movie, {}, has been added!\n", name);
-    } else if (std::tolower(confirm) == 'n') {
-      fmt::print("\nMovie not added. Please run the command again.\n");
-    } else {
-      fmt::print("\nWrong answer! Please run the command again.\n");
-    }
-
-  } else if (std::tolower(option) == 'c') {
-    fmt::print("----------------------------------------\nEnter the name, please.\n");
-
-    fmt::print("-> ");
-    std::getline(std::cin, name);
-    fmt::print("Name:> {}\n", name);
-
-    fmt::print(
-      "\nPlease enter the rating, the year and the stats in one single line.\n"
-      "Example: 10.0 2009 0\n"
-      "Stats: 0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    double rating;
-    int year;
-    int stats;
-
-    fmt::print("-> ");
-    std::cin >> rating >> year >> stats;
-    fmt::print("Rating, Year, Stats:> {} {} {}\n", rating, year, stats);
-
-    fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces. "
-      "Add underscore instead of spaces\n");
-    fmt::print("-> ");
-    std::cin >> alias;
-    fmt::print("Alias:> {}\n", name);
-
-    fmt::print(
-      "You entered:> Name: {0}, Rating: {1}, Year: {2}, Stats: {3}, Alias: {4}."
-      "\nDo you confirm?[y/n]\n-> ",
-      name, rating, year, stats, alias);
-
-    char confirm;
-    std::cin >> confirm;
-
-    if (std::tolower(confirm) == 'y') {
-      Movies movie(
-        common::add_context<Movies>(name, rating, year, static_cast<Stats>(stats), alias));
-      this->movies_list_.push_back(movie);
-      auto database = get_database();
-      database->save(movie);
-
-      fmt::print("New movie, {}, has been added!\n", name);
-    } else if (std::tolower(confirm) == 'n') {
-      fmt::print("\nMovie not added. Please run the command again.\n");
-    } else {
-      fmt::print("\nWrong answer! Please run the command again.\n");
-    }
+  char confirm;
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the stat.\nWatching (1), Plan to Watch (2), Completed (3), Dropped (4)\n-> ");
+    std::cin >> stat;
   }
+
+  fmt::print("Do you want to add a rating? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the rating.\n-> ");
+    std::cin >> rating;
+  }
+
+  Movies movie(common::add_context<Movies>(name, rating, stat));
+  auto database = get_database();
+  this->movies_list_.push_back(movie);
+  database->save(movie);
 }
 
 void Controller::add_tvshow() {
-  fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
-  char option;
-  std::cin >> option;
-  std::cin.get();
+  int stat{-1};
+  double rating{0.0};
+  int episode{0};
+  int last_episode{0};
 
-  auto database = get_database();
-
+  fmt::print("Adding a new TvShow...\nEnter the name, please.\n-> ");
   std::string name;
-  std::string alias = "";
+  std::cin.get();  // to consume enter.
+  std::getline(std::cin, name);
 
-  if (std::tolower(option) == 'b') {
-    fmt::print("----------------------------------------\nEnter the name, please.\n");
-    fmt::print("-> ");
-    std::getline(std::cin, name);
-    fmt::print("Name:> {}\n", name);
+  fmt::print("Do you want to add a stat? (y/n) : ");
 
-    fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces. "
-      "Add underscore instead of spaces\n");
-    fmt::print("-> ");
-    std::cin >> alias;
-    fmt::print("Alias:> {}\n", name);
-
-    fmt::print("You entered:> name = \"{}\", alias = \"{}\".\nDo you Confirm?[y/n]\n-> ", name,
-               alias);
-
-    char confirm;
-    std::cin >> confirm;
-
-    if (std::tolower(confirm) == 'y') {
-      TvShow show(name, alias);
-
-      this->tv_show_list_.push_back(show);
-      database->save(show);
-
-      fmt::print("New Tv Show, {}, has been added!\n", name);
-    } else if (std::tolower(confirm) == 'n') {
-      fmt::print("\nTv Show not added. Please run the command again.\n");
-    } else {
-      fmt::print("\nWrong answer! Please run the command again.\n");
-    }
-
-  } else if (std::tolower(option) == 'c') {
-    fmt::print("----------------------------------------\nEnter the name, please.\n");
-
-    fmt::print("-> ");
-    std::getline(std::cin, name);
-    fmt::print("Name:> {}\n", name);
-
-    fmt::print(
-      "\nPlease enter the rating, the year, and the stats. in one single line\nExample: "
-      "10.0 2008 0\nStats: "
-      "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    double rating;
-    int year;
-    int stats;
-
-    fmt::print("-> ");
-    std::cin >> rating >> year >> stats;
-    fmt::print("Rating, Year, Stats:> {} {} {}\n", rating, year, stats);
-
-    fmt::print(
-      "Please add an alias.\nAlias should be lowercase and no spaces. "
-      "Add underscore instead of spaces\n");
-    fmt::print("-> ");
-    std::cin >> alias;
-    fmt::print("Alias:> {}\n", name);
-
-    fmt::print(
-      "You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}, Alias: {4}\nDo you "
-      "Confirm?[y/n]\n-> ",
-      name, rating, year, stats, alias);
-
-    char confirm;
-    std::cin >> confirm;
-
-    if (std::tolower(confirm) == 'y') {
-      int season;
-      int episode;
-      std::map<int, int> seasons;
-
-      fmt::print("Please enter number of seasons\n-> ");
-      std::cin >> season;
-      fmt::print("Please enter number of episodes for each season\n");
-      for (int i = 1; i < season + 1; i++) {
-        fmt::print("Season {}\n-> ", i);
-        std::cin >> episode;
-        fmt::print("Season {0} : Episode(s) {1}\n", i, episode);
-        seasons.insert({i, episode});
-      }
-
-      fmt::print("You entered:\n");
-      for (std::map<int, int>::iterator iterMap = seasons.begin(); iterMap != seasons.end();
-           ++iterMap) {
-        fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
-      }
-
-      TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
-                  static_cast<Stats>(stats), alias);
-      this->tv_show_list_.push_back(show);
-      database->save(show);
-
-      fmt::print("New Tv Show, {}, has been added!\n", name);
-    } else if (std::tolower(confirm) == 'n') {
-      fmt::print("\nTv Show not added. Please run the command again.\n");
-    } else {
-      fmt::print("\nWrong answer! Please run the command again.\n");
-    }
-  }
-}
-
-void Controller::delete_element() {
-  auto app = get_application();
-
-  fmt::print("Movie [m] or Tv Show [t]?  : ");
-  char user_choose;
-  bool user_choice = false;
-
-  do {
-    std::cin >> user_choose;
-
-    if (std::tolower(user_choose) == 'm') {
-      this->delete_movie();
-      user_choice = true;
-    } else if (std::tolower(user_choose) == 't') {
-      this->delete_tvshow();
-      user_choice = true;
-
-    } else if (std::tolower(user_choose) == 'c') {
-      user_choice = true;
-      app->exit_application();
-    } else {
-      fmt::print("Wrong option! Enter [m] or [t].\n");
-      fmt::print("Enter [c] to cancel. : ");
-    }
-  } while (!user_choice);
-}
-
-void Controller::delete_movie() {
-  auto database = get_database();
-  std::string alias;
-
-  fmt::print(
-    "Can only delete by Alias. Enter the movie alias. In lowercase and no spaces. Add "
-    "Underscore for spaces.\n-> ");
-  std::cin >> alias;
-
-  const bool found = database->is_in_database(alias, 'm');
-  if (!found) {
-    fmt::print("Movie {} not found", alias);
-    return;
+  char confirm;
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the stat.\nWatching (1), Plan to Watch (2), Completed (3), Dropped (4)\n-> ");
+    std::cin >> stat;
   }
 
-  // Maybe a confirmation that the process worked.
-  database->delete_element(alias, 'm');
-}
-
-void Controller::delete_tvshow() {
-  auto database = get_database();
-  std::string alias;
-
-  fmt::print("Enter the tvshow alias. In lowercase and no spaces. Add Underscore for spaces.\n-> ");
-  std::cin >> alias;
-
-  const bool found = database->is_in_database(alias, 't');
-  if (!found) {
-    fmt::print("Tv Show {} not found", alias);
-    return;
+  fmt::print("Do you want to add a rating? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the rating.\n-> ");
+    std::cin >> rating;
   }
 
-  // Maybe a confirmation that the process worked.
-  database->delete_element(alias, 't');
+  fmt::print("Do you want to add how many episodes there are? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the total episodes.\n-> ");
+    std::cin >> last_episode;
+
+    if (stat != 3) {
+      fmt::print("What episode are you on?\n-> ");
+      std::cin >> episode;
+    }
+  }
+
+  TvShow tvshow(common::add_context<TvShow>(name, stat, rating, episode, last_episode));
 }
 
 // Make this Generic, works for movies and tvshows.

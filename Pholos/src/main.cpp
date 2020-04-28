@@ -18,5 +18,6 @@ int main() {
   Application app;
   app.init();
   app.run_application();
+
   return 0;
 }

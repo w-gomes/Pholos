@@ -39,15 +39,12 @@ class Controller {
   void help();
   void exit();
   void add_menu();
-  void delete_element();
   int get_command(std::string_view command);
   void list_all();
 
  private:
   void add_movie();
   void add_tvshow();
-  void delete_movie();
-  void delete_tvshow();
 
  private:
   Command commands_{};

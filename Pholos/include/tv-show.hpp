@@ -1,22 +1,16 @@
 #pragma once
-
-#include <map>
 #include <string>
 
+#include "entertainment.hpp"
 #include "stats.hpp"
 
 namespace Pholos {
 
-class TvShow {
+class TvShow : public Entertainment {
  public:
   TvShow() = default;
 
-  explicit TvShow(std::string name);
-  explicit TvShow(std::string name, std::string alias);
-
-  TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats);
-  TvShow(std::string name, int year, double rating, std::map<int, int> season, Stats stats,
-         std::string alias);
+  TvShow(const std::string &name, int stat, double rating, int episode, int last_episode);
 
   TvShow(const TvShow &other) = default;
   TvShow &operator=(const TvShow &other) = default;
@@ -26,29 +20,14 @@ class TvShow {
 
   ~TvShow() = default;
 
-  unsigned long long get_id() const;
-  std::string get_name() const;
-  int get_year() const;
-  double get_rating() const;
-  std::string get_stats() const;
-  std::map<int, int> get_seasons() const;
-  std::string get_alias() const;
+  void print() override;
 
-  void set_id(unsigned long long id);
-  void set_name(const std::string &name);
-  void set_year(int year);
-  void set_rating(double rating);
-  void set_stats(int response);
-  void add_season(int season, int episode);
-  void set_alias(const std::string &alias);
+  std::string name() const override;
+  double rating() const override;
+  int stat() const override;
 
  private:
-  unsigned long long ID_{0};
-  std::string name_{"None"};
-  std::map<int, int> season_{};
-  int year_{};
-  double rating_{};
-  std::string alias_{"None"};
-  Stats stats_ = Stats::NotSet;
+  int episode_{};
+  int last_episode_{};
 };
 }  // namespace Pholos

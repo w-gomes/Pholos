@@ -45,15 +45,13 @@ class Database {
   void create_table();
   void create_movie_table();
   void create_tvshow_table();
-  void create_season_table();
 
   unsigned long long get_element_id(const std::string &name, const char flag) const;
-  void Database::add_season(const std::string &name, const std::map<int, int> &season);
 
  private:
-  std::string database_name_{"data.db"};
+  std::string database_name_{"data.sqlite3"};
 
-  std::array<const std::string, 3> table_names_{"movies", "tvshow", "season"};
+  static constexpr std::array table_names_{"movies", "tvshow"};
 };
 
 Database *get_database();
