@@ -61,6 +61,9 @@ void Application::run_application() {
     fmt::print("Existing application! Press any key to leave.");
   }
 
+  // Database is loaded, so we can load the contents into the cache.
+  this->controller_.load_content();
+
   // Application loop
   this->controller_.press_any_key();
   while (is_running()) {

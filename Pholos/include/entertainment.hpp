@@ -14,31 +14,15 @@ class Entertainment {
  public:
   Entertainment() = default;
 
-  // Debug
-  virtual void print() = 0;
-
-  virtual std::string name() const = 0;
-  virtual double rating() const    = 0;
-  virtual int stat() const         = 0;
+  virtual std::string name() const           = 0;
+  virtual double rating() const              = 0;
+  virtual int stat() const                   = 0;
+  virtual std::string stat_to_string() const = 0;
 
   virtual ~Entertainment() = default;
 
  protected:
   void set_members(const std::string &name, double rating, int stat);
-  std::string_view stat() {
-    switch (this->stat_) {
-      case Stats::NotSet:
-        return "Not Set";
-      case Stats::PlanToWatch:
-        return "Plan to Watch";
-      case Stats::Completed:
-        return "Completed";
-      case Stats::Dropped:
-        return "Dropped";
-      default:
-        return "Not Set";
-    }
-  }
 
   std::string name_{};
   double rating_{};

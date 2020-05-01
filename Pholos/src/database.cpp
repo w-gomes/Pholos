@@ -36,7 +36,8 @@ Database::Database() { this->instance = this; }
 void Database::init(bool &loaded) {
   try {
     SQLite::Database db(this->database_name_);
-    fmt::print("Database file {} opened successfully.\nChecking database tables...\n", "data.db");
+    fmt::print("Database file {} opened successfully.\nChecking database tables...\n",
+               this->database_name_);
     bool table_exists = true;
     for (const auto &t : this->table_names_) {
       table_exists = db.tableExists(t);
@@ -57,7 +58,7 @@ void Database::init(bool &loaded) {
   }
 }
 
-void Database::save(Movies &movie) {
+void Database::save(const Movies &movie) {
   std::string name = movie.name();
   double rating    = movie.rating();
   int stat         = movie.stat();
@@ -71,62 +72,23 @@ void Database::save(Movies &movie) {
   transaction.commit();
 }
 
-void Database::save(TvShow &show) {
-  // std::string name          = show.get_name();
-  // double rating             = show.get_rating();
-  // int year                  = show.get_year();
-  // std::string stats         = show.get_stats();
-  // std::map<int, int> season = show.get_seasons();
-  // std::string alias         = show.get_alias();
-  // std::size_t ID            = common::generate_id(name);
-  // show.set_id(common::convert<unsigned long long, std::size_t>(ID));
+void Database::save(const TvShow &show) {
+  std::string name = show.name();
+  double rating    = show.rating();
+  int stat         = show.stat();
+  int episode      = show.episode();
+  int last_episode = show.last_episode();
 
-  // SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
-  // SQLite::Transaction transaction(db);
+  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+  SQLite::Transaction transaction(db);
 
-  // const std::string save_query = fmt::format(
-  //   "INSERT INTO tvshow (id_tvshow, name, rating, year, stats, alias) VALUES ({0}, '{1}', {2}, "
-  //   "{3}, '{4}', '{5}')",
-  //   ID, name, rating, year, stats, alias);
-  // db.exec(save_query);
-  // transaction.commit();
+  const std::string save_query = fmt::format(
+    "INSERT INTO tvshow (name, rating, stats, episode, last_episode) VALUES ('{0}', {1}, {2}, {3}, "
+    "{4})",
+    name, rating, stat, episode, last_episode);
 
-  // if (season.empty()) {
-  //   return;
-  // }
-
-  // this->add_season(alias, season);
-}
-
-unsigned long long Database::get_element_id(const std::string &name, const char flag) const {
-  const std::tuple<std::string, std::string> query_type = [&] {
-    if (std::tolower(flag) == 'm') {
-      return std::make_tuple(std::string("movies"), std::string("id_movie"));
-    } else if (std::tolower(flag) == 't') {
-      return std::make_tuple(std::string("tvshow"), std::string("id_tvshow"));
-    } else {
-      return std::make_tuple(std::string(""), std::string(""));
-    }
-  }();
-  assert(std::get<0>(query_type) != "");
-
-  auto id = 0;
-  try {
-    SQLite::Database db(this->database_name_);
-
-    const std::string query = fmt::format("SELECT {} FROM {} WHERE alias='{}'",
-                                          std::get<1>(query_type), std::get<0>(query_type), name);
-
-    id = db.execAndGet(query);
-    fmt::print("id {}.\n", id);
-  } catch (std::exception &e) {
-#if defined(_DEBUG)
-    fmt::print("{}\n", e.what());
-#endif
-    id = -1;
-  }
-
-  return id;
+  db.exec(save_query);
+  transaction.commit();
 }
 
 bool Database::is_in_database(const std::string &name, const char flag) const {
@@ -151,26 +113,6 @@ bool Database::is_in_database(const std::string &name, const char flag) const {
 #endif
     return false;
   }
-}
-
-void Database::delete_element(const std::string &name, const char flag) const {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
-  SQLite::Transaction transaction(db);
-
-  const std::string query_type = Internal::what_type(flag);
-  assert(query_type != "");
-
-  if (std::tolower(flag) == 't') {
-    unsigned long long id = this->get_element_id(name, 't');
-
-    const std::string query_season = fmt::format("DELETE FROM season WHERE tvshow_id='{}'", id);
-    db.exec(query_season);
-  }
-
-  const std::string query = fmt::format("DELETE FROM {} WHERE alias='{}'", query_type, name);
-  db.exec(query);
-
-  transaction.commit();
 }
 
 void Database::create_table() {
@@ -205,7 +147,7 @@ void Database::create_tvshow_table() {
   transaction.commit();
 }
 
-std::vector<std::string> Database::list_all_movies() {
+std::vector<Movies> Database::select_all_movies() {
   try {
     SQLite::Database db(this->database_name_);
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
@@ -214,28 +156,51 @@ std::vector<std::string> Database::list_all_movies() {
     fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
                query.getColumnCount());
 #endif
-    std::vector<std::string> message_vector;
+    std::vector<Movies> movies_list;
     while (query.executeStep()) {
-      const auto id = query.getColumn(0);
-      fmt::print("id {}.\n", id);
-      const std::string name  = query.getColumn(1);
-      const double rating     = query.getColumn(2);
-      const int year          = query.getColumn(3);
-      const std::string stats = query.getColumn(4);
-      const std::string alias = query.getColumn(5);
+      const auto id          = query.getColumn(0);
+      const std::string name = query.getColumn(1);
+      const double rating    = query.getColumn(2);
+      const int stat         = query.getColumn(3);
 
-      // This should be handled by a different procedure like format_objects()
-      auto fmt = fmt::format(
-        "ID: {0} - Name: {1} - Rating: {2} - Year: {3} - "
-        "Stats: {4} - Alias: {5}\n",
-        id, name, rating, year, stats, alias);
-      message_vector.push_back(fmt);
+      Movies movie(name, rating, stat);
+      movies_list.push_back(movie);
     }
-    return message_vector;
+    return movies_list;
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
-    return std::vector<std::string>{};
+    return std::vector<Movies>{};
+#endif
+  }
+}
+
+std::vector<TvShow> Database::select_all_tvshows() {
+  try {
+    SQLite::Database db(this->database_name_);
+    fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
+    SQLite::Statement query(db, "SELECT * from tvshow");
+#if defined(_DEBUG)
+    fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
+               query.getColumnCount());
+#endif
+    std::vector<TvShow> tvshow_list;
+    while (query.executeStep()) {
+      const auto id          = query.getColumn(0);
+      const std::string name = query.getColumn(1);
+      const double rating    = query.getColumn(2);
+      const int stat         = query.getColumn(3);
+      const int episode      = query.getColumn(4);
+      const int last_episode = query.getColumn(5);
+
+      TvShow tvshow(name, stat, rating, episode, last_episode);
+      tvshow_list.push_back(tvshow);
+    }
+    return tvshow_list;
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+    return std::vector<TvShow>{};
 #endif
   }
 }

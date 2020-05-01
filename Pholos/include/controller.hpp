@@ -34,17 +34,22 @@ class Controller {
 
   ~Controller() = default;
 
+  void load_content();
   void press_any_key();  // This needs a better name
   void draw_menu();
   void help();
   void exit();
   void add_menu();
   int get_command(std::string_view command);
-  void list_all();
+  void list_all_movies();
+  void list_all_tvshows();
 
  private:
   void add_movie();
   void add_tvshow();
+
+  void add(const TvShow &tv);
+  void add(const Movies &movie);
 
  private:
   Command commands_{};

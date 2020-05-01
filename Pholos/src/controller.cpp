@@ -100,7 +100,8 @@ void Controller::draw_menu() {
       break;
     case Command::List:
       // List all Elements
-      // Unimplemented
+      this->list_all_movies();
+      this->list_all_tvshows();
       break;
   }
 }
@@ -234,8 +235,8 @@ void Controller::add_movie() {
   }
 
   Movies movie(common::add_context<Movies>(name, rating, stat));
-  auto database = get_database();
-  this->movies_list_.push_back(movie);
+  auto *database = get_database();
+  this->add(movie);
   database->save(movie);
 }
 
@@ -245,7 +246,11 @@ void Controller::add_tvshow() {
   int episode{0};
   int last_episode{0};
 
-  fmt::print("Adding a new TvShow...\nEnter the name, please.\n-> ");
+  fmt::print(
+    "Note: Currently, Pholos doesn't support season. That means if you "
+    "want to add a TV Show with many seasons, you have to add a new TV Show for each "
+    "season.\n\nAdding a new TvShow...\nEnter the name, "
+    "please.\n-> ");
   std::string name;
   std::cin.get();  // to consume enter.
   std::getline(std::cin, name);
@@ -279,25 +284,73 @@ void Controller::add_tvshow() {
   }
 
   TvShow tvshow(common::add_context<TvShow>(name, stat, rating, episode, last_episode));
+  auto *database = get_database();
+  this->add(tvshow);
+  database->save(tvshow);
 }
 
-// Make this Generic, works for movies and tvshows.
-void Controller::list_all() {
-  auto database = get_database();
-  char list_what;
+void Controller::add(const Movies &movie) { this->movies_list_.push_back(movie); }
 
-  fmt::print("List Movies or TvShow? [m/t] ");
-  std::cin >> list_what;
+void Controller::add(const TvShow &tv) { this->tv_show_list_.push_back(tv); }
 
-  if (std::tolower(list_what) == 'm') {
-    std::vector<std::string> message_vector = database->list_all_movies();
-    // This should be a
-    std::for_each(message_vector.begin(), message_vector.end(),
-                  [](std::string_view s) { fmt::print(s); });
-  } else if (std::tolower(list_what) == 't') {
-    // call list_all_tvshows
-  } else {
-    // should never happen
+// Content cache.
+// When we run the application for the first time. We call load_content to
+// populate movies_list and tvshow_list. To avoid reading database to check if a content
+// is in it.
+void Controller::load_content() {
+#if defined(_DEBUG)
+  fmt::print("Loading contents into cache...\n");
+#endif
+  auto *database    = get_database();
+  auto movies_list  = database->select_all_movies();
+  auto tvshows_list = database->select_all_tvshows();
+
+  this->movies_list_  = movies_list;
+  this->tv_show_list_ = tvshows_list;
+
+#if defined(_DEBUG)
+  fmt::print("Loaded movies and tvshows cache... movie: {}s, tvshows {}s",
+             this->movies_list_.size(), this->tv_show_list_.size());
+#endif
+}
+
+void Controller::list_all_movies() {
+  fmt::print("\n");
+  if (this->movies_list_.empty()) {
+    fmt::print("Your movie list is empty!\n");
+    return;
   }
+
+  std::size_t biggest_word = 0;
+  std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [&](const Movies &movie) {
+    std::size_t movie_name_length = movie.name().size();
+    biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
+  });
+
+  fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, "Name", "Rating", "Stat");
+  std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [=](const Movies &movie) {
+    fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, movie.name(), movie.rating(),
+               movie.stat_to_string());
+  });
+}
+
+void Controller::list_all_tvshows() {
+  fmt::print("\n");
+  if (this->tv_show_list_.empty()) {
+    fmt::print("Your tv show list is empty!\n");
+    return;
+  }
+
+  std::size_t biggest_word = 0;
+  std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [&](const TvShow &tv) {
+    std::size_t tv_name_length = tv.name().size();
+    biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
+  });
+  fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, "Name",
+             "Rating", "Stat", "Episode", "Total Episodes");
+  std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [=](const TvShow &tv) {
+    fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, tv.name(),
+               tv.rating(), tv.stat_to_string(), tv.episode(), tv.last_episode());
+  });
 }
 }  // namespace Pholos

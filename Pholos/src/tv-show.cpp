@@ -11,13 +11,27 @@ TvShow::TvShow(const std::string &name, int stat, double rating, int episode, in
   this->last_episode_ = last_episode;
 }
 
-void TvShow::print() {
-  fmt::print("Name: {} | Rating: {} | Stat: {}", this->name_, this->rating_, this->stat());
-}
-
 std::string TvShow::name() const { return this->name_; }
 
 double TvShow::rating() const { return this->rating_; }
 
 int TvShow::stat() const { return static_cast<int>(this->stat_); }
+
+int TvShow::episode() const { return this->episode_; }
+int TvShow::last_episode() const { return this->last_episode_; }
+
+std::string TvShow::stat_to_string() const {
+  switch (this->stat_) {
+    case Stats::NotSet:
+      return "Not Set";
+    case Stats::PlanToWatch:
+      return "Plan to Watch";
+    case Stats::Completed:
+      return "Completed";
+    case Stats::Dropped:
+      return "Dropped";
+    default:
+      return "Not Set";
+  }
+}
 }  // namespace Pholos

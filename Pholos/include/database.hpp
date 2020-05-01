@@ -34,19 +34,17 @@ class Database {
   // and create its needed tables.
   void init(bool &loaded);
 
-  void save(Movies &movie);
-  void save(TvShow &show);
+  void save(const Movies &movie);
+  void save(const TvShow &show);
   bool is_in_database(const std::string &name, const char flag) const;
-  void delete_element(const std::string &name, const char flag) const;
-  std::vector<std::string> list_all_movies();
+  std::vector<Movies> select_all_movies();
+  std::vector<TvShow> select_all_tvshows();
 
  private:
   // Helper functions to create the database's tables.
   void create_table();
   void create_movie_table();
   void create_tvshow_table();
-
-  unsigned long long get_element_id(const std::string &name, const char flag) const;
 
  private:
   std::string database_name_{"data.sqlite3"};

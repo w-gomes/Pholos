@@ -4,5 +4,6 @@ build/
 
 *.user
 *.db
+*.sqlite3
 
 doc/
