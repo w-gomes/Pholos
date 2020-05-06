@@ -1,6 +1,6 @@
 #include "application.hpp"
 
-#include <cassert>
+#include <cassert>  // assert()
 
 #include "fmt/core.h"
 

@@ -19,4 +19,4 @@ target_include_directories(SQLiteCPP
     PUBLIC ${PROJECT_SOURCE_DIR}/include
     PUBLIC ${PROJECT_SOURCE_DIR}/sqlite3
 )
-target_link_libraries(SQLiteCPP PUBLIC sqlite3)
+target_link_libraries(SQLiteCPP PUBLIC sqlite3::sqlite3)

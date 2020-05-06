@@ -2,14 +2,10 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
-#include <cassert>
-#include <cctype>  // std::tolower()
-#include <functional>
+#include <cassert>  // assert()
+#include <cctype>   // std::tolower()
 #include <iostream>
-#include <map>
-#include <optional>
 #include <string>
-#include <tuple>
 #include <vector>
 
 #include "fmt/core.h"

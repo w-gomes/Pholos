@@ -3,12 +3,10 @@
 #include <conio.h>  // _getch()
 
 #include <algorithm>
-#include <cassert>
-#include <cctype>  // std::tolower()
+#include <cassert>  // assert()
+#include <cctype>   // std::tolower()
 #include <iostream>
-#include <map>
 #include <string>
-#include <vector>
 
 #include "application.hpp"
 #include "database.hpp"
