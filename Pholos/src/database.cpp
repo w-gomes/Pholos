@@ -169,8 +169,8 @@ std::vector<Movies> Database::select_all_movies() {
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
-    return std::vector<Movies>{};
 #endif
+    return std::vector<Movies>{};
   }
 }
 
@@ -199,8 +199,8 @@ std::vector<TvShow> Database::select_all_tvshows() {
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
-    return std::vector<TvShow>{};
 #endif
+    return std::vector<TvShow>{};
   }
 }
 
