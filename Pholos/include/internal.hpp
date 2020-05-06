@@ -1,12 +1,10 @@
+#pragma once
 #include <string>
 #include <utility>
 
-#include "movies.hpp"
-#include "tv-show.hpp"
-
 namespace Pholos {
-namespace common {
 
+namespace internal {
 // Add helper function that calls constructor of either
 // Movies or TvShow
 template <typename Context, typename... Types>
@@ -35,5 +33,5 @@ template <typename From, typename To>
 To convert(From from) {
   return static_cast<To>(from);
 }
-}  // namespace common
+}  // namespace internal
 }  // namespace Pholos

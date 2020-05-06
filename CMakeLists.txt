@@ -17,8 +17,8 @@ set(Pholos_SOURCES
     Pholos/src/database.cpp
     Pholos/src/controller.cpp
     Pholos/src/movies.cpp
-    Pholos/src/common.cpp
     Pholos/src/entertainment.cpp
+    Pholos/src/internal.cpp
     )
 
 add_executable(Pholos ${Pholos_SOURCES})

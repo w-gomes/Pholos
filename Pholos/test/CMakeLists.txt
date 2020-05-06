@@ -3,7 +3,6 @@ project(Tests LANGUAGES CXX)
 set(TEST_SOURCES 
     main.cpp
     test_convertion.cpp
-    ../src/common.cpp
     )
 
 add_executable(Tests ${TEST_SOURCES})

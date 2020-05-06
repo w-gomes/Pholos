@@ -11,35 +11,17 @@
 #include <vector>
 
 #include "application.hpp"
-#include "common.hpp"
 #include "database.hpp"
 #include "fmt/core.h"
+#include "internal.hpp"
 #include "movies.hpp"
 #include "stats.hpp"
 #include "tv-show.hpp"
 
 namespace Pholos {
 
-/*
-namespace Internal {
-// @Incomplete implementation of formatting output
-void format_objects(const std::vector<std::string> &message) {
-  // the size of the header and footer should be the size of the longest string
-  const int header_and_footer_size = 100;
-  // @Incomplete
-  const std::string header = fmt::format("{:#^{}}\n", " List of Movies ", header_and_footer_size);
-  fmt::print(header);
-  for (const auto &msg : message) {
-    fmt::print(msg);
-  }
-  const std::string footer = fmt::format("{:#^{}}", "", header_and_footer_size);
-  fmt::print(footer);
-}
-}  // namespace Pholos
-*/
-
 void Controller::press_any_key() {
-  auto app = get_application();
+  auto *app = get_application();
 
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
   int input = _getch();
@@ -234,7 +216,7 @@ void Controller::add_movie() {
     std::cin >> rating;
   }
 
-  Movies movie(common::add_context<Movies>(name, rating, stat));
+  Movies movie(internal::add_context<Movies>(name, rating, stat));
   auto *database = get_database();
   this->add(movie);
   database->save(movie);
@@ -283,7 +265,7 @@ void Controller::add_tvshow() {
     }
   }
 
-  TvShow tvshow(common::add_context<TvShow>(name, stat, rating, episode, last_episode));
+  TvShow tvshow(internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
   auto *database = get_database();
   this->add(tvshow);
   database->save(tvshow);
