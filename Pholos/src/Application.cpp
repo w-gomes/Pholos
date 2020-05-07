@@ -36,7 +36,6 @@ void Application::welcome_message() {
       EDIT      edit
       DELETE    delete
       SEARCH    search
-      QUERY     query (more specific)
       LIST      list all movies or tvshow
       ABOUT     about
 

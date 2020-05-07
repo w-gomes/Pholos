@@ -4,7 +4,6 @@
 #include <map>
 #include <optional>
 #include <string>
-#include <vector>
 
 namespace Pholos {
 
@@ -37,8 +36,8 @@ class Database {
   void save(const Movies &movie);
   void save(const TvShow &show);
   bool is_in_database(const std::string &name, const char flag) const;
-  std::vector<Movies> select_all_movies();
-  std::vector<TvShow> select_all_tvshows();
+  std::map<int, Movies> select_all_movies();
+  std::map<int, TvShow> select_all_tvshows();
 
  private:
   // Helper functions to create the database's tables.

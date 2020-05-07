@@ -9,6 +9,7 @@
 #include "Stats.hpp"
 
 namespace Pholos {
+
 class Entertainment {
  public:
   Entertainment() = default;
@@ -17,6 +18,10 @@ class Entertainment {
   virtual double rating() const              = 0;
   virtual int stat() const                   = 0;
   virtual std::string stat_to_string() const = 0;
+
+  void change_stat(int new_stat);
+  void change_rating(double new_rating);
+  void change_name(const std::string &new_name);
 
   virtual ~Entertainment() = default;
 

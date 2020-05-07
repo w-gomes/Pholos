@@ -28,6 +28,9 @@ class TvShow : public Entertainment {
   int episode() const;
   int last_episode() const;
 
+  // change episode
+  // change last episode
+
  private:
   int episode_{};
   int last_episode_{};

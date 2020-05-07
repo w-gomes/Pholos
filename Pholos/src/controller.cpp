@@ -18,6 +18,75 @@
 
 namespace Pholos {
 
+namespace internal {
+
+bool movie_or_tvshow(char &user_choose) {
+  fmt::print("Movie [m] or Tv Show [t]? : ");
+  bool user_choice = false;
+
+  do {
+    std::cin >> user_choose;
+
+    if (std::tolower(user_choose) == 'm') {
+      user_choice = true;
+    } else if (std::tolower(user_choose) == 't') {
+      user_choice = true;
+    } else if (std::tolower(user_choose) == 'c') {
+      user_choice = true;
+      break;
+    } else {
+      fmt::print("Wrong option! Enter [m] or [t].\n");
+      fmt::print("Enter [c] to cancel. : ");
+    }
+  } while (!user_choice);
+  std::cin.clear();
+
+  return user_choice;
+}
+
+// TO FINISH THIS YOU HAVE TO FIX list_all_tvshows and list_all_movies
+void edit_menu(char movie_or_tv) {
+  int edit_option = 0;
+
+  fmt::print(
+    "\n***\nNote: You must know the object id in other to edit.\nUse list all to get the id.\n\n");
+  // TODO: handle wrong usage: edit_option > 5 and < 1;
+  if (std::tolower(movie_or_tv) == 'm') {
+    fmt::print("Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n\n-> ");
+    std::cin >> edit_option;
+  } else if (std::tolower(movie_or_tv) == 't') {
+    fmt::print(
+      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n Change episode "
+      "(4)\n "
+      "Change total episode (5)\n\n-> ");
+    std::cin >> edit_option;
+  }
+
+  // User must know the movie or tvshow id to edit or exact name...
+  // Use list all to get it.
+  switch (edit_option) {
+    case 1:
+      // change name
+      break;
+    case 2:
+      // change stat
+      break;
+    case 3:
+      // change rating
+      break;
+    case 4:
+      // change episode
+      break;
+    case 5:
+      // change last episode (total episode)
+      break;
+    default:
+      // wrong usage...
+      break;
+  }
+}
+}  // namespace internal
+
 void Controller::press_any_key() {
   auto *app = get_application();
 
@@ -60,26 +129,39 @@ void Controller::draw_menu() {
       break;
     case Command::Edit:
       // Edit existing object
+      // User can change:
+      //  Movie and TvShow
+      // - name
+      // - stat
+      // - rating
+      //
+      //  TvShow
+      // - episode
+      // - last_episode
+      //
       // Unimplemented
+      this->edit();
+      fmt::print("{}", "\nEdit command...\n");
       break;
     case Command::Delete:
       // Delete a movie or a tvshow
       // Unimplemented
+      fmt::print("{}", "\nDelete command...\n");
+      break;
     case Command::Search:
       // This search if movie exists
       // Unimplemented
-      break;
-    case Command::Query:
-      // This query is more complete. You can query for specific things.
-      // Like, list all movies tagged as watching.
-      // Unimplemented
+      fmt::print("{}", "\nSearch command...\n");
       break;
     case Command::About:
       // Show application information
       // Unimplemented
+      fmt::print("{}", "\nAbout command...\n");
       break;
     case Command::List:
       // List all Elements
+      // TODO: Add options to list only movies and tvshows,
+      // and by filters (e.g. list all completed).
       this->list_all_movies();
       this->list_all_tvshows();
       break;
@@ -101,12 +183,10 @@ int Controller::get_command(std::string_view command) {
     x = 4;
   } else if (command == "SEARCH") {
     x = 5;
-  } else if (command == "QUERY") {
-    x = 6;
   } else if (command == "ABOUT") {
-    x = 7;
+    x = 6;
   } else if (command == "LIST") {
-    x = 8;
+    x = 7;
   }
 
   return x;
@@ -125,9 +205,6 @@ void Controller::help() {
         ADD     add
                 Add a new object to your track database.
                 User can add movie or tv show.
-                There two ways to add a new object.
-                Basic: you're asked to enter a name.
-                Full: you're asked to enter name, rating, year, stats(optional).
 
         EDIT    edit
                 Edit an object.
@@ -138,13 +215,10 @@ void Controller::help() {
         SEARCH  search
                 Search for an object.
 
-        QUERY   query
-                Search for objects.
-                Search for objects with specific parameters.
-                E.g. search movies whose status is watching.
-
         LIST    list
+                List all
                 List all movies or tv show.
+                List by filters (e.g. list completed movies or/and tv show)
 
         ABOUT   about
                 Information about the application.
@@ -162,31 +236,15 @@ void Controller::help() {
 
 // Add new movie or tvshow
 void Controller::add_menu() {
-  auto app = get_application();
-
-  fmt::print("Movie [m] or Tv Show [t]? : ");
   char user_choose;
-  bool user_choice = false;
-
-  do {
-    std::cin >> user_choose;
-
-    if (std::tolower(user_choose) == 'm') {
-      this->add_movie();
-      user_choice = true;
-    } else if (std::tolower(user_choose) == 't') {
-      this->add_tvshow();
-      user_choice = true;
-
-    } else if (std::tolower(user_choose) == 'c') {
-      user_choice = true;
-      app->exit_application();
-    } else {
-      fmt::print("Wrong option! Enter [m] or [t].\n");
-      fmt::print("Enter [c] to cancel. : ");
-    }
-  } while (!user_choice);
-  std::cin.clear();
+  bool user_chose = internal::movie_or_tvshow(user_choose);
+  if (user_chose && std::tolower(user_choose) == 'm') {
+    this->add_movie();
+  } else if (user_chose && std::tolower(user_choose) == 't') {
+    this->add_tvshow();
+  } else if (user_chose && std::tolower(user_choose) == 'c') {
+    return;
+  }
 }
 
 void Controller::add_movie() {
@@ -203,7 +261,8 @@ void Controller::add_movie() {
   char confirm;
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
-    fmt::print("Enter the stat.\nWatching (1), Plan to Watch (2), Completed (3), Dropped (4)\n-> ");
+    fmt::print(
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped (4)\n-> ");
     std::cin >> stat;
   }
 
@@ -216,8 +275,8 @@ void Controller::add_movie() {
 
   Movies movie(internal::add_context<Movies>(name, rating, stat));
   auto *database = get_database();
-  this->add(movie);
   database->save(movie);
+  this->load_content();
 }
 
 void Controller::add_tvshow() {
@@ -227,7 +286,7 @@ void Controller::add_tvshow() {
   int last_episode{0};
 
   fmt::print(
-    "Note: Currently, Pholos doesn't support season. That means if you "
+    "\n***\nNote: Currently, Pholos doesn't support season. That means if you "
     "want to add a TV Show with many seasons, you have to add a new TV Show for each "
     "season.\n\nAdding a new TvShow...\nEnter the name, "
     "please.\n-> ");
@@ -240,7 +299,8 @@ void Controller::add_tvshow() {
   char confirm;
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
-    fmt::print("Enter the stat.\nWatching (1), Plan to Watch (2), Completed (3), Dropped (4)\n-> ");
+    fmt::print(
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped (4)\n-> ");
     std::cin >> stat;
   }
 
@@ -265,13 +325,9 @@ void Controller::add_tvshow() {
 
   TvShow tvshow(internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
   auto *database = get_database();
-  this->add(tvshow);
   database->save(tvshow);
+  this->load_content();
 }
-
-void Controller::add(const Movies &movie) { this->movies_list_.push_back(movie); }
-
-void Controller::add(const TvShow &tv) { this->tv_show_list_.push_back(tv); }
 
 // Content cache.
 // When we run the application for the first time. We call load_content to
@@ -285,52 +341,73 @@ void Controller::load_content() {
   auto movies_list  = database->select_all_movies();
   auto tvshows_list = database->select_all_tvshows();
 
-  this->movies_list_  = movies_list;
-  this->tv_show_list_ = tvshows_list;
+  // Whenever we add a new object, we call load_content to reload the cache...
+  // So that we can get the object's id.
+  // So we clear the cache before loading it again.
+  // There is probably a better way, but we're doing this for now.
+  this->movies_cache_.clear();
+  this->tvshow_cache_.clear();
+
+  this->movies_cache_ = movies_list;
+  this->tvshow_cache_ = tvshows_list;
 
 #if defined(_DEBUG)
-  fmt::print("Loaded movies and tvshows cache... movie: {}s, tvshows {}s",
-             this->movies_list_.size(), this->tv_show_list_.size());
+  fmt::print("Loaded movies and tvshows cache... {} movies, {} tvshow.\n",
+             this->movies_cache_.size(), this->tvshow_cache_.size());
 #endif
 }
 
+// TODO: Fix this. Using std::map now.
 void Controller::list_all_movies() {
   fmt::print("\n");
-  if (this->movies_list_.empty()) {
-    fmt::print("Your movie list is empty!\n");
-    return;
-  }
+  // if (this->movies_list_.empty()) {
+  //   fmt::print("Your movie list is empty!\n");
+  //   return;
+  // }
 
-  std::size_t biggest_word = 0;
-  std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [&](const Movies &movie) {
-    std::size_t movie_name_length = movie.name().size();
-    biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
-  });
+  // std::size_t biggest_word = 0;
+  // std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [&](const Movies &movie) {
+  //   std::size_t movie_name_length = movie.name().size();
+  //   biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
+  // });
 
-  fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, "Name", "Rating", "Stat");
-  std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [=](const Movies &movie) {
-    fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, movie.name(), movie.rating(),
-               movie.stat_to_string());
-  });
+  // fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, "Name", "Rating", "Stat");
+  // std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [=](const Movies &movie) {
+  //   fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, movie.name(), movie.rating(),
+  //              movie.stat_to_string());
+  // });
 }
 
+// TODO: Fix this. Using std::map now.
 void Controller::list_all_tvshows() {
   fmt::print("\n");
-  if (this->tv_show_list_.empty()) {
-    fmt::print("Your tv show list is empty!\n");
+  // if (this->tv_show_list_.empty()) {
+  //   fmt::print("Your tv show list is empty!\n");
+  //   return;
+  // }
+
+  // std::size_t biggest_word = 0;
+  // std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [&](const TvShow &tv) {
+  //   std::size_t tv_name_length = tv.name().size();
+  //   biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
+  // });
+  // fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, "Name",
+  //            "Rating", "Stat", "Episode", "Total Episodes");
+  // std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [=](const TvShow &tv) {
+  //   fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, tv.name(),
+  //              tv.rating(), tv.stat_to_string(), tv.episode(), tv.last_episode());
+  // });
+}
+
+void Controller::edit() {
+  // Which object we want to edit: movie or tv show.
+  char user_choose;
+  bool user_chose = internal::movie_or_tvshow(user_choose);
+
+  if (user_chose && std::tolower(user_choose) != 'c') {
+    internal::edit_menu(user_choose);
+  } else {
     return;
   }
-
-  std::size_t biggest_word = 0;
-  std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [&](const TvShow &tv) {
-    std::size_t tv_name_length = tv.name().size();
-    biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
-  });
-  fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, "Name",
-             "Rating", "Stat", "Episode", "Total Episodes");
-  std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [=](const TvShow &tv) {
-    fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, tv.name(),
-               tv.rating(), tv.stat_to_string(), tv.episode(), tv.last_episode());
-  });
 }
 }  // namespace Pholos

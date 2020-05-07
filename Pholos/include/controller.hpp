@@ -1,9 +1,9 @@
 #pragma once
 
 #include <array>
+#include <map>
 #include <string>
 #include <string_view>
-#include <vector>
 
 #include "movies.hpp"
 #include "tv-show.hpp"
@@ -18,9 +18,8 @@ class Controller {
     Edit   = 3,
     Delete = 4,
     Search = 5,
-    Query  = 6,
-    About  = 7,
-    List   = 8
+    About  = 6,
+    List   = 7
   };
 
  public:
@@ -39,6 +38,7 @@ class Controller {
   void help();
   void exit();
   void add_menu();
+  void edit();
   int get_command(std::string_view command);
   void list_all_movies();
   void list_all_tvshows();
@@ -47,14 +47,12 @@ class Controller {
   void add_movie();
   void add_tvshow();
 
-  void add(const TvShow &tv);
-  void add(const Movies &movie);
-
  private:
   Command commands_{};
   static constexpr std::array commands_list = {"HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
                                                "SEARCH", "QUERY", "ABOUT", "LIST"};
-  std::vector<Movies> movies_list_;
-  std::vector<TvShow> tv_show_list_;
+
+  std::map<int, Movies> movies_cache_;
+  std::map<int, TvShow> tvshow_cache_;
 };
 }  // namespace Pholos

@@ -5,8 +5,8 @@
 #include <cassert>  // assert()
 #include <cctype>   // std::tolower()
 #include <iostream>
+#include <map>
 #include <string>
-#include <vector>
 
 #include "fmt/core.h"
 #include "movies.hpp"
@@ -14,7 +14,7 @@
 
 namespace Pholos {
 
-namespace Internal {
+namespace internal {
 const inline std::string what_type(const char flag) {
   if (std::tolower(flag) == 'm') {
     return "movies";
@@ -24,7 +24,7 @@ const inline std::string what_type(const char flag) {
     return "";
   }
 }
-}  // namespace Internal
+}  // namespace internal
 
 Database::Database() { this->instance = this; }
 
@@ -87,7 +87,7 @@ void Database::save(const TvShow &show) {
 }
 
 bool Database::is_in_database(const std::string &name, const char flag) const {
-  const std::string query_type = Internal::what_type(flag);
+  const std::string query_type = internal::what_type(flag);
   assert(query_type != "");
 
   try {
@@ -142,16 +142,18 @@ void Database::create_tvshow_table() {
   transaction.commit();
 }
 
-std::vector<Movies> Database::select_all_movies() {
+std::map<int, Movies> Database::select_all_movies() {
   try {
     SQLite::Database db(this->database_name_);
+#if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
+#endif
     SQLite::Statement query(db, "SELECT * from movies");
 #if defined(_DEBUG)
     fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
                query.getColumnCount());
 #endif
-    std::vector<Movies> movies_list;
+    std::map<int, Movies> movies_list;
     while (query.executeStep()) {
       const auto id          = query.getColumn(0);
       const std::string name = query.getColumn(1);
@@ -159,27 +161,29 @@ std::vector<Movies> Database::select_all_movies() {
       const int stat         = query.getColumn(3);
 
       Movies movie(name, rating, stat);
-      movies_list.push_back(movie);
+      movies_list[id] = movie;
     }
     return movies_list;
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
 #endif
-    return std::vector<Movies>{};
+    return std::map<int, Movies>{};
   }
 }
 
-std::vector<TvShow> Database::select_all_tvshows() {
+std::map<int, TvShow> Database::select_all_tvshows() {
   try {
     SQLite::Database db(this->database_name_);
+#if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
+#endif
     SQLite::Statement query(db, "SELECT * from tvshow");
 #if defined(_DEBUG)
     fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
                query.getColumnCount());
 #endif
-    std::vector<TvShow> tvshow_list;
+    std::map<int, TvShow> tvshow_list;
     while (query.executeStep()) {
       const auto id          = query.getColumn(0);
       const std::string name = query.getColumn(1);
@@ -189,14 +193,14 @@ std::vector<TvShow> Database::select_all_tvshows() {
       const int last_episode = query.getColumn(5);
 
       TvShow tvshow(name, stat, rating, episode, last_episode);
-      tvshow_list.push_back(tvshow);
+      tvshow_list[id] = tvshow;
     }
     return tvshow_list;
   } catch (std::exception &e) {
 #if defined(_DEBUG)
     fmt::print("{}\n", e.what());
 #endif
-    return std::vector<TvShow>{};
+    return std::map<int, TvShow>{};
   }
 }
 
