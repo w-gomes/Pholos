@@ -357,46 +357,95 @@ void Controller::load_content() {
 #endif
 }
 
-// TODO: Fix this. Using std::map now.
 void Controller::list_all_movies() {
   fmt::print("\n");
-  // if (this->movies_list_.empty()) {
-  //   fmt::print("Your movie list is empty!\n");
-  //   return;
-  // }
+  if (this->movies_cache_.empty()) {
+    fmt::print("\n***\nYour movie list is empty!\n");
+    return;
+  }
 
-  // std::size_t biggest_word = 0;
-  // std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [&](const Movies &movie) {
-  //   std::size_t movie_name_length = movie.name().size();
-  //   biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
-  // });
+  // Get the length of the biggest movie's name.
+  // id width | word width | rating width | stat width |
+  // 0          1            2            3
+  // Id | Name | Rating | Stat
+  // 4    5      6        7
+  std::size_t biggest_word = 0;
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [&](const auto &obj) {
+    std::size_t movie_name_length = obj.second.name().size();
+    biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
+  });
 
-  // fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, "Name", "Rating", "Stat");
-  // std::for_each(this->movies_list_.begin(), this->movies_list_.end(), [=](const Movies &movie) {
-  //   fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}}\n", biggest_word, movie.name(), movie.rating(),
-  //              movie.stat_to_string());
-  // });
+  // TODO: Turn this into a routine
+  // TOP
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
+             biggest_word, Controller::rating_width, Controller::stat_width, "");
+  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Controller::id_width, biggest_word,
+             Controller::rating_width, Controller::stat_width, "Movie ID", "Name", "Rating",
+             "Stat");
+
+  // MID
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
+             biggest_word, Controller::rating_width, Controller::stat_width, "");
+
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [=](const auto &obj) {
+    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Controller::id_width,
+               biggest_word, Controller::rating_width, Controller::stat_width, obj.first,
+               obj.second.name(), obj.second.rating(), obj.second.stat_to_string());
+  });
+
+  // BOTTOM
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
+             biggest_word, Controller::rating_width, Controller::stat_width, "");
 }
 
-// TODO: Fix this. Using std::map now.
 void Controller::list_all_tvshows() {
   fmt::print("\n");
-  // if (this->tv_show_list_.empty()) {
-  //   fmt::print("Your tv show list is empty!\n");
-  //   return;
-  // }
+  if (this->tvshow_cache_.empty()) {
+    fmt::print("Your tv show list is empty!\n");
+    return;
+  }
 
-  // std::size_t biggest_word = 0;
-  // std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [&](const TvShow &tv) {
-  //   std::size_t tv_name_length = tv.name().size();
-  //   biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
-  // });
-  // fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, "Name",
-  //            "Rating", "Stat", "Episode", "Total Episodes");
-  // std::for_each(this->tv_show_list_.begin(), this->tv_show_list_.end(), [=](const TvShow &tv) {
-  //   fmt::print("{1:<{0}} | {2:<{0}} | {3:<{0}} | {4:<{0}} | {5:<{0}}\n", biggest_word, tv.name(),
-  //              tv.rating(), tv.stat_to_string(), tv.episode(), tv.last_episode());
-  // });
+  // id width | word width | rating width | stat width | episode width | total episode
+  // 0          1            2              3            4               5
+  // Id | Name | Rating | Stat | Episode | Total Episodes
+  // 6    7      8        9      10        11
+
+  std::size_t biggest_word = 0;
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [&](const auto &obj) {
+    std::size_t tv_name_length = obj.second.name().size();
+    biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
+  });
+
+  // TODO: Turn this into a routine
+  // TOP
+  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
+             Controller::id_width + 3, biggest_word, Controller::rating_width,
+             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
+             "");
+  fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+             Controller::id_width + 3, biggest_word, Controller::rating_width,
+             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
+             "Tv Show ID", "Name", "Rating", "Stat", "Episode", "Total Episodes");
+
+  // MID
+  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
+             Controller::id_width + 3, biggest_word, Controller::rating_width,
+             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
+             "");
+
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [=](const auto &obj) {
+    fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+               Controller::id_width + 3, biggest_word, Controller::rating_width,
+               Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
+               obj.first, obj.second.name(), obj.second.rating(), obj.second.stat_to_string(),
+               obj.second.episode(), obj.second.last_episode());
+  });
+
+  // BOTTOM
+  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
+             Controller::id_width + 3, biggest_word, Controller::rating_width,
+             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
+             "");
 }
 
 void Controller::edit() {

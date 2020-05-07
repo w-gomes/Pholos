@@ -11,6 +11,13 @@
 namespace Pholos {
 
 class Controller {
+  // Plan to watch has 13 characters.
+  constexpr static std::size_t stat_width          = 13;
+  constexpr static std::size_t rating_width        = 6;
+  constexpr static std::size_t id_width            = 8;
+  constexpr static std::size_t episode_width       = 7;
+  constexpr static std::size_t total_episode_width = 14;
+
   enum class Command {
     Help   = 0,
     Exit   = 1,
