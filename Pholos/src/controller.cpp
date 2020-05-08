@@ -44,47 +44,6 @@ bool movie_or_tvshow(char &user_choose) {
   return user_choice;
 }
 
-// TO FINISH THIS YOU HAVE TO FIX list_all_tvshows and list_all_movies
-void edit_menu(char movie_or_tv) {
-  int edit_option = 0;
-
-  fmt::print(
-    "\n***\nNote: You must know the object id in other to edit.\nUse list all to get the id.\n\n");
-  // TODO: handle wrong usage: edit_option > 5 and < 1;
-  if (std::tolower(movie_or_tv) == 'm') {
-    fmt::print("Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n\n-> ");
-    std::cin >> edit_option;
-  } else if (std::tolower(movie_or_tv) == 't') {
-    fmt::print(
-      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n Change episode "
-      "(4)\n "
-      "Change total episode (5)\n\n-> ");
-    std::cin >> edit_option;
-  }
-
-  // User must know the movie or tvshow id to edit or exact name...
-  // Use list all to get it.
-  switch (edit_option) {
-    case 1:
-      // change name
-      break;
-    case 2:
-      // change stat
-      break;
-    case 3:
-      // change rating
-      break;
-    case 4:
-      // change episode
-      break;
-    case 5:
-      // change last episode (total episode)
-      break;
-    default:
-      // wrong usage...
-      break;
-  }
-}
 }  // namespace internal
 
 void Controller::press_any_key() {
@@ -448,15 +407,95 @@ void Controller::list_all_tvshows() {
              "");
 }
 
+bool Controller::id_exist(const int id, const char obj_type) {
+  auto found = false;
+  if (std::tolower(obj_type) == 'm') {
+    auto search = this->movies_cache_.find(id);
+    if (search != this->movies_cache_.end()) {
+      found = true;
+    } else {
+      found = false;
+    }
+  } else if (std::tolower(obj_type) == 't') {
+    auto search = this->tvshow_cache_.find(id);
+    if (search != this->tvshow_cache_.end()) {
+      found = true;
+    } else {
+      found = false;
+    }
+  }
+  return found;
+}
+
 void Controller::edit() {
   // Which object we want to edit: movie or tv show.
   char user_choose;
   bool user_chose = internal::movie_or_tvshow(user_choose);
 
   if (user_chose && std::tolower(user_choose) != 'c') {
-    internal::edit_menu(user_choose);
+    this->edit_menu(user_choose);
   } else {
     return;
+  }
+}
+
+void Controller::edit_menu(char movie_or_tv) {
+  int edit_option = 0;
+
+  fmt::print(
+    "\n***\nNote: You must know the object id in other to edit.\nUse list all to get the id.\n\n");
+  // Check for object's id.
+  int id     = internal::get_user_input<int>("Please enter the id.\n-> ");
+  bool exist = this->id_exist(id, movie_or_tv);
+
+  if (!exist) {
+    fmt::print("The id doesn't exist\n");
+    return;
+  }
+
+  // TODO: handle wrong usage: edit_option > 5 and < 1;
+  if (std::tolower(movie_or_tv) == 'm') {
+    fmt::print("Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n\n-> ");
+    std::cin >> edit_option;
+  } else if (std::tolower(movie_or_tv) == 't') {
+    fmt::print(
+      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n Change episode "
+      "(4)\n "
+      "Change total episode (5)\n\n-> ");
+    std::cin >> edit_option;
+  }
+
+  // We update the objects in database using the ID.
+  auto *database = get_database();
+  switch (edit_option) {
+    case 1:
+      fmt::print("Enter the new name, please.\n-> ");
+      {
+        std::string name;
+        std::cin.get();
+        std::getline(std::cin, name);
+        database->update_name(id, name, movie_or_tv);
+      }
+      break;
+    case 2:
+      // change stat
+      // implement UPDATE query for stat
+      break;
+    case 3:
+      // change rating
+      // implement UPDATE query for rating
+      break;
+    case 4:
+      // change episode
+      // implement UPDATE query for episode
+      break;
+    case 5:
+      // change last episode (total episode)
+      // implement UPDATE query for total episode
+      break;
+    default:
+      // wrong usage...
+      break;
   }
 }
 }  // namespace Pholos

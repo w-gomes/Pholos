@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 
+#include "fmt/core.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
 
@@ -46,9 +47,11 @@ class Controller {
   void exit();
   void add_menu();
   void edit();
+  void edit_menu(char movie_or_tv);
   int get_command(std::string_view command);
   void list_all_movies();
   void list_all_tvshows();
+  bool id_exist(const int id, const char obj_type);
 
  private:
   void add_movie();
@@ -62,4 +65,15 @@ class Controller {
   std::map<int, Movies> movies_cache_;
   std::map<int, TvShow> tvshow_cache_;
 };
+
+namespace internal {
+
+template <typename T>
+T get_user_input(const std::string &message) {
+  fmt::print("{}", message);
+  T id;
+  std::cin >> id;
+  return id;
+}
+}  // namespace internal
 }  // namespace Pholos

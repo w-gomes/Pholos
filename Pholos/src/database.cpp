@@ -86,62 +86,6 @@ void Database::save(const TvShow &show) {
   transaction.commit();
 }
 
-bool Database::is_in_database(const std::string &name, const char flag) const {
-  const std::string query_type = internal::what_type(flag);
-  assert(query_type != "");
-
-  try {
-    SQLite::Database db(this->database_name_);
-
-    const std::string query =
-      fmt::format("SELECT alias FROM {} WHERE alias='{}'", query_type, name);
-    const std::string value = db.execAndGet(query);
-
-    if (value.size() == 0) {
-      return false;
-    }
-
-    return true;
-  } catch (std::exception &e) {
-#if defined(_DEBUG)
-    fmt::print("{}\n", e.what());
-#endif
-    return false;
-  }
-}
-
-void Database::create_table() {
-  fmt::print("Creating tables now...\n");
-  this->create_movie_table();
-  this->create_tvshow_table();
-  fmt::print("Done\n");
-}
-
-void Database::create_movie_table() {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-  SQLite::Transaction transaction(db);
-
-  const std::string movie_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
-    "NULL, `rating` REAL, `stats` INTEGER);",
-    this->table_names_[0]);
-
-  db.exec(movie_query);
-  transaction.commit();
-}
-
-void Database::create_tvshow_table() {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
-  SQLite::Transaction transaction(db);
-
-  const std::string tv_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
-    "NULL, `rating` REAL, `stats` INTEGER, `episode`, `last_episode` INTEGER);",
-    this->table_names_[1]);
-  db.exec(tv_query);
-  transaction.commit();
-}
-
 std::map<int, Movies> Database::select_all_movies() {
   try {
     SQLite::Database db(this->database_name_);
@@ -202,6 +146,93 @@ std::map<int, TvShow> Database::select_all_tvshows() {
 #endif
     return std::map<int, TvShow>{};
   }
+}
+
+// UPDATE queries
+void Database::update_name(int id, const std::string &name, const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  // Maybe implement a generic function
+  const std::string query = fmt::format("UPDATE {} SET name='{}' WHERE id_{}={}", query_type, name,
+                                        (obj_type == 't' ? "tvshow" : "movie"), id);
+
+  this->execute_update(query);
+}
+void Database::update_stat(int id, int stat, const char obj_type) {}
+void Database::update_rating(int id, double rating, const char obj_type) {}
+void Database::update_total_episode(int id, int total_episode, const char obj_type) {}
+void Database::update_episode(int id, const char obj_type, int distance) {}
+
+bool Database::is_in_database(const std::string &name, const char obj_type) const {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  try {
+    SQLite::Database db(this->database_name_);
+
+    const std::string query =
+      fmt::format("SELECT alias FROM {} WHERE alias='{}'", query_type, name);
+    const std::string value = db.execAndGet(query);
+
+    if (value.size() == 0) {
+      return false;
+    }
+
+    return true;
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+#endif
+    return false;
+  }
+}
+
+// Private section
+void Database::execute_update(const std::string &query) {
+  try {
+    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Transaction transaction(db);
+
+    db.exec(query);
+    transaction.commit();
+  } catch (std::exception &e) {
+#if defined(_DEBUG)
+    fmt::print("{}\n", e.what());
+#endif
+  }
+}
+
+void Database::create_table() {
+  fmt::print("Creating tables now...\n");
+  this->create_movie_table();
+  this->create_tvshow_table();
+  fmt::print("Done\n");
+}
+
+void Database::create_movie_table() {
+  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+  SQLite::Transaction transaction(db);
+
+  const std::string movie_query = fmt::format(
+    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "NULL, `rating` REAL, `stats` INTEGER);",
+    this->table_names_[0]);
+
+  db.exec(movie_query);
+  transaction.commit();
+}
+
+void Database::create_tvshow_table() {
+  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+  SQLite::Transaction transaction(db);
+
+  const std::string tv_query = fmt::format(
+    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "NULL, `rating` REAL, `stats` INTEGER, `episode`, `last_episode` INTEGER);",
+    this->table_names_[1]);
+  db.exec(tv_query);
+  transaction.commit();
 }
 
 // is this really necessary?

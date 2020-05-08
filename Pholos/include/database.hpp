@@ -33,14 +33,28 @@ class Database {
   // and create its needed tables.
   void init(bool &loaded);
 
+  bool is_in_database(const std::string &name, const char obj_type) const;
+
+  // INSERT queries
   void save(const Movies &movie);
   void save(const TvShow &show);
-  bool is_in_database(const std::string &name, const char flag) const;
+
+  // SELECT queries
   std::map<int, Movies> select_all_movies();
   std::map<int, TvShow> select_all_tvshows();
+  // TODO: select * FROM (movies|tvshow) WHERE ID=#;
+  // So, we can print a single object.
+
+  // UPDATE queries
+  void update_name(int id, const std::string &name, const char obj_type);
+  void update_stat(int id, int stat, const char obj_type);
+  void update_rating(int id, double rating, const char obj_type);
+  void update_total_episode(int id, int total_episode, const char obj_type);
+  void update_episode(int id, const char obj_type, int distance = 1);
 
  private:
   // Helper functions to create the database's tables.
+  void execute_update(const std::string &query);
   void create_table();
   void create_movie_table();
   void create_tvshow_table();
