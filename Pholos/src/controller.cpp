@@ -100,7 +100,6 @@ void Controller::draw_menu() {
       //
       // Unimplemented
       this->edit();
-      fmt::print("{}", "\nEdit command...\n");
       break;
     case Command::Delete:
       // Delete a movie or a tvshow
@@ -413,15 +412,11 @@ bool Controller::id_exist(const int id, const char obj_type) {
     auto search = this->movies_cache_.find(id);
     if (search != this->movies_cache_.end()) {
       found = true;
-    } else {
-      found = false;
     }
   } else if (std::tolower(obj_type) == 't') {
     auto search = this->tvshow_cache_.find(id);
     if (search != this->tvshow_cache_.end()) {
       found = true;
-    } else {
-      found = false;
     }
   }
   return found;
@@ -449,7 +444,7 @@ void Controller::edit_menu(char movie_or_tv) {
   bool exist = this->id_exist(id, movie_or_tv);
 
   if (!exist) {
-    fmt::print("The id doesn't exist\n");
+    fmt::print("The id doesn't exist.\n");
     return;
   }
 
