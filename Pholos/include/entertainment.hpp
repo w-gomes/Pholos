@@ -26,7 +26,7 @@ class Entertainment {
   virtual ~Entertainment() = default;
 
  protected:
-  void set_members(const std::string &name, double rating, int stat);
+  void set_members(std::string name, double rating, int stat);
 
   std::string name_{};
   double rating_{};

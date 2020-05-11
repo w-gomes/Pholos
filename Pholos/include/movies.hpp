@@ -10,7 +10,7 @@ namespace Pholos {
 class Movies : public Entertainment {
  public:
   Movies() = default;
-  Movies(const std::string &name, double rating, int stat);
+  Movies(std::string name, double rating, int stat);
 
   Movies(const Movies &other) = default;
   Movies &operator=(const Movies &other) = default;

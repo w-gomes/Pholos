@@ -11,7 +11,7 @@ class TvShow : public Entertainment {
  public:
   TvShow() = default;
 
-  TvShow(const std::string &name, int stat, double rating, int episode, int last_episode);
+  TvShow(std::string name, int stat, double rating, int episode, int last_episode);
 
   TvShow(const TvShow &other) = default;
   TvShow &operator=(const TvShow &other) = default;

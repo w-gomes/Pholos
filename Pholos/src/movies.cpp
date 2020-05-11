@@ -1,12 +1,11 @@
 #include "movies.hpp"
 
 #include <string>
-
-#include "fmt/core.h"
+#include <utility>
 
 namespace Pholos {
-Movies::Movies(const std::string &name, double rating, int stat) {
-  this->set_members(name, rating, stat);
+Movies::Movies(std::string name, double rating, int stat) {
+  this->set_members(std::move(name), rating, stat);
 }
 
 std::string Movies::name() const { return this->name_; }

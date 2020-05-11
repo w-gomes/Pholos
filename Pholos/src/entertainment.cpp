@@ -1,8 +1,10 @@
 #include "entertainment.hpp"
 
+#include <utility>
+
 namespace Pholos {
-void Entertainment::set_members(const std::string &name, double rating, int stat) {
-  this->name_   = name;
+void Entertainment::set_members(std::string name, double rating, int stat) {
+  this->name_   = std::move(name);
   this->rating_ = rating;
   this->stat_   = static_cast<Stats>(stat);
 }
