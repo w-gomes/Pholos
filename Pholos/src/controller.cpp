@@ -335,25 +335,24 @@ void Controller::list_all_movies() {
 
   // TODO: Turn this into a routine
   // TOP
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
-             biggest_word, Controller::rating_width, Controller::stat_width, "");
-  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Controller::id_width, biggest_word,
-             Controller::rating_width, Controller::stat_width, "Movie ID", "Name", "Rating",
-             "Stat");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
+             Width::Rating, Width::Stat, "");
+  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID, biggest_word,
+             Width::Rating, Width::Stat, "Movie ID", "Name", "Rating", "Stat");
 
   // MID
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
-             biggest_word, Controller::rating_width, Controller::stat_width, "");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
+             Width::Rating, Width::Stat, "");
 
   std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [=](const auto &obj) {
-    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Controller::id_width,
-               biggest_word, Controller::rating_width, Controller::stat_width, obj.first,
-               obj.second.name(), obj.second.rating(), obj.second.stat_to_string());
+    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID, biggest_word,
+               Width::Rating, Width::Stat, obj.first, obj.second.name(), obj.second.rating(),
+               obj.second.stat_to_string());
   });
 
   // BOTTOM
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Controller::id_width,
-             biggest_word, Controller::rating_width, Controller::stat_width, "");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
+             Width::Rating, Width::Stat, "");
 }
 
 void Controller::list_all_tvshows() {
@@ -377,45 +376,39 @@ void Controller::list_all_tvshows() {
   // TODO: Turn this into a routine
   // TOP
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Controller::id_width + 3, biggest_word, Controller::rating_width,
-             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
-             "");
+             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::Total_Episode, "");
   fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-             Controller::id_width + 3, biggest_word, Controller::rating_width,
-             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
-             "Tv Show ID", "Name", "Rating", "Stat", "Episode", "Total Episodes");
+             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+             "Total Episodes");
 
   // MID
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Controller::id_width + 3, biggest_word, Controller::rating_width,
-             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
-             "");
+             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::Total_Episode, "");
 
   std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [=](const auto &obj) {
     fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-               Controller::id_width + 3, biggest_word, Controller::rating_width,
-               Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
-               obj.first, obj.second.name(), obj.second.rating(), obj.second.stat_to_string(),
-               obj.second.episode(), obj.second.last_episode());
+               Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+               Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
+               obj.second.stat_to_string(), obj.second.episode(), obj.second.last_episode());
   });
 
   // BOTTOM
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Controller::id_width + 3, biggest_word, Controller::rating_width,
-             Controller::stat_width, Controller::episode_width, Controller::total_episode_width,
-             "");
+             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::Total_Episode, "");
 }
 
 bool Controller::id_exist(const int id, const char obj_type) {
   auto found = false;
   if (std::tolower(obj_type) == 'm') {
-    auto search = this->movies_cache_.find(id);
-    if (search != this->movies_cache_.end()) {
+    if (auto search = this->movies_cache_.find(id); search != this->movies_cache_.end()) {
       found = true;
     }
   } else if (std::tolower(obj_type) == 't') {
-    auto search = this->tvshow_cache_.find(id);
-    if (search != this->tvshow_cache_.end()) {
+    if (auto search = this->tvshow_cache_.find(id); search != this->tvshow_cache_.end()) {
       found = true;
     }
   }
