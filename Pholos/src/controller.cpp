@@ -347,7 +347,7 @@ void Controller::list_all_movies() {
   std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [=](const auto &obj) {
     fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID, biggest_word,
                Width::Rating, Width::Stat, obj.first, obj.second.name(), obj.second.rating(),
-               obj.second.stat_to_string());
+               obj.second.stat_as_string());
   });
 
   // BOTTOM
@@ -392,7 +392,7 @@ void Controller::list_all_tvshows() {
     fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
                Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
                Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
-               obj.second.stat_to_string(), obj.second.episode(), obj.second.last_episode());
+               obj.second.stat_as_string(), obj.second.episode(), obj.second.last_episode());
   });
 
   // BOTTOM

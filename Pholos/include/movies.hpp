@@ -20,7 +20,7 @@ class Movies : public Entertainment {
 
   ~Movies() = default;
 
-  std::string stat_to_string() const override;
+  std::string stat_as_string() const override;
   std::string name() const override;
   double rating() const override;
   int stat() const override;

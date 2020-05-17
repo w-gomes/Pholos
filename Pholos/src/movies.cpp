@@ -14,10 +14,12 @@ double Movies::rating() const { return this->rating_; }
 
 int Movies::stat() const { return static_cast<int>(this->stat_); }
 
-std::string Movies::stat_to_string() const {
+std::string Movies::stat_as_string() const {
   switch (this->stat_) {
     case Stats::NotSet:
       return "Not Set";
+    case Stats::Watching:
+      return "Watching";
     case Stats::PlanToWatch:
       return "Plan to Watch";
     case Stats::Completed:

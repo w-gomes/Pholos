@@ -19,10 +19,12 @@ int TvShow::stat() const { return static_cast<int>(this->stat_); }
 int TvShow::episode() const { return this->episode_; }
 int TvShow::last_episode() const { return this->last_episode_; }
 
-std::string TvShow::stat_to_string() const {
+std::string TvShow::stat_as_string() const {
   switch (this->stat_) {
     case Stats::NotSet:
       return "Not Set";
+    case Stats::Watching:
+      return "Watching";
     case Stats::PlanToWatch:
       return "Plan to Watch";
     case Stats::Completed:
@@ -33,4 +35,7 @@ std::string TvShow::stat_to_string() const {
       return "Not Set";
   }
 }
+
+void TvShow::change_episose(int episode) { this->episode_ = episode; }
+void TvShow::change_last_episode(int last_episode) { this->last_episode_ = last_episode; }
 }  // namespace Pholos

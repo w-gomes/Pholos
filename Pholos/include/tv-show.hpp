@@ -21,15 +21,15 @@ class TvShow : public Entertainment {
 
   ~TvShow() = default;
 
-  std::string stat_to_string() const override;
+  std::string stat_as_string() const override;
   std::string name() const override;
   double rating() const override;
   int stat() const override;
   int episode() const;
   int last_episode() const;
 
-  // change episode
-  // change last episode
+  void change_episose(int episode);
+  void change_last_episode(int last_episode);
 
  private:
   int episode_{};
