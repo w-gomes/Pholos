@@ -485,5 +485,8 @@ void Controller::edit_menu(char movie_or_tv) {
       // wrong usage...
       break;
   }
+
+  // LOL: We have to update the cache.
+  this->load_content();
 }
 }  // namespace Pholos
