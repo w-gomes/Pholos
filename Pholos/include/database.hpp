@@ -46,11 +46,11 @@ class Database {
   // So, we can print a single object.
 
   // UPDATE queries
-  void update_name(int id, const std::string &name, const char obj_type);
-  void update_stat(int id, int stat, const char obj_type);
-  void update_rating(int id, double rating, const char obj_type);
-  void update_total_episode(int id, int total_episode, const char obj_type);
-  void update_episode(int id, const char obj_type, int distance = 1);
+  void update_name(const int id, const std::string &name, const char obj_type);
+  void update_stat(const int id, const int stat, const char obj_type);
+  void update_rating(const int id, const double rating, const char obj_type);
+  void update_total_episode(const int id, const int total_episode, const char obj_type);
+  void update_episode(const int id, const char obj_type, const int distance = 1);
 
  private:
   // Helper functions to create the database's tables.

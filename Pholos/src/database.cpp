@@ -149,20 +149,52 @@ std::map<int, TvShow> Database::select_all_tvshows() {
 }
 
 // UPDATE queries
-void Database::update_name(int id, const std::string &name, const char obj_type) {
+void Database::update_name(const int id, const std::string &name, const char obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   // Maybe implement a generic function
   const std::string query = fmt::format("UPDATE {} SET name='{}' WHERE id_{}={}", query_type, name,
                                         (obj_type == 't' ? "tvshow" : "movie"), id);
-
   this->execute_update(query);
 }
-void Database::update_stat(int id, int stat, const char obj_type) {}
-void Database::update_rating(int id, double rating, const char obj_type) {}
-void Database::update_total_episode(int id, int total_episode, const char obj_type) {}
-void Database::update_episode(int id, const char obj_type, int distance) {}
+
+void Database::update_stat(const int id, const int stat, const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query = fmt::format("UPDATE {} SET stats={} WHERE id_{}={}", query_type, stat,
+                                        (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+void Database::update_rating(const int id, const double rating, const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query = fmt::format("UPDATE {} SET rating={} WHERE id_{}={}", query_type,
+                                        rating, (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+void Database::update_total_episode(const int id, const int total_episode, const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query = fmt::format("UPDATE {} SET last_episode={} WHERE id_{}={}", query_type,
+                                        total_episode, (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+void Database::update_episode(const int id, const char obj_type, const int distance) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query =
+    fmt::format("UPDATE {} SET episode=episode + {} WHERE id_{}={}", query_type, distance,
+                (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
 
 bool Database::is_in_database(const std::string &name, const char obj_type) const {
   const std::string query_type = internal::what_type(obj_type);

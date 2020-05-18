@@ -98,7 +98,6 @@ void Controller::draw_menu() {
       // - episode
       // - last_episode
       //
-      // Unimplemented
       this->edit();
       break;
     case Command::Delete:
@@ -376,28 +375,28 @@ void Controller::list_all_tvshows() {
   // TODO: Turn this into a routine
   // TOP
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
              Width::Total_Episode, "");
   fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
              Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
              "Total Episodes");
 
   // MID
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
              Width::Total_Episode, "");
 
   std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [=](const auto &obj) {
     fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-               Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+               Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
                Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
                obj.second.stat_as_string(), obj.second.episode(), obj.second.last_episode());
   });
 
   // BOTTOM
   fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 3, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
              Width::Total_Episode, "");
 }
 
@@ -453,6 +452,7 @@ void Controller::edit_menu(char movie_or_tv) {
     std::cin >> edit_option;
   }
 
+  // TODO: handle wrong user input
   // We update the objects in database using the ID.
   auto *database = get_database();
   switch (edit_option) {
@@ -465,24 +465,33 @@ void Controller::edit_menu(char movie_or_tv) {
         database->update_name(id, name, movie_or_tv);
       }
       break;
-    case 2:
-      // change stat
-      // implement UPDATE query for stat
-      break;
-    case 3:
-      // change rating
-      // implement UPDATE query for rating
-      break;
-    case 4:
-      // change episode
-      // implement UPDATE query for episode
-      break;
-    case 5:
-      // change last episode (total episode)
-      // implement UPDATE query for total episode
-      break;
+    case 2: {
+      const int stat = internal::get_user_input<int>(
+        "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped "
+        "(4)\n-> ");
+      database->update_stat(id, stat, movie_or_tv);
+    } break;
+    case 3: {
+      const double rating = internal::get_user_input<double>("Enter the new rating.\n-> ");
+      database->update_rating(id, rating, movie_or_tv);
+    } break;
+    case 4: {
+      // We ask user the number of episodes to increment. Default is by 1.
+      const bool update_more_than_one =
+        internal::get_user_input<bool>("Do you want to update more than 1? (y/n)\n-> ");
+      if (update_more_than_one) {
+        const int distance = internal::get_user_input<int>("Enter the amount to increment.\n-> ");
+        database->update_episode(id, movie_or_tv, distance);
+      } else {
+        database->update_episode(id, movie_or_tv);
+      }
+    } break;
+    case 5: {
+      const int total_episode = internal::get_user_input<int>("Enter the new total episode.\n-> ");
+      database->update_total_episode(id, total_episode, movie_or_tv);
+    } break;
     default:
-      // wrong usage...
+      fmt::print("Unhandled case!!!\n");
       break;
   }
 

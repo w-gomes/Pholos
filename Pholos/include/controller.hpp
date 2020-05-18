@@ -1,15 +1,51 @@
 #pragma once
 
 #include <array>
+#include <cctype>  // std::tolower()
+#include <iostream>
 #include <map>
 #include <string>
 #include <string_view>
 
+#include "fmt/core.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
 
 namespace Pholos {
 
+namespace internal {
+
+// Helper to get user input such as id, rating, episodes, etc.
+// TODO: make it work with strings. Pehaps add a specialization.
+template <typename T>
+T get_user_input(const std::string &message) {
+  fmt::print("{}", message);
+  T value;
+  std::cin >> value;
+  return value;
+}
+
+// The following template specialization is defined inline,
+// otherwise we get error LNK2005
+// It needs to be defined as inline or moved into a single cpp file.
+// See: https://groups.google.com/forum/#!topic/microsoft.public.vc.language/YY47Mc6rC9Y
+template <>
+inline bool get_user_input<bool>(const std::string &message) {
+  fmt::print("{}", message);
+  char value;
+  std::cin >> value;
+  bool result = false;
+  if (std::tolower(value) == 'y') {
+    result = true;
+  }
+  return result;
+}
+
+}  // namespace internal
+
+/*
+ * Controller interface
+ */
 class Controller {
   enum Width : std::size_t { Stat = 13, Rating = 6, ID = 8, Episode = 7, Total_Episode = 14 };
 
@@ -59,14 +95,4 @@ class Controller {
   std::map<int, TvShow> tvshow_cache_;
 };
 
-namespace internal {
-
-template <typename T>
-T get_user_input(const std::string &message) {
-  fmt::print("{}", message);
-  T id;
-  std::cin >> id;
-  return id;
-}
-}  // namespace internal
 }  // namespace Pholos
