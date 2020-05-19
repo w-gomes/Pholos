@@ -16,7 +16,6 @@ namespace Pholos {
 namespace internal {
 
 // Helper to get user input such as id, rating, episodes, etc.
-// TODO: make it work with strings. Pehaps add a specialization.
 template <typename T>
 T get_user_input(const std::string &message) {
   fmt::print("{}", message);
@@ -25,7 +24,7 @@ T get_user_input(const std::string &message) {
   return value;
 }
 
-// The following template specialization is defined inline,
+// The following templates specialization is defined inline,
 // otherwise we get error LNK2005
 // It needs to be defined as inline or moved into a single cpp file.
 // See:
@@ -40,6 +39,15 @@ inline bool get_user_input<bool>(const std::string &message) {
     result = true;
   }
   return result;
+}
+
+template <>
+inline std::string get_user_input<std::string>(const std::string &message) {
+  fmt::print("{}", message);
+  std::string name;
+  std::cin.get();  // to consume enter
+  std::getline(std::cin, name);
+  return name;
 }
 
 }  // namespace internal

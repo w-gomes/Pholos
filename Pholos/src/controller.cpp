@@ -486,15 +486,11 @@ void Controller::edit_menu(char movie_or_tv) {
   // We update the objects in database using the ID.
   auto *database = get_database();
   switch (edit_option) {
-    case 1:
-      fmt::print("Enter the new name, please.\n-> ");
-      {
-        std::string name;
-        std::cin.get();
-        std::getline(std::cin, name);
-        database->update_name(id, name, movie_or_tv);
-      }
-      break;
+    case 1: {
+      const std::string name = internal::get_user_input<std::string>(
+        "Enter the new name, please.\n-> ");
+      database->update_name(id, name, movie_or_tv);
+    } break;
     case 2: {
       const int stat = internal::get_user_input<int>(
         "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
