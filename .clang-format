@@ -4,7 +4,6 @@ AlignConsecutiveAssignments: true
 AlwaysBreakTemplateDeclarations: Yes
 BreakConstructorInitializersBeforeComma: true
 BreakBeforeTernaryOperators: true
-ColumnLimit: 100
 ContinuationIndentWidth: 2
 FixNamespaceComments: true
 IndentCaseLabels: true
