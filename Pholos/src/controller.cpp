@@ -20,6 +20,27 @@ namespace Pholos {
 
 namespace internal {
 
+template <>
+bool get_user_input<bool>(const std::string &message) {
+  fmt::print("{}", message);
+  char value;
+  std::cin >> value;
+  bool result = false;
+  if (std::tolower(value) == 'y') {
+    result = true;
+  }
+  return result;
+}
+
+template <>
+std::string get_user_input<std::string>(const std::string &message) {
+  fmt::print("{}", message);
+  std::string name;
+  std::cin.get();  // to consume enter
+  std::getline(std::cin, name);
+  return name;
+}
+
 bool movie_or_tvshow(char &user_choose) {
   fmt::print("Movie [m] or Tv Show [t]? : ");
   bool user_choice = false;

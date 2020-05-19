@@ -24,31 +24,12 @@ T get_user_input(const std::string &message) {
   return value;
 }
 
-// The following templates specialization is defined inline,
-// otherwise we get error LNK2005
-// It needs to be defined as inline or moved into a single cpp file.
-// See:
-// https://groups.google.com/forum/#!topic/microsoft.public.vc.language/YY47Mc6rC9Y
+// Template specialization declaration
 template <>
-inline bool get_user_input<bool>(const std::string &message) {
-  fmt::print("{}", message);
-  char value;
-  std::cin >> value;
-  bool result = false;
-  if (std::tolower(value) == 'y') {
-    result = true;
-  }
-  return result;
-}
+bool get_user_input<bool>(const std::string &message);
 
 template <>
-inline std::string get_user_input<std::string>(const std::string &message) {
-  fmt::print("{}", message);
-  std::string name;
-  std::cin.get();  // to consume enter
-  std::getline(std::cin, name);
-  return name;
-}
+std::string get_user_input<std::string>(const std::string &message);
 
 }  // namespace internal
 
