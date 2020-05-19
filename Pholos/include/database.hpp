@@ -29,8 +29,8 @@ class Database {
   // This is called after the creation of Database object to check
   // if a database file (i.e. data.db) exists. Otherwise, application exits.
   //
-  // TODO: If data.db doesn't exist, the application should create a new data.db file
-  // and create its needed tables.
+  // TODO: If data.db doesn't exist, the application should create a new data.db
+  // file and create its needed tables.
   void init(bool &loaded);
 
   bool is_in_database(const std::string &name, const char obj_type) const;
@@ -49,8 +49,10 @@ class Database {
   void update_name(const int id, const std::string &name, const char obj_type);
   void update_stat(const int id, const int stat, const char obj_type);
   void update_rating(const int id, const double rating, const char obj_type);
-  void update_total_episode(const int id, const int total_episode, const char obj_type);
-  void update_episode(const int id, const char obj_type, const int distance = 1);
+  void update_total_episode(const int id, const int total_episode,
+                            const char obj_type);
+  void update_episode(const int id, const char obj_type,
+                      const int distance = 1);
 
  private:
   // Helper functions to create the database's tables.

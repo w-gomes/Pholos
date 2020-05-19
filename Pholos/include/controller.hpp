@@ -28,7 +28,8 @@ T get_user_input(const std::string &message) {
 // The following template specialization is defined inline,
 // otherwise we get error LNK2005
 // It needs to be defined as inline or moved into a single cpp file.
-// See: https://groups.google.com/forum/#!topic/microsoft.public.vc.language/YY47Mc6rC9Y
+// See:
+// https://groups.google.com/forum/#!topic/microsoft.public.vc.language/YY47Mc6rC9Y
 template <>
 inline bool get_user_input<bool>(const std::string &message) {
   fmt::print("{}", message);
@@ -47,7 +48,13 @@ inline bool get_user_input<bool>(const std::string &message) {
  * Controller interface
  */
 class Controller {
-  enum Width : std::size_t { Stat = 13, Rating = 6, ID = 8, Episode = 7, Total_Episode = 14 };
+  enum Width : std::size_t {
+    Stat          = 13,
+    Rating        = 6,
+    ID            = 8,
+    Episode       = 7,
+    Total_Episode = 14
+  };
 
   enum class Command {
     Help   = 0,
@@ -88,8 +95,9 @@ class Controller {
   void add_tvshow();
 
  private:
-  static constexpr std::array commands_list = {"HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
-                                               "SEARCH", "QUERY", "ABOUT", "LIST"};
+  static constexpr std::array commands_list = {"HELP",  "EXIT",   "ADD",
+                                               "EDIT",  "DELETE", "SEARCH",
+                                               "QUERY", "ABOUT",  "LIST"};
 
   std::map<int, Movies> movies_cache_;
   std::map<int, TvShow> tvshow_cache_;

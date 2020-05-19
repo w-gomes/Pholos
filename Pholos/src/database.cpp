@@ -31,8 +31,9 @@ Database::Database() { this->instance = this; }
 void Database::init(bool &loaded) {
   try {
     SQLite::Database db(this->database_name_);
-    fmt::print("Database file {} opened successfully.\nChecking database tables...\n",
-               this->database_name_);
+    fmt::print(
+      "Database file {} opened successfully.\nChecking database tables...\n",
+      this->database_name_);
     bool table_exists = true;
     for (const auto &t : this->table_names_) {
       table_exists = db.tableExists(t);
@@ -62,7 +63,8 @@ void Database::save(const Movies &movie) {
   SQLite::Transaction transaction(db);
 
   const std::string save_query = fmt::format(
-    "INSERT INTO movies (name, rating, stats) VALUES ('{0}', {1}, {2})", name, rating, stat);
+    "INSERT INTO movies (name, rating, stats) VALUES ('{0}', {1}, {2})", name,
+    rating, stat);
   db.exec(save_query);
   transaction.commit();
 }
@@ -78,7 +80,8 @@ void Database::save(const TvShow &show) {
   SQLite::Transaction transaction(db);
 
   const std::string save_query = fmt::format(
-    "INSERT INTO tvshow (name, rating, stats, episode, last_episode) VALUES ('{0}', {1}, {2}, {3}, "
+    "INSERT INTO tvshow (name, rating, stats, episode, last_episode) VALUES "
+    "('{0}', {1}, {2}, {3}, "
     "{4})",
     name, rating, stat, episode, last_episode);
 
@@ -94,8 +97,8 @@ std::map<int, Movies> Database::select_all_movies() {
 #endif
     SQLite::Statement query(db, "SELECT * from movies");
 #if defined(_DEBUG)
-    fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
-               query.getColumnCount());
+    fmt::print("SQLite statement {} compiled. Column counts {}\n",
+               query.getQuery().c_str(), query.getColumnCount());
 #endif
     std::map<int, Movies> movies_list;
     while (query.executeStep()) {
@@ -124,8 +127,8 @@ std::map<int, TvShow> Database::select_all_tvshows() {
 #endif
     SQLite::Statement query(db, "SELECT * from tvshow");
 #if defined(_DEBUG)
-    fmt::print("SQLite statement {} compiled. Column counts {}\n", query.getQuery().c_str(),
-               query.getColumnCount());
+    fmt::print("SQLite statement {} compiled. Column counts {}\n",
+               query.getQuery().c_str(), query.getColumnCount());
 #endif
     std::map<int, TvShow> tvshow_list;
     while (query.executeStep()) {
@@ -149,13 +152,15 @@ std::map<int, TvShow> Database::select_all_tvshows() {
 }
 
 // UPDATE queries
-void Database::update_name(const int id, const std::string &name, const char obj_type) {
+void Database::update_name(const int id, const std::string &name,
+                           const char obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   // Maybe implement a generic function
-  const std::string query = fmt::format("UPDATE {} SET name='{}' WHERE id_{}={}", query_type, name,
-                                        (obj_type == 't' ? "tvshow" : "movie"), id);
+  const std::string query =
+    fmt::format("UPDATE {} SET name='{}' WHERE id_{}={}", query_type, name,
+                (obj_type == 't' ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
@@ -163,40 +168,47 @@ void Database::update_stat(const int id, const int stat, const char obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
-  const std::string query = fmt::format("UPDATE {} SET stats={} WHERE id_{}={}", query_type, stat,
-                                        (obj_type == 't' ? "tvshow" : "movie"), id);
-  this->execute_update(query);
-}
-
-void Database::update_rating(const int id, const double rating, const char obj_type) {
-  const std::string query_type = internal::what_type(obj_type);
-  assert(query_type != "");
-
-  const std::string query = fmt::format("UPDATE {} SET rating={} WHERE id_{}={}", query_type,
-                                        rating, (obj_type == 't' ? "tvshow" : "movie"), id);
-  this->execute_update(query);
-}
-
-void Database::update_total_episode(const int id, const int total_episode, const char obj_type) {
-  const std::string query_type = internal::what_type(obj_type);
-  assert(query_type != "");
-
-  const std::string query = fmt::format("UPDATE {} SET last_episode={} WHERE id_{}={}", query_type,
-                                        total_episode, (obj_type == 't' ? "tvshow" : "movie"), id);
-  this->execute_update(query);
-}
-
-void Database::update_episode(const int id, const char obj_type, const int distance) {
-  const std::string query_type = internal::what_type(obj_type);
-  assert(query_type != "");
-
   const std::string query =
-    fmt::format("UPDATE {} SET episode=episode + {} WHERE id_{}={}", query_type, distance,
+    fmt::format("UPDATE {} SET stats={} WHERE id_{}={}", query_type, stat,
                 (obj_type == 't' ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
-bool Database::is_in_database(const std::string &name, const char obj_type) const {
+void Database::update_rating(const int id, const double rating,
+                             const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query =
+    fmt::format("UPDATE {} SET rating={} WHERE id_{}={}", query_type, rating,
+                (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+void Database::update_total_episode(const int id, const int total_episode,
+                                    const char obj_type) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query =
+    fmt::format("UPDATE {} SET last_episode={} WHERE id_{}={}", query_type,
+                total_episode, (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+void Database::update_episode(const int id, const char obj_type,
+                              const int distance) {
+  const std::string query_type = internal::what_type(obj_type);
+  assert(query_type != "");
+
+  const std::string query =
+    fmt::format("UPDATE {} SET episode=episode + {} WHERE id_{}={}", query_type,
+                distance, (obj_type == 't' ? "tvshow" : "movie"), id);
+  this->execute_update(query);
+}
+
+bool Database::is_in_database(const std::string &name,
+                              const char obj_type) const {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
@@ -243,11 +255,13 @@ void Database::create_table() {
 }
 
 void Database::create_movie_table() {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+  SQLite::Database db(this->database_name_,
+                      SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
 
   const std::string movie_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY "
+    "AUTOINCREMENT, `name` TEXT NOT "
     "NULL, `rating` REAL, `stats` INTEGER);",
     this->table_names_[0]);
 
@@ -256,11 +270,13 @@ void Database::create_movie_table() {
 }
 
 void Database::create_tvshow_table() {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
+  SQLite::Database db(this->database_name_,
+                      SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
 
   const std::string tv_query = fmt::format(
-    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY AUTOINCREMENT, `name` TEXT NOT "
+    "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY "
+    "AUTOINCREMENT, `name` TEXT NOT "
     "NULL, `rating` REAL, `stats` INTEGER, `episode`, `last_episode` INTEGER);",
     this->table_names_[1]);
   db.exec(tv_query);

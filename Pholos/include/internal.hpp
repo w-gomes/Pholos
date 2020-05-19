@@ -28,8 +28,8 @@ std::size_t generate_id(const std::string &s);
 // template parameter From = old_type
 // template parameter To = new_type
 //
-// TODO: Check for narrowing. That is if a type can't fit in the new type we want.
-// Use concepts for this.
+// TODO: Check for narrowing. That is if a type can't fit in the new type we
+// want. Use concepts for this.
 template <typename From, typename To>
 To convert(From from) {
   return static_cast<To>(from);

@@ -67,7 +67,8 @@ void Controller::draw_menu() {
   std::string command;
   std::cin >> command;
 
-  if (auto findResult = std::find(this->commands_list.begin(), this->commands_list.end(), command);
+  if (auto findResult = std::find(this->commands_list.begin(),
+                                  this->commands_list.end(), command);
       findResult == this->commands_list.end()) {
     fmt::print("Command not found!\n");
     return;
@@ -219,7 +220,8 @@ void Controller::add_movie() {
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
     fmt::print(
-      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped (4)\n-> ");
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
+      "Dropped (4)\n-> ");
     std::cin >> stat;
   }
 
@@ -244,7 +246,8 @@ void Controller::add_tvshow() {
 
   fmt::print(
     "\n***\nNote: Currently, Pholos doesn't support season. That means if you "
-    "want to add a TV Show with many seasons, you have to add a new TV Show for each "
+    "want to add a TV Show with many seasons, you have to add a new TV Show "
+    "for each "
     "season.\n\nAdding a new TvShow...\nEnter the name, "
     "please.\n-> ");
   std::string name;
@@ -257,7 +260,8 @@ void Controller::add_tvshow() {
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
     fmt::print(
-      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped (4)\n-> ");
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
+      "Dropped (4)\n-> ");
     std::cin >> stat;
   }
 
@@ -280,7 +284,8 @@ void Controller::add_tvshow() {
     }
   }
 
-  TvShow tvshow(internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
+  TvShow tvshow(
+    internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
   auto *database = get_database();
   database->save(tvshow);
   this->load_content();
@@ -288,8 +293,8 @@ void Controller::add_tvshow() {
 
 // Content cache.
 // When we run the application for the first time. We call load_content to
-// populate movies_list and tvshow_list. To avoid reading database to check if a content
-// is in it.
+// populate movies_list and tvshow_list. To avoid reading database to check if a
+// content is in it.
 void Controller::load_content() {
 #if defined(_DEBUG)
   fmt::print("Loading contents into cache...\n");
@@ -327,31 +332,37 @@ void Controller::list_all_movies() {
   // Id | Name | Rating | Stat
   // 4    5      6        7
   std::size_t biggest_word = 0;
-  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [&](const auto &obj) {
-    std::size_t movie_name_length = obj.second.name().size();
-    biggest_word = movie_name_length > biggest_word ? movie_name_length : biggest_word;
-  });
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
+                [&](const auto &obj) {
+                  std::size_t movie_name_length = obj.second.name().size();
+                  biggest_word = movie_name_length > biggest_word
+                                   ? movie_name_length
+                                   : biggest_word;
+                });
 
   // TODO: Turn this into a routine
   // TOP
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
-             Width::Rating, Width::Stat, "");
-  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID, biggest_word,
-             Width::Rating, Width::Stat, "Movie ID", "Name", "Rating", "Stat");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
+  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "Movie ID", "Name",
+             "Rating", "Stat");
 
   // MID
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
-             Width::Rating, Width::Stat, "");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
 
-  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(), [=](const auto &obj) {
-    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID, biggest_word,
-               Width::Rating, Width::Stat, obj.first, obj.second.name(), obj.second.rating(),
-               obj.second.stat_as_string());
-  });
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
+                [=](const auto &obj) {
+                  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                             Width::ID, biggest_word, Width::Rating,
+                             Width::Stat, obj.first, obj.second.name(),
+                             obj.second.rating(), obj.second.stat_as_string());
+                });
 
   // BOTTOM
-  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID, biggest_word,
-             Width::Rating, Width::Stat, "");
+  fmt::print(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
 }
 
 void Controller::list_all_tvshows() {
@@ -361,53 +372,68 @@ void Controller::list_all_tvshows() {
     return;
   }
 
-  // id width | word width | rating width | stat width | episode width | total episode
-  // 0          1            2              3            4               5
-  // Id | Name | Rating | Stat | Episode | Total Episodes
-  // 6    7      8        9      10        11
+  // id width | word width | rating width | stat width | episode width | total
+  // episode 0          1            2              3            4 5 Id | Name |
+  // Rating | Stat | Episode | Total Episodes 6    7      8        9      10 11
 
   std::size_t biggest_word = 0;
-  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [&](const auto &obj) {
-    std::size_t tv_name_length = obj.second.name().size();
-    biggest_word               = tv_name_length > biggest_word ? tv_name_length : biggest_word;
-  });
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
+                [&](const auto &obj) {
+                  std::size_t tv_name_length = obj.second.name().size();
+                  biggest_word = tv_name_length > biggest_word ? tv_name_length
+                                                               : biggest_word;
+                });
 
   // TODO: Turn this into a routine
   // TOP
-  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-             Width::Total_Episode, "");
-  fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-             Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
-             "Total Episodes");
+  fmt::print(
+    " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- "
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
+  fmt::print(
+    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+    "Total Episodes");
 
   // MID
-  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-             Width::Total_Episode, "");
+  fmt::print(
+    " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- "
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
 
-  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(), [=](const auto &obj) {
-    fmt::print("| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-               Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-               Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
-               obj.second.stat_as_string(), obj.second.episode(), obj.second.last_episode());
-  });
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
+                [=](const auto &obj) {
+                  fmt::print(
+                    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+                    "{11:<{5}} |\n",
+                    Width::ID + 2, biggest_word, Width::Rating, Width::Stat,
+                    Width::Episode, Width::Total_Episode, obj.first,
+                    obj.second.name(), obj.second.rating(),
+                    obj.second.stat_as_string(), obj.second.episode(),
+                    obj.second.last_episode());
+                });
 
   // BOTTOM
-  fmt::print(" -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- \n",
-             Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-             Width::Total_Episode, "");
+  fmt::print(
+    " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}- "
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
 }
 
 bool Controller::id_exist(const int id, const char obj_type) {
   auto found = false;
   if (std::tolower(obj_type) == 'm') {
-    if (auto search = this->movies_cache_.find(id); search != this->movies_cache_.end()) {
+    if (auto search = this->movies_cache_.find(id);
+        search != this->movies_cache_.end()) {
       found = true;
     }
   } else if (std::tolower(obj_type) == 't') {
-    if (auto search = this->tvshow_cache_.find(id); search != this->tvshow_cache_.end()) {
+    if (auto search = this->tvshow_cache_.find(id);
+        search != this->tvshow_cache_.end()) {
       found = true;
     }
   }
@@ -430,7 +456,8 @@ void Controller::edit_menu(char movie_or_tv) {
   int edit_option = 0;
 
   fmt::print(
-    "\n***\nNote: You must know the object id in other to edit.\nUse list all to get the id.\n\n");
+    "\n***\nNote: You must know the object id in other to edit.\nUse list all "
+    "to get the id.\n\n");
   // Check for object's id.
   int id     = internal::get_user_input<int>("Please enter the id.\n-> ");
   bool exist = this->id_exist(id, movie_or_tv);
@@ -442,11 +469,14 @@ void Controller::edit_menu(char movie_or_tv) {
 
   // TODO: handle wrong usage: edit_option > 5 and < 1;
   if (std::tolower(movie_or_tv) == 'm') {
-    fmt::print("Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n\n-> ");
+    fmt::print(
+      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
+      "(3)\n\n-> ");
     std::cin >> edit_option;
   } else if (std::tolower(movie_or_tv) == 't') {
     fmt::print(
-      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n Change episode "
+      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n "
+      "Change episode "
       "(4)\n "
       "Change total episode (5)\n\n-> ");
     std::cin >> edit_option;
@@ -467,27 +497,31 @@ void Controller::edit_menu(char movie_or_tv) {
       break;
     case 2: {
       const int stat = internal::get_user_input<int>(
-        "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n Dropped "
+        "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
+        "(3)\n Dropped "
         "(4)\n-> ");
       database->update_stat(id, stat, movie_or_tv);
     } break;
     case 3: {
-      const double rating = internal::get_user_input<double>("Enter the new rating.\n-> ");
+      const double rating =
+        internal::get_user_input<double>("Enter the new rating.\n-> ");
       database->update_rating(id, rating, movie_or_tv);
     } break;
     case 4: {
       // We ask user the number of episodes to increment. Default is by 1.
-      const bool update_more_than_one =
-        internal::get_user_input<bool>("Do you want to update more than 1? (y/n)\n-> ");
+      const bool update_more_than_one = internal::get_user_input<bool>(
+        "Do you want to update more than 1? (y/n)\n-> ");
       if (update_more_than_one) {
-        const int distance = internal::get_user_input<int>("Enter the amount to increment.\n-> ");
+        const int distance =
+          internal::get_user_input<int>("Enter the amount to increment.\n-> ");
         database->update_episode(id, movie_or_tv, distance);
       } else {
         database->update_episode(id, movie_or_tv);
       }
     } break;
     case 5: {
-      const int total_episode = internal::get_user_input<int>("Enter the new total episode.\n-> ");
+      const int total_episode =
+        internal::get_user_input<int>("Enter the new total episode.\n-> ");
       database->update_total_episode(id, total_episode, movie_or_tv);
     } break;
     default:
