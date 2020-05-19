@@ -219,7 +219,7 @@ bool Database::is_in_database(const std::string &name,
       fmt::format("SELECT alias FROM {} WHERE alias='{}'", query_type, name);
     const std::string value = db.execAndGet(query);
 
-    if (value.size() == 0) {
+    if (value.empty()) {
       return false;
     }
 
