@@ -6,6 +6,7 @@
 #include <cassert>  // assert()
 #include <cctype>   // std::tolower()
 #include <iostream>
+#include <iterator>
 #include <string>
 
 #include "application.hpp"
@@ -147,6 +148,7 @@ void Controller::draw_menu() {
     case Command::Cmd:
       // Show all list of commands.
       // Unimplemented
+      this->cmd();
       break;
     case Command::Unknown:
       fmt::print("Unknown command!\n");
@@ -187,8 +189,15 @@ void Controller::exit() {
   app->exit_application();
 }
 
+inline void Controller::cmd() const {
+  fmt::print("Available commands: ");
+  std::copy(std::begin(this->commands_list), std::end(this->commands_list),
+            std::ostream_iterator<std::string>(std::cout, " "));
+  fmt::print("\n");
+}
+
 // TODO: incomplete, change the wordings.
-void Controller::help() {
+inline void Controller::help() const {
   const std::string commands = R"(
     - Usage:
 
@@ -210,15 +219,17 @@ void Controller::help() {
                 List all movies or tv show.
                 List by filters (e.g. list completed movies or/and tv show)
 
-        ABOUT   about
-                Information about the application.
-
         EXIT    exit
                 Exit the application.
 
+        CMD     command
+                Show available commands.
+
+        ABOUT   about
+                Information about the application.
+
         HELP    help
                 Show this command list.
-
 
   )";
   fmt::print(commands);

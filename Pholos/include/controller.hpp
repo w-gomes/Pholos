@@ -71,7 +71,8 @@ class Controller {
   void load_content();
   void press_any_key();  // This needs a better name
   void draw_menu();
-  void help();
+  void cmd() const;
+  void help() const;
   void exit();
   void add_menu();
   void edit();
@@ -86,9 +87,9 @@ class Controller {
   void add_tvshow();
 
  private:
-  static constexpr std::array commands_list = {"HELP",  "EXIT",   "ADD",
-                                               "EDIT",  "DELETE", "SEARCH",
-                                               "QUERY", "ABOUT",  "LIST"};
+  static constexpr std::array commands_list = {
+    "HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
+    "SEARCH", "QUERY", "ABOUT", "LIST", "CMD"};
 
   std::map<int, Movies> movies_cache_;
   std::map<int, TvShow> tvshow_cache_;
