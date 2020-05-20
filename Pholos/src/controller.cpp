@@ -371,7 +371,7 @@ void Controller::list_all_movies() {
 
   // Get the length of the biggest movie's name.
   // id width | word width | rating width | stat width |
-  // 0          1            2            3
+  // 0          1            2              3
   // Id | Name | Rating | Stat
   // 4    5      6        7
   std::size_t biggest_word = 0;
@@ -415,9 +415,13 @@ void Controller::list_all_tvshows() {
     return;
   }
 
-  // id width | word width | rating width | stat width | episode width | total
-  // episode 0          1            2              3            4 5 Id | Name |
-  // Rating | Stat | Episode | Total Episodes 6    7      8        9      10 11
+  // id width | word width | rating width | stat width | episode width |
+  // 0          1            2              3            4
+  // total episode
+  // 5
+  //
+  // Id | Name | Rating | Stat | Episode | Total Episodes
+  // 6    7      8        9      10        11
 
   std::size_t biggest_word = 0;
   std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
