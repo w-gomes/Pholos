@@ -46,14 +46,16 @@ class Controller {
   };
 
   enum class Command {
-    Help   = 0,
-    Exit   = 1,
-    Add    = 2,
-    Edit   = 3,
-    Delete = 4,
-    Search = 5,
-    About  = 6,
-    List   = 7
+    Unknown = -1,
+    Help    = 0,
+    Exit    = 1,
+    Add     = 2,
+    Edit    = 3,
+    Delete  = 4,
+    Search  = 5,
+    About   = 6,
+    List    = 7,
+    Cmd     = 8
   };
 
  public:
@@ -74,7 +76,7 @@ class Controller {
   void add_menu();
   void edit();
   void edit_menu(char movie_or_tv);
-  int get_command(std::string_view command);
+  Command get_command(std::string_view command);
   void list_all_movies();
   void list_all_tvshows();
   bool id_exist(const int id, const char obj_type);

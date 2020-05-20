@@ -20,6 +20,8 @@ namespace Pholos {
 
 namespace internal {
 
+// Cannot use a simple overloaded function
+// because only return type is different.
 template <>
 bool get_user_input<bool>(const std::string &message) {
   fmt::print("{}", message);
@@ -95,9 +97,7 @@ void Controller::draw_menu() {
     return;
   }
 
-  int y = this->get_command(command);
-  assert(y != -1);
-  switch (static_cast<Command>(y)) {
+  switch (this->get_command(command)) {
     case Command::Help:
       this->help();
       break;
@@ -144,31 +144,42 @@ void Controller::draw_menu() {
       this->list_all_movies();
       this->list_all_tvshows();
       break;
+    case Command::Cmd:
+      // Show all list of commands.
+      // Unimplemented
+      break;
+    case Command::Unknown:
+      fmt::print("Unknown command!\n");
+      break;
+    default:
+      fmt::print("Unhandled case!\n");
+      break;
   }
 }
 
-int Controller::get_command(std::string_view command) {
-  int x = -1;
+Controller::Command Controller::get_command(std::string_view command) {
   // Can't use switch with strings
   if (command == "HELP") {
-    x = 0;
+    return Command::Help;
   } else if (command == "EXIT") {
-    x = 1;
+    return Command::Exit;
   } else if (command == "ADD") {
-    x = 2;
+    return Command::Add;
   } else if (command == "EDIT") {
-    x = 3;
+    return Command::Edit;
   } else if (command == "DELETE") {
-    x = 4;
+    return Command::Delete;
   } else if (command == "SEARCH") {
-    x = 5;
+    return Command::Search;
   } else if (command == "ABOUT") {
-    x = 6;
+    return Command::About;
   } else if (command == "LIST") {
-    x = 7;
+    return Command::List;
+  } else if (command == "CMD") {
+    return Command::Cmd;
+  } else {
+    return Command::Unknown;
   }
-
-  return x;
 }
 
 void Controller::exit() {
