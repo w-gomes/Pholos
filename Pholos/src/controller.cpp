@@ -571,8 +571,70 @@ void Controller::edit_menu(char movie_or_tv) {
       fmt::print("Unhandled case!!!\n");
       break;
   }
-
   // LOL: We have to update the cache.
   this->load_content();
+
+  this->print(id, movie_or_tv);
 }
+
+void Controller::print(const int id, const char movie_or_tv) const {
+  std::string top;
+  std::string mid;
+  std::string title;
+  std::string context;
+  std::string bottom;
+  std::size_t word_size = 0;
+
+  if (std::tolower(movie_or_tv) == 'm') {
+    auto movie = movies_cache_.at(id);
+    word_size  = movie.name().size();
+    top     = fmt::format(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n",
+                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+    title   = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                        Width::ID, word_size, Width::Rating, Width::Stat,
+                        "Movie ID", "Name", "Rating", "Stat");
+    mid     = fmt::format(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n",
+                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+    context = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                          Width::ID, word_size, Width::Rating, Width::Stat, id,
+                          movie.name(), movie.rating(), movie.stat_as_string());
+    bottom  = fmt::format(" -{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}- \n",
+                         Width::ID, word_size, Width::Rating, Width::Stat, "");
+  } else if (std::tolower(movie_or_tv) == 't') {
+    auto tvshow = tvshow_cache_.at(id);
+    word_size   = tvshow.name().size();
+    top         = fmt::format(
+      " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      " "
+      "\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+    title = fmt::format(
+      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+      "Total Episodes");
+    mid = fmt::format(
+      " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      " "
+      "\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+    context = fmt::format(
+      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+      "{11:<{5}} |\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, id, tvshow.name(), tvshow.rating(),
+      tvshow.stat_as_string(), tvshow.episode(), tvshow.last_episode());
+    bottom = fmt::format(
+      " -{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      " "
+      "\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+  }
+
+  fmt::print("{}{}{}{}{}", top, title, mid, context, bottom);
+}
+
 }  // namespace Pholos

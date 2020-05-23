@@ -86,6 +86,8 @@ class Controller {
   void add_movie();
   void add_tvshow();
 
+  void print(const int id, const char movie_or_tv) const;
+
  private:
   static constexpr std::array commands_list = {
     "HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
