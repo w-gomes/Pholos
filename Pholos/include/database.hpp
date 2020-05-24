@@ -16,6 +16,7 @@ class Database {
  public:
   // There should be only one object of Database type.
   inline static Database *instance = nullptr;
+
   Database();
 
   // No copy or move allowed
@@ -26,12 +27,16 @@ class Database {
 
   ~Database() = default;
 
-  // This is called after the creation of Database object to check
-  // if a database file (i.e. data.db) exists. Otherwise, application exits.
-  //
-  // TODO: If data.db doesn't exist, the application should create a new data.db
-  // file and create its needed tables.
+  // This is called after creating the Database object.
+  // It checks if the database file exits, if not, it creates one.
+  // Then it creates the database tables.
+  // it calls create_database_file()
   void init(bool &loaded);
+
+  void set_database_name(std::string database_name) {
+    this->database_name_ = (std::move(database_name));
+  }
+  std::string name() const { return this->database_name_; }
 
   bool is_in_database(const std::string &name, const char obj_type) const;
 
@@ -55,6 +60,8 @@ class Database {
                       const int distance = 1);
 
  private:
+  bool create_database_file();
+
   // Helper functions to create the database's tables.
   void execute_update(const std::string &query);
   void create_table();
@@ -62,7 +69,7 @@ class Database {
   void create_tvshow_table();
 
  private:
-  std::string database_name_{"data.sqlite3"};
+  std::string database_name_{};
 
   static constexpr std::array table_names_{"movies", "tvshow"};
 };

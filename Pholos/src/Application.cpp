@@ -2,7 +2,7 @@
 
 #include <cassert>  // assert()
 
-#include "fmt/core.h"
+#include "fmt/format.h"
 
 namespace Pholos {
 
@@ -54,6 +54,7 @@ void Application::run_application() {
   this->running_ = true;
 
   // Initializes database
+  this->database_.set_database_name("data.sqlite3");
   this->database_.init(this->db_loaded_);
 
   if (!this->is_db_loaded()) {

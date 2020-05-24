@@ -4,11 +4,13 @@
 
 #include <cassert>  // assert()
 #include <cctype>   // std::tolower()
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <string>
+#include <utility>  // std::move
 
-#include "fmt/core.h"
+#include "fmt/format.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
 
@@ -26,9 +28,39 @@ const inline std::string what_type(const char flag) {
 }
 }  // namespace internal
 
+bool Database::create_database_file() {
+  // Check if the database file already exists.
+  std::ifstream file(this->database_name_);
+  if (file.is_open()) {
+    // It does...
+    fmt::print("Database file exists!\n");
+    return true;
+  }
+
+  // Database file doesn't exist, so we create an empty one.
+  std::ofstream database_file(this->database_name_);
+  if (database_file.is_open()) {
+    fmt::print("Database file {} doesn't exist. Creating one...\n",
+               this->database_name_);
+    return true;
+  }
+
+  // Something wrong happened.
+  return false;
+}
+
 Database::Database() { this->instance = this; }
 
 void Database::init(bool &loaded) {
+  bool database_exist = this->create_database_file();
+  if (!database_exist) {
+    fmt::print(
+      "An error occurred trying to read the database file. The file might not "
+      "exist and couldn't create a new one.\n");
+    loaded = false;
+    return;
+  }
+
   try {
     SQLite::Database db(this->database_name_);
     fmt::print(
@@ -38,7 +70,7 @@ void Database::init(bool &loaded) {
     for (const auto &t : this->table_names_) {
       table_exists = db.tableExists(t);
       if (!table_exists) {
-        fmt::print("Some tables are missing...\n");
+        fmt::print("No tables found.\n");
         break;
       }
     }

@@ -11,7 +11,7 @@
 
 #include "application.hpp"
 #include "database.hpp"
-#include "fmt/core.h"
+#include "fmt/format.h"
 #include "internal.hpp"
 #include "movies.hpp"
 #include "stats.hpp"
