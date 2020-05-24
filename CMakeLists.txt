@@ -56,7 +56,7 @@ target_compile_options(Pholos PUBLIC
                        /w14928 # illegal copy-initialization; more than one user-defined
                               # conversion has been implicitly applied
                        )
-target_link_libraries(Pholos PRIVATE fmt::fmt SQLiteCPP::SQLiteCPP sqlite3::sqlite3)
+target_link_libraries(Pholos PRIVATE fmt::fmt-header-only SQLiteCPP::SQLiteCPP sqlite3::sqlite3)
 target_compile_features(Pholos PUBLIC cxx_std_17)
 
 if(ENABLE_TEST)
