@@ -2,8 +2,7 @@ project(Tests LANGUAGES CXX)
 
 set(TEST_SOURCES 
     main.cpp
-    test_convertion.cpp
-    )
+)
 
 add_executable(Tests ${TEST_SOURCES})
 target_compile_options(Tests PRIVATE /W4)
