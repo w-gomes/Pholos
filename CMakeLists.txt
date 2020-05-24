@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Pholos LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(ENABLE_TEST "Enable Test" ON)
@@ -21,10 +21,10 @@ set(Pholos_SOURCES
     Pholos/src/internal.cpp
     )
 
-add_executable(Pholos ${Pholos_SOURCES})
-target_include_directories(Pholos PUBLIC Pholos/include Pholos/external/SQLiteCpp/include)
+add_executable(${PROJECT_NAME} ${Pholos_SOURCES})
+target_include_directories(${PROJECT_NAME} PUBLIC Pholos/include)
 # copied from https://github.com/lefticu/cpp_starter_project
-target_compile_options(Pholos PUBLIC 
+target_compile_options(${PROJECT_NAME} PUBLIC 
                        /W4
                        /w14242 # 'identfier': conversion from 'type1' to 'type1', possible loss
                                # of data
@@ -56,8 +56,8 @@ target_compile_options(Pholos PUBLIC
                        /w14928 # illegal copy-initialization; more than one user-defined
                               # conversion has been implicitly applied
                        )
-target_link_libraries(Pholos PRIVATE fmt::fmt-header-only SQLiteCPP::SQLiteCPP sqlite3::sqlite3)
-target_compile_features(Pholos PUBLIC cxx_std_17)
+target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt-header-only SQLiteCPP::SQLiteCPP)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 if(ENABLE_TEST)
   enable_testing()
