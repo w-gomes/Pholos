@@ -14,6 +14,7 @@
 #include "fmt/format.h"
 #include "internal.hpp"
 #include "movies.hpp"
+#include "queries.hpp"
 #include "stats.hpp"
 #include "tv-show.hpp"
 
@@ -248,6 +249,16 @@ void Controller::add_menu() {
   }
 }
 
+std::string Controller::make_insert_query(const Movies &movie) {
+  return fmt::format(Query::insert_movie, movie.name(), movie.rating(),
+                     movie.stat());
+}
+
+std::string Controller::make_insert_query(const TvShow &tvshow) {
+  return fmt::format(Query::insert_tvshow, tvshow.name(), tvshow.rating(),
+                     tvshow.stat(), tvshow.episode(), tvshow.last_episode());
+}
+
 void Controller::add_movie() {
   int stat{-1};
   double rating{0.0};
@@ -277,7 +288,7 @@ void Controller::add_movie() {
 
   Movies movie(internal::add_context<Movies>(name, rating, stat));
   auto *database = get_database();
-  database->save(movie);
+  database->insert(this->make_insert_query(movie));
   this->load_content();
 }
 
@@ -330,7 +341,7 @@ void Controller::add_tvshow() {
   TvShow tvshow(
     internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
   auto *database = get_database();
-  database->save(tvshow);
+  database->insert(this->make_insert_query(tvshow));
   this->load_content();
 }
 

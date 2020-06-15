@@ -86,38 +86,13 @@ void Database::init(bool &loaded) {
   }
 }
 
-void Database::save(const Movies &movie) {
-  std::string name = movie.name();
-  double rating    = movie.rating();
-  int stat         = movie.stat();
-
+// Insert query.
+// The client should pass the formatted query.
+void Database::insert(std::string query) {
   SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
-  const std::string save_query = fmt::format(
-    "INSERT INTO movies (name, rating, stats) VALUES ('{0}', {1}, {2})", name,
-    rating, stat);
-  db.exec(save_query);
-  transaction.commit();
-}
-
-void Database::save(const TvShow &show) {
-  std::string name = show.name();
-  double rating    = show.rating();
-  int stat         = show.stat();
-  int episode      = show.episode();
-  int last_episode = show.last_episode();
-
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
-  SQLite::Transaction transaction(db);
-
-  const std::string save_query = fmt::format(
-    "INSERT INTO tvshow (name, rating, stats, episode, last_episode) VALUES "
-    "('{0}', {1}, {2}, {3}, "
-    "{4})",
-    name, rating, stat, episode, last_episode);
-
-  db.exec(save_query);
+  db.exec(std::move(query));
   transaction.commit();
 }
 

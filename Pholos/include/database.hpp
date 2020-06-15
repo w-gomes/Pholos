@@ -41,8 +41,7 @@ class Database {
   bool is_in_database(const std::string &name, const char obj_type) const;
 
   // INSERT queries
-  void save(const Movies &movie);
-  void save(const TvShow &show);
+  void insert(std::string query);
 
   // SELECT queries
   std::map<int, Movies> select_all_movies();
