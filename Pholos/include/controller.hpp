@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 
+#include "constants.hpp"
 #include "fmt/core.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
@@ -37,27 +38,6 @@ std::string get_user_input<std::string>(const std::string &message);
  * Controller interface
  */
 class Controller {
-  enum Width : std::size_t {
-    Stat          = 13,
-    Rating        = 6,
-    ID            = 8,
-    Episode       = 7,
-    Total_Episode = 14
-  };
-
-  enum class Command {
-    Unknown = -1,
-    Help    = 0,
-    Exit    = 1,
-    Add     = 2,
-    Edit    = 3,
-    Delete  = 4,
-    Search  = 5,
-    About   = 6,
-    List    = 7,
-    Cmd     = 8
-  };
-
  public:
   Controller() = default;
 

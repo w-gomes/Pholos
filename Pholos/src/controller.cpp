@@ -10,12 +10,12 @@
 #include <string>
 
 #include "application.hpp"
+#include "constants.hpp"
 #include "database.hpp"
 #include "fmt/format.h"
 #include "internal.hpp"
 #include "movies.hpp"
 #include "queries.hpp"
-#include "stats.hpp"
 #include "tv-show.hpp"
 
 namespace Pholos {
@@ -160,7 +160,7 @@ void Controller::draw_menu() {
   }
 }
 
-Controller::Command Controller::get_command(std::string_view command) {
+Command Controller::get_command(std::string_view command) {
   // Can't use switch with strings
   if (command == "HELP") {
     return Command::Help;

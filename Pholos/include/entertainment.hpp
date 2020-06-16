@@ -6,7 +6,7 @@
 
 #include <string>
 
-#include "Stats.hpp"
+#include "constants.hpp"
 
 namespace Pholos {
 

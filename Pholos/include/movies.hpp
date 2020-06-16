@@ -2,8 +2,8 @@
 
 #include <string>
 
+#include "constants.hpp"
 #include "entertainment.hpp"
-#include "stats.hpp"
 
 namespace Pholos {
 
