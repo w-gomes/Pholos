@@ -65,8 +65,6 @@ class Controller {
  private:
   void add_movie();
   void add_tvshow();
-  std::string make_insert_query(const Movies &movie);
-  std::string make_insert_query(const TvShow &tvshow);
 
   void print(const int id, Type type) const;
 
