@@ -56,11 +56,11 @@ class Controller {
   void exit();
   void add_menu();
   void edit();
-  void edit_menu(char movie_or_tv);
+  void edit_menu(Type type);
   Command get_command(std::string_view command);
   void list_all_movies();
   void list_all_tvshows();
-  bool id_exist(const int id, const char obj_type);
+  bool id_exist(const int id, Type type);
 
  private:
   void add_movie();
@@ -68,7 +68,7 @@ class Controller {
   std::string make_insert_query(const Movies &movie);
   std::string make_insert_query(const TvShow &tvshow);
 
-  void print(const int id, const char movie_or_tv) const;
+  void print(const int id, Type type) const;
 
  private:
   static constexpr std::array commands_list = {

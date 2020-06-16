@@ -5,11 +5,11 @@
 #include <cassert>  // assert()
 #include <cctype>   // std::tolower()
 #include <fstream>
-#include <iostream>
 #include <map>
 #include <string>
 #include <utility>  // std::move
 
+#include "constants.hpp"
 #include "fmt/format.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
@@ -17,13 +17,14 @@
 namespace Pholos {
 
 namespace internal {
-const inline std::string what_type(const char flag) {
-  if (std::tolower(flag) == 'm') {
-    return "movies";
-  } else if (std::tolower(flag) == 't') {
-    return "tvshow";
-  } else {
-    return "";
+const inline std::string what_type(Type type) {
+  switch (type) {
+    case Type::Movie:
+      return "movies";
+    case Type::TvShow:
+      return "tvshow";
+    default:
+      return "";
   }
 }
 }  // namespace internal
@@ -160,62 +161,59 @@ std::map<int, TvShow> Database::select_all_tvshows() {
 
 // UPDATE queries
 void Database::update_name(const int id, const std::string &name,
-                           const char obj_type) {
+                           Type obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   // Maybe implement a generic function
   const std::string query =
     fmt::format("UPDATE {} SET name='{}' WHERE id_{}={}", query_type, name,
-                (obj_type == 't' ? "tvshow" : "movie"), id);
+                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
-void Database::update_stat(const int id, const int stat, const char obj_type) {
+void Database::update_stat(const int id, const int stat, Type obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   const std::string query =
     fmt::format("UPDATE {} SET stats={} WHERE id_{}={}", query_type, stat,
-                (obj_type == 't' ? "tvshow" : "movie"), id);
+                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
-void Database::update_rating(const int id, const double rating,
-                             const char obj_type) {
+void Database::update_rating(const int id, const double rating, Type obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   const std::string query =
     fmt::format("UPDATE {} SET rating={} WHERE id_{}={}", query_type, rating,
-                (obj_type == 't' ? "tvshow" : "movie"), id);
+                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
 void Database::update_total_episode(const int id, const int total_episode,
-                                    const char obj_type) {
+                                    Type obj_type) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
-  const std::string query =
-    fmt::format("UPDATE {} SET last_episode={} WHERE id_{}={}", query_type,
-                total_episode, (obj_type == 't' ? "tvshow" : "movie"), id);
+  const std::string query = fmt::format(
+    "UPDATE {} SET last_episode={} WHERE id_{}={}", query_type, total_episode,
+    (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
-void Database::update_episode(const int id, const char obj_type,
-                              const int distance) {
+void Database::update_episode(const int id, Type obj_type, const int distance) {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 
   const std::string query =
     fmt::format("UPDATE {} SET episode=episode + {} WHERE id_{}={}", query_type,
-                distance, (obj_type == 't' ? "tvshow" : "movie"), id);
+                distance, (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
   this->execute_update(query);
 }
 
-bool Database::is_in_database(const std::string &name,
-                              const char obj_type) const {
+bool Database::is_in_database(const std::string &name, Type obj_type) const {
   const std::string query_type = internal::what_type(obj_type);
   assert(query_type != "");
 

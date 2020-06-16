@@ -15,7 +15,7 @@ enum class Command {
   Cmd     = 8
 };
 
-enum class Type { TvShow, Movie };
+enum class Type { TvShow, Movie, None };
 
 enum Width : std::size_t {
   Stat          = 13,

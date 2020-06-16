@@ -8,6 +8,7 @@
 #include <iostream>
 #include <iterator>
 #include <string>
+#include <utility>  // std::pair
 
 #include "application.hpp"
 #include "constants.hpp"
@@ -45,19 +46,24 @@ std::string get_user_input<std::string>(const std::string &message) {
   return name;
 }
 
-bool movie_or_tvshow(char &user_choose) {
+auto movie_or_tvshow() {
   fmt::print("Movie [m] or Tv Show [t]? : ");
+  char user_choose;
   bool user_choice = false;
+  Type type;
 
   do {
     std::cin >> user_choose;
 
     if (std::tolower(user_choose) == 'm') {
       user_choice = true;
+      type        = Type::Movie;
     } else if (std::tolower(user_choose) == 't') {
       user_choice = true;
+      type        = Type::TvShow;
     } else if (std::tolower(user_choose) == 'c') {
       user_choice = true;
+      type        = Type::None;
       break;
     } else {
       fmt::print("Wrong option! Enter [m] or [t].\n");
@@ -66,7 +72,7 @@ bool movie_or_tvshow(char &user_choose) {
   } while (!user_choice);
   std::cin.clear();
 
-  return user_choice;
+  return std::make_pair(user_choice, type);
 }
 
 }  // namespace internal
@@ -238,14 +244,19 @@ inline void Controller::help() const {
 
 // Add new movie or tvshow
 void Controller::add_menu() {
-  char user_choose;
-  bool user_chose = internal::movie_or_tvshow(user_choose);
-  if (user_chose && std::tolower(user_choose) == 'm') {
-    this->add_movie();
-  } else if (user_chose && std::tolower(user_choose) == 't') {
-    this->add_tvshow();
-  } else if (user_chose && std::tolower(user_choose) == 'c') {
-    return;
+  auto [user_chose, type] = internal::movie_or_tvshow();
+
+  if (user_chose) {
+    switch (type) {
+      case Type::Movie:
+        this->add_movie();
+        break;
+      case Type::TvShow:
+        this->add_tvshow();
+        break;
+      case Type::None:
+        return;
+    }
   }
 }
 
@@ -482,35 +493,48 @@ void Controller::list_all_tvshows() {
     Width::Total_Episode, "");
 }
 
-bool Controller::id_exist(const int id, const char obj_type) {
+bool Controller::id_exist(const int id, Type type) {
   auto found = false;
-  if (std::tolower(obj_type) == 'm') {
-    if (auto search = this->movies_cache_.find(id);
-        search != this->movies_cache_.end()) {
-      found = true;
-    }
-  } else if (std::tolower(obj_type) == 't') {
-    if (auto search = this->tvshow_cache_.find(id);
-        search != this->tvshow_cache_.end()) {
-      found = true;
-    }
+  switch (type) {
+    case Type::Movie:
+      if (auto search = this->movies_cache_.find(id);
+          search != this->movies_cache_.end()) {
+        found = true;
+      }
+      break;
+    case Type::TvShow:
+      if (auto search = this->tvshow_cache_.find(id);
+          search != this->tvshow_cache_.end()) {
+        found = true;
+        break;
+      }
+    case Type::None:
+      fmt::print("Error! case Type::None is not a real object!\n");
+      break;
   }
   return found;
 }
 
 void Controller::edit() {
   // Which object we want to edit: movie or tv show.
-  char user_choose;
-  bool user_chose = internal::movie_or_tvshow(user_choose);
+  auto [user_chose, type] = internal::movie_or_tvshow();
 
-  if (user_chose && std::tolower(user_choose) != 'c') {
-    this->edit_menu(user_choose);
-  } else {
-    return;
+  if (user_chose) {
+    switch (type) {
+      case Type::Movie:
+        this->list_all_movies();
+        break;
+      case Type::TvShow:
+        this->list_all_tvshows();
+        break;
+      case Type::None:
+        return;
+    }
   }
+  this->edit_menu(type);
 }
 
-void Controller::edit_menu(char movie_or_tv) {
+void Controller::edit_menu(Type type) {
   int edit_option = 0;
 
   fmt::print(
@@ -518,7 +542,7 @@ void Controller::edit_menu(char movie_or_tv) {
     "to get the id.\n\n");
   // Check for object's id.
   int id     = internal::get_user_input<int>("Please enter the id.\n-> ");
-  bool exist = this->id_exist(id, movie_or_tv);
+  bool exist = this->id_exist(id, type);
 
   if (!exist) {
     fmt::print("The id doesn't exist.\n");
@@ -526,18 +550,22 @@ void Controller::edit_menu(char movie_or_tv) {
   }
 
   // TODO: handle wrong usage: edit_option > 5 and < 1;
-  if (std::tolower(movie_or_tv) == 'm') {
-    fmt::print(
-      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
-      "(3)\n\n-> ");
-    std::cin >> edit_option;
-  } else if (std::tolower(movie_or_tv) == 't') {
-    fmt::print(
-      "Edit options:\n Change name (1)\n Change stat (2)\n Change rating (3)\n "
-      "Change episode "
-      "(4)\n "
-      "Change total episode (5)\n\n-> ");
-    std::cin >> edit_option;
+  switch (type) {
+    case Type::Movie:
+      fmt::print(
+        "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
+        "(3)\n\n-> ");
+      std::cin >> edit_option;
+      break;
+    case Type::TvShow:
+      fmt::print(
+        "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
+        "(3)\n "
+        "Change episode "
+        "(4)\n "
+        "Change total episode (5)\n\n-> ");
+      std::cin >> edit_option;
+      break;
   }
 
   // TODO: handle wrong user input
@@ -547,19 +575,19 @@ void Controller::edit_menu(char movie_or_tv) {
     case 1: {
       const std::string name = internal::get_user_input<std::string>(
         "Enter the new name, please.\n-> ");
-      database->update_name(id, name, movie_or_tv);
+      database->update_name(id, name, type);
     } break;
     case 2: {
       const int stat = internal::get_user_input<int>(
         "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
         "(3)\n Dropped "
         "(4)\n-> ");
-      database->update_stat(id, stat, movie_or_tv);
+      database->update_stat(id, stat, type);
     } break;
     case 3: {
       const double rating =
         internal::get_user_input<double>("Enter the new rating.\n-> ");
-      database->update_rating(id, rating, movie_or_tv);
+      database->update_rating(id, rating, type);
     } break;
     case 4: {
       // We ask user the number of episodes to increment. Default is by 1.
@@ -568,15 +596,15 @@ void Controller::edit_menu(char movie_or_tv) {
       if (update_more_than_one) {
         const int distance =
           internal::get_user_input<int>("Enter the amount to increment.\n-> ");
-        database->update_episode(id, movie_or_tv, distance);
+        database->update_episode(id, type, distance);
       } else {
-        database->update_episode(id, movie_or_tv);
+        database->update_episode(id, type);
       }
     } break;
     case 5: {
       const int total_episode =
         internal::get_user_input<int>("Enter the new total episode.\n-> ");
-      database->update_total_episode(id, total_episode, movie_or_tv);
+      database->update_total_episode(id, total_episode, type);
     } break;
     default:
       fmt::print("Unhandled case!!!\n");
@@ -585,10 +613,10 @@ void Controller::edit_menu(char movie_or_tv) {
   // LOL: We have to update the cache.
   this->load_content();
 
-  this->print(id, movie_or_tv);
+  this->print(id, type);
 }
 
-void Controller::print(const int id, const char movie_or_tv) const {
+void Controller::print(const int id, Type type) const {
   std::string top;
   std::string mid;
   std::string title;
@@ -596,7 +624,7 @@ void Controller::print(const int id, const char movie_or_tv) const {
   std::string bottom;
   std::size_t word_size = 0;
 
-  if (std::tolower(movie_or_tv) == 'm') {
+  if (type == Type::Movie) {
     auto movie = movies_cache_.at(id);
     word_size  = movie.name().size();
     top     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
@@ -611,7 +639,7 @@ void Controller::print(const int id, const char movie_or_tv) const {
                           movie.name(), movie.rating(), movie.stat_as_string());
     bottom  = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
                          Width::ID, word_size, Width::Rating, Width::Stat, "");
-  } else if (std::tolower(movie_or_tv) == 't') {
+  } else if (type == Type::TvShow) {
     auto tvshow = tvshow_cache_.at(id);
     word_size   = tvshow.name().size();
     top         = fmt::format(

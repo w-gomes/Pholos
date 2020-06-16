@@ -5,6 +5,8 @@
 #include <optional>
 #include <string>
 
+#include "constants.hpp"
+
 namespace Pholos {
 
 class Movies;
@@ -38,7 +40,7 @@ class Database {
   }
   std::string name() const { return this->database_name_; }
 
-  bool is_in_database(const std::string &name, const char obj_type) const;
+  bool is_in_database(const std::string &name, Type obj_type) const;
 
   // INSERT queries
   void insert(std::string query);
@@ -50,13 +52,12 @@ class Database {
   // So, we can print a single object.
 
   // UPDATE queries
-  void update_name(const int id, const std::string &name, const char obj_type);
-  void update_stat(const int id, const int stat, const char obj_type);
-  void update_rating(const int id, const double rating, const char obj_type);
+  void update_name(const int id, const std::string &name, Type obj_type);
+  void update_stat(const int id, const int stat, Type obj_type);
+  void update_rating(const int id, const double rating, Type obj_type);
   void update_total_episode(const int id, const int total_episode,
-                            const char obj_type);
-  void update_episode(const int id, const char obj_type,
-                      const int distance = 1);
+                            Type obj_type);
+  void update_episode(const int id, Type obj_type, const int distance = 1);
 
  private:
   bool create_database_file();
