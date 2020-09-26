@@ -33,7 +33,7 @@ set(Pholos_SOURCES
     )
 
 add_executable(${PROJECT_NAME} ${Pholos_SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC Pholos/include)
+target_include_directories(${PROJECT_NAME} PUBLIC Pholos/src)
 target_link_libraries(
   ${PROJECT_NAME}
   PUBLIC fmt::fmt-header-only
