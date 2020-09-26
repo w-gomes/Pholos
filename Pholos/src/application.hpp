@@ -22,10 +22,11 @@ class Application {
   void init();
 
  private:
+  // methods
   bool is_running() const;
   bool is_db_loaded() const;
 
- private:
+  // variables
   bool running_{false};
   bool db_loaded_{false};
 

@@ -40,15 +40,23 @@ class Database {
   }
   std::string name() const { return this->database_name_; }
 
-  bool is_in_database(const std::string &name, Type obj_type) const;
-
   // INSERT queries
   void insert(std::string query);
 
   // SELECT queries
+  // For multiple objects we return a map,
+  // std::map<int, Object>,
+  // and for a single object we return a pair
+  // std::pair<int, Object>.
+  // id | object
+  auto select(/*Type context_type,*/ Select_Type select_type);
+
+  // TODO: Make these two private.
   std::map<int, Movies> select_all_movies();
   std::map<int, TvShow> select_all_tvshows();
-  // TODO: select * FROM (movies|tvshow) WHERE ID=#;
+  // std::pair<int, Movies> select_movies();
+  // std::pair<int, TvShow> select_tvshows();
+  // TODO: select * FROM (movies|tvshow) WHERE stats=#;
   // So, we can print a single object.
 
   // UPDATE queries
@@ -59,6 +67,7 @@ class Database {
                             Type obj_type);
   void update_episode(const int id, Type obj_type, const int distance = 1);
 
+  // Private section
  private:
   bool create_database_file();
 
@@ -71,7 +80,7 @@ class Database {
  private:
   std::string database_name_{};
 
-  static constexpr std::array table_names_{"movies", "tvshow"};
+  static constexpr std::array table_names_{"tvshow", "movies"};
 };
 
 Database *get_database();

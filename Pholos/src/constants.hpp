@@ -15,7 +15,7 @@ enum class Command {
   Cmd     = 8
 };
 
-enum class Type { TvShow, Movie, None };
+enum class Type { TvShow = 0, Movie, None };
 
 enum Width : std::size_t {
   Stat          = 13,
@@ -32,4 +32,6 @@ enum class Stats {
   Completed   = 3,
   Dropped     = 4
 };
+
+enum class Select_Type { All, Filtered };
 }  // namespace Pholos

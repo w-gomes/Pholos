@@ -63,18 +63,19 @@ class Controller {
   bool id_exist(const int id, Type type);
 
  private:
+  // methods
   void add_movie();
   void add_tvshow();
 
   void print(const int id, Type type) const;
 
- private:
+  // variables
   static constexpr std::array commands_list = {
     "HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
     "SEARCH", "QUERY", "ABOUT", "LIST", "CMD"};
 
-  std::map<int, Movies> movies_cache_;
-  std::map<int, TvShow> tvshow_cache_;
+  std::map<int, Movies> movies_cache_{};
+  std::map<int, TvShow> tvshow_cache_{};
 };
 
 }  // namespace Pholos
