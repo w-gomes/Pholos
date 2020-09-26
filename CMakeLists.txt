@@ -8,6 +8,9 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# add fmt library
+find_package(fmt REQUIRED)
+
 # Link this 'library' to use the warnings specified in compiler_warnings.cmake
 add_library(project_warnings INTERFACE)
 include(cmake/compiler_warnings.cmake)
@@ -18,7 +21,6 @@ include(cmake/static_analyzers.cmake)
 
 option(ENABLE_TEST "Enable Test" ON)
 
-add_subdirectory(Pholos/external/fmt)
 add_subdirectory(Pholos/external/SQLiteCPP)
 
 set(Pholos_SOURCES
@@ -36,9 +38,9 @@ add_executable(${PROJECT_NAME} ${Pholos_SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC Pholos/src)
 target_link_libraries(
   ${PROJECT_NAME}
+  PRIVATE project_warnings
   PUBLIC fmt::fmt-header-only
           SQLiteCPP::SQLiteCPP
-          project_warnings
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
