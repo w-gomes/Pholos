@@ -1,7 +1,6 @@
-----
-Checks: '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-llvm-*,-android-*,-darwin-*,
-         -llvmlibc-*,-linuxkernel-*,
-        '
+---
+Checks: '*,-fuchsia-*,-google-*,-zircon-*,-abseil-*,-llvm-*,-android-*,-darwin-*,-llvmlibc-*,-linuxkernel-*,-modernize-use-trailing-return-type'
 WarningsAsErrors: ''
 HeaderFilterRegex: ''
 FormatStyle: none
+...
