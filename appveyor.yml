@@ -1,9 +1,8 @@
 branches:
     only:
       - Dev
-      - master
+      # - master
 image: 
-    - Visual Studio 2017
     - Visual Studio 2019
 
 configuration:
@@ -18,10 +17,5 @@ before_build:
 build_script:
     - cmake --build . --config %CONFIGURATION%
 
-before_test:
-    - cd Pholos
-    - cd test
-    - cd %CONFIGURATION%
-
 test_script:
-    - Tests.exe
+    - cmd: ctest
