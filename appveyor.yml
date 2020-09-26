@@ -17,5 +17,10 @@ before_build:
 build_script:
     - cmake --build . --config %CONFIGURATION%
 
+before_test:
+    - cd Pholos
+    - cd test
+    - cd %CONFIGURATION%
+
 test_script:
-    - cmd: ctest
+    - Tests.exe
