@@ -16,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create Build Environment
-      run: mkdir build && cd build && cmake -DENABLE_TEST=ON
+      run: mkdir build && cd build && cmake -DENABLE_TEST=ON ..
 
     - name: Build
       shell: bash
