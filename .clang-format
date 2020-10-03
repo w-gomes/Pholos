@@ -1,42 +1,14 @@
 Language: Cpp
-AccessModifierOffset: -2
-AlignAfterOpenBracket: Align
+BasedOnStyle: Google
 AlignConsecutiveAssignments: true
-AlignConsecutiveDeclarations: false
-AlignEscapedNewlines: Left
-AlignTrailingComments: true
-AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortCaseLabelsOnASingleLine: true
-AllowShortFunctionsOnASingleLine: false
-AllowShortIfStatementsOnASingleLine: true
-AllowShortCaseLabelsOnASingleLine: false
-AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
-BreakBeforeBraces: Custom	
 BreakConstructorInitializersBeforeComma: true
 BreakBeforeTernaryOperators: true
-BraceWrapping:
-  AfterControlStatement: false
-  AfterClass: false
-  AfterEnum: true
-  AfterFunction: true
-  AfterNamespace: false
-  AfterStruct: false
-  AfterUnion: false
-  AfterExternBlock: false
-  BeforeCatch: false
-  BeforeElse: false
-ColumnLimit: 100
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
-ConstructorInitializerIndentWidth: 2
 ContinuationIndentWidth: 2
-Cpp11BracedListStyle: false
-DerivePointerBinding: false
 FixNamespaceComments: true
 IndentCaseLabels: true
+IndentPPDirectives: BeforeHash
 IndentWidth: 2
-IndentWrappedFunctionNames: true
-NamespaceIndentation: Inner
 PointerAlignment: Right
 SpacesBeforeTrailingComments: 2
 Standard: Cpp11

@@ -1,143 +1,33 @@
 #include "movies.hpp"
 
+#include <string>
+#include <utility>
+
 namespace Pholos {
-
-Movies::Movies(std::string name)
-  : name_(std::move(name))
-{
+Movies::Movies(std::string name, double rating, int stat) {
+  this->set_members(std::move(name), rating, stat);
 }
 
-Movies::Movies(std::string name, double rating, int year)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , stats_(Stats::NotSet)
-{
-}
+std::string Movies::name() const { return this->name_; }
 
-Movies::Movies(std::string name, double rating, int year, Stats stats)
-  : name_(std::move(name))
-  , rating_(rating)
-  , year_(year)
-  , stats_(stats)
-{
-}
+double Movies::rating() const { return this->rating_; }
 
-Movies::Movies(const Movies &other)
-{
-  this->name_   = other.name_;
-  this->rating_ = other.rating_;
-  this->year_   = other.year_;
-  this->stats_  = other.stats_;
-}
+int Movies::stat() const { return static_cast<int>(this->stat_); }
 
-Movies &Movies::operator=(const Movies &other)
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->rating_ = other.rating_;
-    this->year_   = other.year_;
-    this->stats_  = other.stats_;
-  }
-
-  return *this;
-}
-
-Movies::Movies(Movies &&other) noexcept
-{
-  this->name_   = other.name_;
-  this->rating_ = other.rating_;
-  this->year_   = other.year_;
-  this->stats_  = other.stats_;
-}
-
-Movies &Movies::operator=(Movies &&other) noexcept
-{
-  if (&other != this) {
-    this->name_   = other.name_;
-    this->rating_ = other.rating_;
-    this->year_   = other.year_;
-    this->stats_  = other.stats_;
-  }
-
-  return *this;
-}
-
-std::string Movies::get_name() const
-{
-  return this->name_;
-}
-
-int Movies::get_year() const
-{
-  return this->year_;
-}
-
-double Movies::get_rating() const
-{
-  return this->rating_;
-}
-
-void Movies::set_name(const std::string &name)
-{
-  this->name_ = name;
-}
-
-std::string Movies::get_stats() const
-{
-  std::string stats;
-  switch (this->stats_) {
-    case Stats::PlanToWatch:
-      stats = "Plan to watch";
-      break;
-    case Stats::Watching:
-      stats = "Watching";
-      break;
-    case Stats::Completed:
-      stats = "Completed";
-      break;
-    case Stats::Dropped:
-      stats = "Dropped";
-      break;
+std::string Movies::stat_as_string() const {
+  switch (this->stat_) {
     case Stats::NotSet:
-      stats = "Not set";
-      break;
-  }
-
-  return stats;
-}
-
-void Movies::set_stats(int response)
-{
-  switch (static_cast<Stats>(response)) {
-    case Stats::NotSet:
-      this->stats_ = Stats::NotSet;
-      break;
-    case Stats::PlanToWatch:
-      this->stats_ = Stats::PlanToWatch;
-      break;
+      return "Not Set";
     case Stats::Watching:
-      this->stats_ = Stats::Watching;
-      break;
+      return "Watching";
+    case Stats::PlanToWatch:
+      return "Plan to Watch";
     case Stats::Completed:
-      this->stats_ = Stats::Completed;
-      break;
+      return "Completed";
     case Stats::Dropped:
-      this->stats_ = Stats::Dropped;
-      break;
+      return "Dropped";
     default:
-      break;
+      return "Not Set";
   }
 }
-
-void Movies::set_rating(double rating)
-{
-  this->rating_ = rating;
-}
-
-void Movies::set_year(int year)
-{
-  this->year_ = year;
-}
-
 }  // namespace Pholos

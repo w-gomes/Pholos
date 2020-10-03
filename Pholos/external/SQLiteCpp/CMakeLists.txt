@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(SQLiteCPP LANGUAGES CXX)
 
-add_library(SQLiteCPP STATIC
+add_library(${PROJECT_NAME} STATIC
     src/Backup.cpp
     src/Column.cpp
     src/Database.cpp
@@ -10,12 +10,13 @@ add_library(SQLiteCPP STATIC
     src/Statement.cpp
     src/Transaction.cpp
     )
+add_library(SQLiteCPP::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 
 add_subdirectory(sqlite3)
 
-target_include_directories(SQLiteCPP 
+target_include_directories(${PROJECT_NAME} 
     PUBLIC ${PROJECT_SOURCE_DIR}/include
     PUBLIC ${PROJECT_SOURCE_DIR}/sqlite3
 )
-target_link_libraries(SQLiteCPP PUBLIC sqlite3)
+target_link_libraries(${PROJECT_NAME} PUBLIC sqlite3::sqlite3)

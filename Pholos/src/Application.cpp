@@ -1,58 +1,60 @@
 #include "application.hpp"
 
-#include <cassert>
+#include <cassert>  // assert()
 
-#include "fmt/core.h"
+#include "fmt/format.h"
 
 namespace Pholos {
-Application *Application::instance = nullptr;
 
-Application::Application()
-{
-  this->instance = this;
-}
+void Application::welcome_message() {
+  const std::string welcome = R"(
+      Welcome to Pholos Application!
+      Your movie and tv show tracker!
 
-void Application::welcome_message()
-{
-  const std::string logo = fmt::format("\n\tWelcome to Pholos Application!\n"
-                                       "\tYour movie and tv show tracker!\n"
-                                       "\n\t:::::::::::::::::"
-                                       "\n\t::::::::::::::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t:::::        ::::::"
-                                       "\n\t::::::::::::::::::"
-                                       "\n\t:::::::::::::::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::"
-                                       "\n\t:::::\n\n");
+           :::::::::::::::::
+           ::::::::::::::::::
+           :::::        ::::::
+           :::::        ::::::
+           :::::        ::::::
+           ::::::::::::::::::
+           :::::::::::::::::
+           :::::
+           :::::
+           :::::
+           :::::
+           :::::
+           :::::
 
-  const std::string commands = fmt::format("- Usage:\n"
-                                           "\t -h \thelp\n"
-                                           "\t -x \texit\n"
-                                           "\t -a \tadd\n"
-                                           "\t -e \tedit\n"
-                                           "\t -d \tdelete\n"
-                                           "\t -s \tsearch\n"
-                                           "\t -q \tquery (advanced searching.)\n"
-                                           "\t -A \tabout\n");
+  )";
 
-  const std::string delimiter = fmt::format("\n--------------------------------------------");
-  fmt::print("{}{}{}\n", logo, commands, delimiter);
+  const std::string commands = R"(
+  - Usage:
+
+      ADD       add
+      EDIT      edit
+      DELETE    delete
+      SEARCH    search
+      LIST      list all movies or tvshow
+      EXIT      exit
+      CMD       list of commands
+      ABOUT     about
+      HELP      help
+
+------------------------------------------------
+  )";
+
+  fmt::print("{}{}\n", welcome, commands);
 }
 
 // Main loop
-void Application::run_application()
-{
+void Application::run_application() {
   // Welcome message and logo
   Application::welcome_message();
 
   this->running_ = true;
 
   // Initializes database
+  this->database_.set_database_name("data.sqlite3");
   this->database_.init(this->db_loaded_);
 
   if (!this->is_db_loaded()) {
@@ -60,32 +62,29 @@ void Application::run_application()
     fmt::print("Existing application! Press any key to leave.");
   }
 
+  // Database is loaded, so we can load the contents into the cache.
+  this->controller_.load_content();
+
   // Application loop
-  this->controller_.get_user_response();
+  this->controller_.press_any_key();
   while (is_running()) {
     this->controller_.draw_menu();
   }
 }
 
-bool Application::is_running() const
-{
-  return this->running_;
-}
+bool Application::is_running() const { return this->running_; }
 
-bool Application::is_db_loaded() const
-{
-  return this->db_loaded_;
-}
+bool Application::is_db_loaded() const { return this->db_loaded_; }
 
-void Application::exit_application()
-{
+void Application::exit_application() {
   fmt::print("\nBye!\n");
   this->running_ = false;
 }
 
-Application *get_application()
-{
+Application *get_application() {
   assert(Application::instance != nullptr);
   return Application::instance;
 }
+
+void Application::init() { this->instance = this; }
 }  // namespace Pholos

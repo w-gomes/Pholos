@@ -1,25 +1,84 @@
 #include "controller.hpp"
 
-#include <algorithm>
-#include <cassert>
-#include <cctype>   // std::tolower()
 #include <conio.h>  // _getch()
+
+#include <algorithm>
+#include <cassert>  // assert()
+#include <cctype>   // std::tolower()
 #include <iostream>
-#include <map>
+#include <iterator>
 #include <string>
-#include <vector>
+#include <utility>  // std::pair
 
 #include "application.hpp"
+#include "constants.hpp"
 #include "database.hpp"
-#include "fmt/core.h"
+#include "fmt/format.h"
+#include "internal.hpp"
 #include "movies.hpp"
-#include "stats.hpp"
+#include "queries.hpp"
+#include "tv-show.hpp"
 
 namespace Pholos {
 
-void Controller::get_user_response()
-{
-  auto app = get_application();
+namespace internal {
+
+// Cannot use a simple overloaded function
+// because only return type is different.
+template <>
+bool get_user_input<bool>(const std::string &message) {
+  fmt::print("{}", message);
+  char value;
+  std::cin >> value;
+  bool result = false;
+  if (std::tolower(value) == 'y') {
+    result = true;
+  }
+  return result;
+}
+
+template <>
+std::string get_user_input<std::string>(const std::string &message) {
+  fmt::print("{}", message);
+  std::string name;
+  std::cin.get();  // to consume enter
+  std::getline(std::cin, name);
+  return name;
+}
+
+auto movie_or_tvshow() {
+  fmt::print("Movie [m] or Tv Show [t]? : ");
+  char user_choose;
+  bool user_choice = false;
+  Type type;
+
+  do {
+    std::cin >> user_choose;
+
+    if (std::tolower(user_choose) == 'm') {
+      user_choice = true;
+      type        = Type::Movie;
+    } else if (std::tolower(user_choose) == 't') {
+      user_choice = true;
+      type        = Type::TvShow;
+    } else if (std::tolower(user_choose) == 'c') {
+      user_choice = true;
+      type        = Type::None;
+      break;
+    } else {
+      fmt::print("Wrong option! Enter [m] or [t].\n");
+      fmt::print("Enter [c] to cancel. : ");
+    }
+  } while (!user_choice);
+  std::cin.clear();
+
+  return std::make_pair(user_choice, type);
+}
+
+}  // namespace internal
+
+void Controller::press_any_key() {
+  auto *app = get_application();
 
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
   int input = _getch();
@@ -31,26 +90,22 @@ void Controller::get_user_response()
 }
 
 // Refactor this
-void Controller::draw_menu()
-{
+void Controller::draw_menu() {
   // Maybe we don't need this.
   // auto app = get_application();
 
-  fmt::print("\nEnter an option! Type [-h] for command list : ");
+  fmt::print("\nEnter an option! Type [HELP] for command list : ");
   std::string command;
   std::cin >> command;
 
-  auto findResult =
-    std::find(this->commands_vector_.begin(), this->commands_vector_.end(), command);
-
-  if (findResult == this->commands_vector_.end()) {
+  if (auto findResult = std::find(this->commands_list.begin(),
+                                  this->commands_list.end(), command);
+      findResult == this->commands_list.end()) {
     fmt::print("Command not found!\n");
     return;
   }
 
-  int y = this->get_command(command);
-  assert(y != -1);
-  switch (static_cast<Command>(y)) {
+  switch (this->get_command(command)) {
     case Command::Help:
       this->help();
       break;
@@ -63,314 +118,549 @@ void Controller::draw_menu()
       break;
     case Command::Edit:
       // Edit existing object
-      // Unimplemented
+      // User can change:
+      //  Movie and TvShow
+      // - name
+      // - stat
+      // - rating
+      //
+      //  TvShow
+      // - episode
+      // - last_episode
+      //
+      this->edit();
       break;
     case Command::Delete:
       // Delete a movie or a tvshow
-      this->delete_element();
+      // Unimplemented
+      fmt::print("{}", "\nDelete command...\n");
       break;
     case Command::Search:
       // This search if movie exists
       // Unimplemented
-      break;
-    case Command::Query:
-      // This query for specific, i.e., query all movies watching
-      // probly hard to implement
-      // Unimplemented
+      fmt::print("{}", "\nSearch command...\n");
       break;
     case Command::About:
       // Show application information
       // Unimplemented
+      fmt::print("{}", "\nAbout command...\n");
+      break;
+    case Command::List:
+      // List all Elements
+      // TODO: Add options to list only movies and tvshows,
+      // and by filters (e.g. list all completed).
+      this->list_all_movies();
+      this->list_all_tvshows();
+      break;
+    case Command::Cmd:
+      // Show all list of commands.
+      // Unimplemented
+      this->cmd();
+      break;
+    case Command::Unknown:
+      fmt::print("Unknown command!\n");
+      break;
+    default:
+      fmt::print("Unhandled case!\n");
       break;
   }
 }
 
-int Controller::get_command(const std::string &command)
-{
-  int x = -1;
+Command Controller::get_command(std::string_view command) {
   // Can't use switch with strings
-  if (command == "-h") {
-    x = 0;
-  } else if (command == "-x") {
-    x = 1;
-  } else if (command == "-a") {
-    x = 2;
-  } else if (command == "-e") {
-    x = 3;
-  } else if (command == "-d") {
-    x = 4;
-  } else if (command == "-s") {
-    x = 5;
-  } else if (command == "-q") {
-    x = 6;
-  } else if (command == "-A") {
-    x = 7;
+  if (command == "HELP") {
+    return Command::Help;
+  } else if (command == "EXIT") {
+    return Command::Exit;
+  } else if (command == "ADD") {
+    return Command::Add;
+  } else if (command == "EDIT") {
+    return Command::Edit;
+  } else if (command == "DELETE") {
+    return Command::Delete;
+  } else if (command == "SEARCH") {
+    return Command::Search;
+  } else if (command == "ABOUT") {
+    return Command::About;
+  } else if (command == "LIST") {
+    return Command::List;
+  } else if (command == "CMD") {
+    return Command::Cmd;
+  } else {
+    return Command::Unknown;
   }
-
-  return x;
 }
 
-void Controller::exit()
-{
+void Controller::exit() {
   auto app = get_application();
   app->exit_application();
 }
 
-// TODO: incomplete, change the wordings.
-void Controller::help()
-{
-  const std::string commands =
-    fmt::format("\n\t - Usage:\n\n"
-                "\t -a \tadd.\n"
-                "\t\t Add a new object to your track database.\n"
-                "\t\t\t User can add movie or tv show.\n"
-                "\t\t\t There are two ways to add a new object.\n"
-                "\t\t\t Basic: you're asked to enter a name.\n"
-                "\t\t\t Full: you're asked to enter name, rating, year, stats(optional).\n\n"
-                "\t -e \tedit.\n"
-                "\t\t Edit an object.\n\n"
-                "\t -d \tdelete.\n"
-                "\t\t Delete an object.\n\n"
-                "\t -s \tsearch.\n"
-                "\t\t Search for an object.\n\n"
-                "\t -q \tquery.\n"
-                "\t\t Query for an object.\n"
-                "\t\t\t Query is an advanced version of search. For instance, user can search "
-                "for all movies with status 'Watching'.\n\n"
-                "\t -A \tabout.\n"
-                "\t\t Information about the application.\n\n"
-                "\t -x \texit.\n"
-                "\t\t Exit the application.\n\n"
-                "\t -h = \thelp.\n"
-                "\t\t Show command instructions.\n\n");
+inline void Controller::cmd() const {
+  fmt::print("Available commands: ");
+  std::copy(std::begin(this->commands_list), std::end(this->commands_list),
+            std::ostream_iterator<std::string>(std::cout, " "));
+  fmt::print("\n");
+}
 
+// TODO: incomplete, change the wordings.
+inline void Controller::help() const {
+  const std::string commands = R"(
+    - Usage:
+
+        ADD     add
+                Add a new object to your track database.
+                User can add movie or tv show.
+
+        EDIT    edit
+                Edit an object.
+
+        DELETE  delete
+                Delete an object.
+
+        SEARCH  search
+                Search for an object.
+
+        LIST    list
+                List all
+                List all movies or tv show.
+                List by filters (e.g. list completed movies or/and tv show)
+
+        EXIT    exit
+                Exit the application.
+
+        CMD     command
+                Show available commands.
+
+        ABOUT   about
+                Information about the application.
+
+        HELP    help
+                Show this command list.
+
+  )";
   fmt::print(commands);
 }
 
 // Add new movie or tvshow
-void Controller::add_menu()
-{
-  auto app = get_application();
+void Controller::add_menu() {
+  auto [user_chose, type] = internal::movie_or_tvshow();
 
-  fmt::print("Movie [m] or Tv Show [t]?  : ");
-  char user_choose;
-  bool user_choice = false;
-
-  do {
-    std::cin >> user_choose;
-
-    if (std::tolower(user_choose) == 'm') {
-      // call movie constructor.
-      this->add_movie();
-      user_choice = true;
-    } else if (std::tolower(user_choose) == 't') {
-      // call tvshow constructor.
-      this->add_tvshow();
-      user_choice = true;
-
-    } else if (std::tolower(user_choose) == 'c') {
-      user_choice = true;
-      app->exit_application();
-    } else {
-      fmt::print("Wrong option! Enter [m] or [t].\n");
-      fmt::print("Enter [c] to cancel. : ");
+  if (user_chose) {
+    switch (type) {
+      case Type::Movie:
+        this->add_movie();
+        break;
+      case Type::TvShow:
+        this->add_tvshow();
+        break;
+      case Type::None:
+        return;
     }
-  } while (!user_choice);
+  }
 }
 
-void Controller::add_movie()
-{
-  fmt::print("Adding a new Movie...\n"
-             "Basic or Complete creation? [b/c] : ");
-  char option_creation;
-  std::cin >> option_creation;
-  std::cin.get();
+void Controller::add_movie() {
+  int stat{-1};
+  double rating{0.0};
 
-  auto database = get_database();
-
+  fmt::print("Adding a new Movie...\nEnter the name, please.\n-> ");
   std::string name;
-  double rating;
-  int year;
-  int stats;
+  std::cin.get();  // to consume enter.
+  std::getline(std::cin, name);
+
+  fmt::print("Do you want to add a stat? (y/n) : ");
+
   char confirm;
-
-  if (std::tolower(option_creation) == 'b') {
-    fmt::print("\nPlease enter a name\nPlease add no spaces, use underscore\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name;
-      fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
-
-    Movies movie(name);
-    this->movies_list_.push_back(movie);
-    database->save(movie);
-
-  } else if (std::tolower(option_creation) == 'c') {
-    fmt::print("\nPlease enter the name, the rating, the year and the stats. in one "
-               "single line\nExample: "
-               "The_Avengers 10.0 2009 0\n.Use underscore instead of spaces.\nStats: "
-               "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name >> rating >> year >> stats;
-      fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
-                 "Confirm?[y/n]\n-> ",
-                 name, rating, year, stats);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
-
-    Movies movie(name, static_cast<double>(rating), static_cast<int>(year),
-                 static_cast<Stats>(stats));
-    this->movies_list_.push_back(movie);
-    database->save(movie);
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print(
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
+      "Dropped (4)\n-> ");
+    std::cin >> stat;
   }
 
-  fmt::print("New movie, {}, has been added!\n", name);
+  fmt::print("Do you want to add a rating? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the rating.\n-> ");
+    std::cin >> rating;
+  }
+
+  Movies movie(internal::add_context<Movies>(name, rating, stat));
+  auto *database = get_database();
+  database->insert(Query::make_insert_query(movie));
+  this->load_content();
 }
 
-void Controller::add_tvshow()
-{
-  fmt::print("Adding a new Tv Show...\nBasic or Complete creation? [b/c] : ");
-  char option_creation;
-  std::cin >> option_creation;
-  std::cin.get();
+void Controller::add_tvshow() {
+  int stat{-1};
+  double rating{0.0};
+  int episode{0};
+  int last_episode{0};
 
-  auto database = get_database();
-
+  fmt::print(
+    "\n***\nNote: Currently, Pholos doesn't support season. That means if you "
+    "want to add a TV Show with many seasons, you have to add a new TV Show "
+    "for each "
+    "season.\n\nAdding a new TvShow...\nEnter the name, "
+    "please.\n-> ");
   std::string name;
-  double rating;
-  int year;
-  int stats;
-  int season;
-  int episode;
+  std::cin.get();  // to consume enter.
+  std::getline(std::cin, name);
+
+  fmt::print("Do you want to add a stat? (y/n) : ");
+
   char confirm;
-  std::map<int, int> seasons;
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print(
+      "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
+      "Dropped (4)\n-> ");
+    std::cin >> stat;
+  }
 
-  if (std::tolower(option_creation) == 'b') {
-    fmt::print("Please enter a name\nPlease add no spaces, use underscore\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name;
-      fmt::print("You entered \"{}\"\nDo you Confirm?[y/n]\n-> ", name);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
+  fmt::print("Do you want to add a rating? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the rating.\n-> ");
+    std::cin >> rating;
+  }
 
-    TvShow show(name);
+  fmt::print("Do you want to add how many episodes there are? (y/n) : ");
+  std::cin >> confirm;
+  if (std::tolower(confirm) == 'y') {
+    fmt::print("Enter the total episodes.\n-> ");
+    std::cin >> last_episode;
 
-    this->tv_show_list_.push_back(show);
-    database->save(show);
-
-  } else if (std::tolower(option_creation) == 'c') {
-    fmt::print("Please enter a name, rating, year, and stats. in one single line\nExample: "
-               "Two_and_a_half_man 10.0 2008 0\n.Use underscore instead of spaces.\nStats: "
-               "0 = Plan to Watch, 1 = Watching, 2 = Completed, 3 = Dropped\n");
-    do {
-      fmt::print("-> ");
-      std::cin >> name >> rating >> year >> stats;
-      fmt::print("You entered Name: {0}, Rating: {1}, Year: {2}, Stats: {3}.\nDo you "
-                 "Confirm?[y/n]\n-> ",
-                 name, rating, year, stats);
-      std::cin >> confirm;
-      if (std::tolower(confirm) == 'y') {
-        break;
-      }
-    } while (true);
-
-    fmt::print("Please enter number of seasons\n-> ");
-    std::cin >> season;
-    fmt::print("Please enter number of episodes for each season\n");
-    for (int i = 1; i < season + 1; i++) {
-      fmt::print("Season {}\n-> ", i);
+    if (stat != 3) {
+      fmt::print("What episode are you on?\n-> ");
       std::cin >> episode;
-      fmt::print("Season {0} : Episode(s) {1}\n", i, episode);
-      seasons.insert({ i, episode });
     }
-
-    fmt::print("You entered:\n");
-    for (std::map<int, int>::iterator iterMap = seasons.begin(); iterMap != seasons.end();
-         ++iterMap) {
-      fmt::print("Seasons {0} : Episode(s) {1}\n", iterMap->first, iterMap->second);
-    }
-
-    TvShow show(name, static_cast<int>(year), static_cast<double>(rating), seasons,
-                static_cast<Stats>(stats));
-    this->tv_show_list_.push_back(show);
-    database->save(show);
   }
 
-  fmt::print("New Tv Show, {}, has been added!\n", name);
+  TvShow tvshow(
+    internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
+  auto *database = get_database();
+  database->insert(Query::make_insert_query(tvshow));
+  this->load_content();
 }
 
-void Controller::delete_element()
-{
-  auto app = get_application();
+// Content cache.
+// When we run the application for the first time. We call load_content to
+// populate movies_list and tvshow_list. To avoid reading database to check if a
+// content is in it.
+void Controller::load_content() {
+#if defined(_DEBUG)
+  fmt::print("Loading contents into cache...\n");
+#endif
+  auto *database    = get_database();
+  auto movies_list  = database->select_all_movies();
+  auto tvshows_list = database->select_all_tvshows();
 
-  fmt::print("Movie [m] or Tv Show [t]?  : ");
-  char user_choose;
-  bool user_choice = false;
+  // Whenever we add a new object, we call load_content to reload the cache...
+  // So that we can get the object's id.
+  // So we clear the cache before loading it again.
+  // There is probably a better way, but we're doing this for now.
+  this->movies_cache_.clear();
+  this->tvshow_cache_.clear();
 
-  do {
-    std::cin >> user_choose;
+  this->movies_cache_ = movies_list;
+  this->tvshow_cache_ = tvshows_list;
 
-    if (std::tolower(user_choose) == 'm') {
-      this->delete_movie();
-      user_choice = true;
-    } else if (std::tolower(user_choose) == 't') {
-      this->delete_tvshow();
-      user_choice = true;
-
-    } else if (std::tolower(user_choose) == 'c') {
-      user_choice = true;
-      app->exit_application();
-    } else {
-      fmt::print("Wrong option! Enter [m] or [t].\n");
-      fmt::print("Enter [c] to cancel. : ");
-    }
-  } while (!user_choice);
+#if defined(_DEBUG)
+  fmt::print("Loaded movies and tvshows cache... {} movies, {} tvshow.\n",
+             this->movies_cache_.size(), this->tvshow_cache_.size());
+#endif
 }
 
-void Controller::delete_movie()
-{
-  auto database = get_database();
-  fmt::print("Enter the movie name. If name has spaces add _ (underscore)\n: ");
-  std::string name;
-  std::cin >> name;
-
-  const bool found = database->search(name, 'm');
-  if (!found) {
-    fmt::print("Movie {} not found", name);
+void Controller::list_all_movies() {
+  fmt::print("\n");
+  if (this->movies_cache_.empty()) {
+    fmt::print("\n***\nYour movie list is empty!\n");
     return;
   }
 
-  // Maybe a confirmation that the process worked.
-  database->delete_element(name, 'm');
+  // Get the length of the biggest movie's name.
+  // id width | word width | rating width | stat width |
+  // 0          1            2              3
+  // Id | Name | Rating | Stat
+  // 4    5      6        7
+  std::size_t biggest_word = 0;
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
+                [&](const auto &obj) {
+                  std::size_t movie_name_length = obj.second.name().size();
+                  biggest_word = movie_name_length > biggest_word
+                                   ? movie_name_length
+                                   : biggest_word;
+                });
+
+  // TODO: Turn this into a routine
+  // TOP
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
+  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "Movie ID", "Name",
+             "Rating", "Stat");
+
+  // MID
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
+
+  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
+                [=](const auto &obj) {
+                  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                             Width::ID, biggest_word, Width::Rating,
+                             Width::Stat, obj.first, obj.second.name(),
+                             obj.second.rating(), obj.second.stat_as_string());
+                });
+
+  // BOTTOM
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
+             biggest_word, Width::Rating, Width::Stat, "");
 }
 
-void Controller::delete_tvshow()
-{
-  auto database = get_database();
-  fmt::print("Enter the tv show name. If name has spaces add _ (underscore)\n: ");
-  std::string name;
-  std::cin >> name;
-
-  const bool found = database->search(name, 't');
-  if (!found) {
-    fmt::print("Tv Show {} not found", name);
+void Controller::list_all_tvshows() {
+  fmt::print("\n");
+  if (this->tvshow_cache_.empty()) {
+    fmt::print("Your tv show list is empty!\n");
     return;
   }
 
-  // Maybe a confirmation that the process worked.
-  database->delete_element(name, 't');
+  // id width | word width | rating width | stat width | episode width |
+  // 0          1            2              3            4
+  // total episode
+  // 5
+  //
+  // Id | Name | Rating | Stat | Episode | Total Episodes
+  // 6    7      8        9      10        11
+
+  std::size_t biggest_word = 0;
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
+                [&](const auto &obj) {
+                  std::size_t tv_name_length = obj.second.name().size();
+                  biggest_word = tv_name_length > biggest_word ? tv_name_length
+                                                               : biggest_word;
+                });
+
+  // TODO: Turn this into a routine
+  // TOP
+  fmt::print(
+    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
+  fmt::print(
+    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+    "Total Episodes");
+
+  // MID
+  fmt::print(
+    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
+
+  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
+                [=](const auto &obj) {
+                  fmt::print(
+                    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+                    "{11:<{5}} |\n",
+                    Width::ID + 2, biggest_word, Width::Rating, Width::Stat,
+                    Width::Episode, Width::Total_Episode, obj.first,
+                    obj.second.name(), obj.second.rating(),
+                    obj.second.stat_as_string(), obj.second.episode(),
+                    obj.second.last_episode());
+                });
+
+  // BOTTOM
+  fmt::print(
+    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    "\n",
+    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+    Width::Total_Episode, "");
 }
+
+bool Controller::id_exist(const int id, Type type) {
+  auto found = false;
+  switch (type) {
+    case Type::Movie:
+      if (auto search = this->movies_cache_.find(id);
+          search != this->movies_cache_.end()) {
+        found = true;
+      }
+      break;
+    case Type::TvShow:
+      if (auto search = this->tvshow_cache_.find(id);
+          search != this->tvshow_cache_.end()) {
+        found = true;
+        break;
+      }
+    case Type::None:
+      fmt::print("Error! case Type::None is not a real object!\n");
+      break;
+  }
+  return found;
+}
+
+void Controller::edit() {
+  // Which object we want to edit: movie or tv show.
+  auto [user_chose, type] = internal::movie_or_tvshow();
+
+  if (user_chose) {
+    switch (type) {
+      case Type::Movie:
+        this->list_all_movies();
+        break;
+      case Type::TvShow:
+        this->list_all_tvshows();
+        break;
+      case Type::None:
+        return;
+    }
+  }
+  this->edit_menu(type);
+}
+
+void Controller::edit_menu(Type type) {
+  int edit_option = 0;
+
+  fmt::print(
+    "\n***\nNote: You must know the object id in other to edit.\nUse list all "
+    "to get the id.\n\n");
+  // Check for object's id.
+  int id     = internal::get_user_input<int>("Please enter the id.\n-> ");
+  bool exist = this->id_exist(id, type);
+
+  if (!exist) {
+    fmt::print("The id doesn't exist.\n");
+    return;
+  }
+
+  // TODO: handle wrong usage: edit_option > 5 and < 1;
+  switch (type) {
+    case Type::Movie:
+      fmt::print(
+        "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
+        "(3)\n\n-> ");
+      std::cin >> edit_option;
+      break;
+    case Type::TvShow:
+      fmt::print(
+        "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
+        "(3)\n "
+        "Change episode "
+        "(4)\n "
+        "Change total episode (5)\n\n-> ");
+      std::cin >> edit_option;
+      break;
+  }
+
+  // TODO: handle wrong user input
+  // We update the objects in database using the ID.
+  auto *database = get_database();
+  switch (edit_option) {
+    case 1: {
+      const std::string name = internal::get_user_input<std::string>(
+        "Enter the new name, please.\n-> ");
+      database->update_name(id, name, type);
+    } break;
+    case 2: {
+      const int stat = internal::get_user_input<int>(
+        "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
+        "(3)\n Dropped "
+        "(4)\n-> ");
+      database->update_stat(id, stat, type);
+    } break;
+    case 3: {
+      const double rating =
+        internal::get_user_input<double>("Enter the new rating.\n-> ");
+      database->update_rating(id, rating, type);
+    } break;
+    case 4: {
+      // We ask user the number of episodes to increment. Default is by 1.
+      const bool update_more_than_one = internal::get_user_input<bool>(
+        "Do you want to update more than 1? (y/n)\n-> ");
+      if (update_more_than_one) {
+        const int distance =
+          internal::get_user_input<int>("Enter the amount to increment.\n-> ");
+        database->update_episode(id, type, distance);
+      } else {
+        database->update_episode(id, type);
+      }
+    } break;
+    case 5: {
+      const int total_episode =
+        internal::get_user_input<int>("Enter the new total episode.\n-> ");
+      database->update_total_episode(id, total_episode, type);
+    } break;
+    default:
+      fmt::print("Unhandled case!!!\n");
+      break;
+  }
+  // LOL: We have to update the cache.
+  this->load_content();
+
+  this->print(id, type);
+}
+
+void Controller::print(const int id, Type type) const {
+  std::string top;
+  std::string mid;
+  std::string title;
+  std::string context;
+  std::string bottom;
+  std::size_t word_size = 0;
+
+  if (type == Type::Movie) {
+    auto movie = movies_cache_.at(id);
+    word_size  = movie.name().size();
+    top     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+    title   = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                        Width::ID, word_size, Width::Rating, Width::Stat,
+                        "Movie ID", "Name", "Rating", "Stat");
+    mid     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+    context = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+                          Width::ID, word_size, Width::Rating, Width::Stat, id,
+                          movie.name(), movie.rating(), movie.stat_as_string());
+    bottom  = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+                         Width::ID, word_size, Width::Rating, Width::Stat, "");
+  } else if (type == Type::TvShow) {
+    auto tvshow = tvshow_cache_.at(id);
+    word_size   = tvshow.name().size();
+    top         = fmt::format(
+      "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      "+\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+    title = fmt::format(
+      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+      "Total Episodes");
+    mid = fmt::format(
+      "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      "+\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+    context = fmt::format(
+      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+      "{11:<{5}} |\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, id, tvshow.name(), tvshow.rating(),
+      tvshow.stat_as_string(), tvshow.episode(), tvshow.last_episode());
+    bottom = fmt::format(
+      "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
+      "+\n",
+      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, "");
+  }
+
+  fmt::print("{}{}{}{}{}", top, title, mid, context, bottom);
+}
+
 }  // namespace Pholos

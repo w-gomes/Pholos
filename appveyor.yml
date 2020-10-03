@@ -1,14 +1,26 @@
 branches:
     only:
-        - Dev
-        - master
-image: Visual Studio 2017
+      - Dev
+      # - master
+image: 
+    - Visual Studio 2019
 
 configuration:
     - Debug
+    - Release
 
 before_build:
-    - cmake -DCMAKE_GENERATOR_PLATFORM=x64 -Bbuild
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_GENERATOR_PLATFORM=x64 -DENABLE_TEST=ON
 
-build:
-    project: build/Pholos.sln
+build_script:
+    - cmake --build . --config %CONFIGURATION%
+
+before_test:
+    - cd Pholos
+    - cd test
+    - cd %CONFIGURATION%
+
+test_script:
+    - Tests.exe
