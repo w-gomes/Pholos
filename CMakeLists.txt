@@ -30,7 +30,7 @@ set(Pholos_SOURCES
     Pholos/src/database.cpp
     Pholos/src/controller.cpp
     Pholos/src/movies.cpp
-    Pholos/src/entertainment.cpp
+    Pholos/src/content-base.cpp
     Pholos/src/internal.cpp
     )
 

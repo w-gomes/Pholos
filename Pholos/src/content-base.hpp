@@ -1,18 +1,16 @@
 #pragma once
 
-/* entertainment.hpp - Abstract class for Movies, TvShow, Anime
+/* content-base.hpp - Abstract class for Movies, TvShow, Anime
  *
  */
 
 #include <string>
 
-#include "constants.hpp"
-
 namespace Pholos {
 
-class Entertainment {
+class ContentBase {
  public:
-  Entertainment() = default;
+  ContentBase() = default;
 
   virtual std::string name() const           = 0;
   virtual double rating() const              = 0;
@@ -23,9 +21,17 @@ class Entertainment {
   void change_rating(double new_rating);
   void change_name(const std::string &new_name);
 
-  virtual ~Entertainment() = default;
+  virtual ~ContentBase() = default;
 
  protected:
+  enum class Stats {
+    NotSet      = -1,
+    Watching    = 1,
+    PlanToWatch = 2,
+    Completed   = 3,
+    Dropped     = 4
+  };
+
   void set_members(std::string name, double rating, int stat);
 
   std::string name_{};

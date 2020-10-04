@@ -2,12 +2,11 @@
 
 #include <string>
 
-#include "constants.hpp"
-#include "entertainment.hpp"
+#include "content-base.hpp"
 
 namespace Pholos {
 
-class Movies : public Entertainment {
+class Movies : public ContentBase {
  public:
   Movies() = default;
   Movies(std::string name, double rating, int stat);
