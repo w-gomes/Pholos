@@ -377,10 +377,10 @@ void Controller::load_content() {
 
   // Desired API call
   // database->select(Type::Movie, Select_Type::All);
-  auto movies_list = database->select_movies();
+  const auto movies_list = database->select_movies();
   // Desired API call
   // database->select(Type::TvShow, Select_Type::All);
-  auto tvshows_list = database->select_tvshows();
+  const auto tvshows_list = database->select_tvshows();
 
   // Whenever we add a new object, we call load_content to reload the cache...
   // So that we can get the object's id.
@@ -405,8 +405,9 @@ void Controller::list_all_movies() {
   const int search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
-  auto *database  = get_database();
-  auto movie_list = database->select_movies(static_cast<Stats>(search_type));
+  auto *database = get_database();
+  const auto movie_list =
+    database->select_movies(static_cast<Stats>(search_type));
   if (movie_list.empty()) {
     fmt::print("\n***\nNo movie was found for this search type.\n");
     return;
@@ -455,8 +456,9 @@ void Controller::list_all_tvshows() {
   const int search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
-  auto *database   = get_database();
-  auto tvshow_list = database->select_tvshows(static_cast<Stats>(search_type));
+  auto *database = get_database();
+  const auto tvshow_list =
+    database->select_tvshows(static_cast<Stats>(search_type));
   if (tvshow_list.empty()) {
     fmt::print("\n***\nNo tvshow was found for this search type.\n");
     return;
@@ -539,7 +541,7 @@ bool Controller::id_exist(const int id, Type type) {
 
 void Controller::edit() {
   // Which object we want to edit: movie or tv show.
-  auto [user_chose, type] = internal::movie_or_tvshow();
+  const auto [user_chose, type] = internal::movie_or_tvshow();
 
   if (user_chose) {
     switch (type) {
@@ -647,8 +649,8 @@ void Controller::print(const int id, Type type) const {
   std::size_t word_size = 0;
 
   if (type == Type::Movie) {
-    auto movie = movies_cache_.at(id);
-    word_size  = movie.name().size();
+    const auto movie = movies_cache_.at(id);
+    word_size        = movie.name().size();
     top     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
                       Width::ID, word_size, Width::Rating, Width::Stat, "");
     title   = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
@@ -662,9 +664,9 @@ void Controller::print(const int id, Type type) const {
     bottom  = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
                          Width::ID, word_size, Width::Rating, Width::Stat, "");
   } else if (type == Type::TvShow) {
-    auto tvshow = tvshow_cache_.at(id);
-    word_size   = tvshow.name().size();
-    top         = fmt::format(
+    const auto tvshow = tvshow_cache_.at(id);
+    word_size         = tvshow.name().size();
+    top               = fmt::format(
       "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
       "+\n",
       Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
