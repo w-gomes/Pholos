@@ -49,11 +49,11 @@ class Database {
   // and for a single object we return a pair
   // std::pair<int, Object>.
   // id | object
-  auto select(/*Type context_type,*/ Select_Type select_type);
+  // auto select(Type context_type, Stats stat = Stats::NotSet);
 
   // TODO: Make these two private.
-  std::map<int, Movies> select_all_movies();
-  std::map<int, TvShow> select_all_tvshows();
+  std::map<int, Movies> select_movies(Stats stat = Stats::NotSet);
+  std::map<int, TvShow> select_tvshows(Stats stat = Stats::NotSet);
   // std::pair<int, Movies> select_movies();
   // std::pair<int, TvShow> select_tvshows();
   // TODO: select * FROM (movies|tvshow) WHERE stats=#;

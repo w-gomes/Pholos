@@ -25,5 +25,13 @@ enum Width : std::size_t {
   Total_Episode = 14
 };
 
+enum class Stats {
+  NotSet      = -1,
+  Watching    = 1,
+  PlanToWatch = 2,
+  Completed   = 3,
+  Dropped     = 4
+};
+
 enum class Select_Type { All, Filtered };
 }  // namespace Pholos

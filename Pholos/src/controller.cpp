@@ -160,9 +160,6 @@ void Controller::draw_menu() {
     case Command::Unknown:
       fmt::print("Unknown command!\n");
       break;
-    default:
-      fmt::print("Unhandled case!\n");
-      break;
   }
 }
 
@@ -209,11 +206,24 @@ inline void Controller::help() const {
     - Usage:
 
         ADD     add
-                Add a new object to your track database.
-                User can add movie or tv show.
+                Add a new movie or tv show to your database.
+                Options: m -> movie
+                         t -> tv show
+
+                You can add a name, a status (Watching, Plan to Watch, Completed or Dropped) [optional],
+                and a rating [optional] to a Movie and Tv Show.
+
+                Additionally, for Tv Show, you can add a number of episodes and the episode you're on.
 
         EDIT    edit
                 Edit an object.
+                Options: m -> movie
+                         t -> tv show
+
+                Users must know the id of the movie or tvshow.
+                Picking the option 'm' or 't', a table will be displayed, so that users can get the id.
+                For movies, users can edit the name, status and rating.
+                For tvshows, users can edit the name, status, rating, total episodes and the current episode.
 
         DELETE  delete
                 Delete an object.
@@ -225,6 +235,15 @@ inline void Controller::help() const {
                 List all
                 List all movies or tv show.
                 List by filters (e.g. list completed movies or/and tv show)
+
+                Options: m -> movie
+                         t -> tv show
+
+                Inner Options: -1 -> list all
+                                1 -> list only watching
+                                2 -> list only plan to watch
+                                3 -> list only completed
+                                4 -> list only dropped
 
         EXIT    exit
                 Exit the application.
@@ -354,9 +373,14 @@ void Controller::load_content() {
 #if defined(_DEBUG)
   fmt::print("Loading contents into cache...\n");
 #endif
-  auto *database    = get_database();
-  auto movies_list  = database->select_all_movies();
-  auto tvshows_list = database->select_all_tvshows();
+  auto *database = get_database();
+
+  // Desired API call
+  // database->select(Type::Movie, Select_Type::All);
+  auto movies_list = database->select_movies();
+  // Desired API call
+  // database->select(Type::TvShow, Select_Type::All);
+  auto tvshows_list = database->select_tvshows();
 
   // Whenever we add a new object, we call load_content to reload the cache...
   // So that we can get the object's id.
@@ -375,9 +399,16 @@ void Controller::load_content() {
 }
 
 void Controller::list_all_movies() {
-  fmt::print("\n");
-  if (this->movies_cache_.empty()) {
-    fmt::print("\n***\nYour movie list is empty!\n");
+  const std::string msg =
+    "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
+    "watch\n 3 - completed\n 4 - dropped\n-> ";
+  const int search_type = internal::get_user_input<int>(msg);
+  fmt::print("search_type is {}.\n", search_type);
+
+  auto *database  = get_database();
+  auto movie_list = database->select_movies(static_cast<Stats>(search_type));
+  if (movie_list.empty()) {
+    fmt::print("\n***\nNo movie was found for this search type.\n");
     return;
   }
 
@@ -387,13 +418,11 @@ void Controller::list_all_movies() {
   // Id | Name | Rating | Stat
   // 4    5      6        7
   std::size_t biggest_word = 0;
-  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
-                [&](const auto &obj) {
-                  std::size_t movie_name_length = obj.second.name().size();
-                  biggest_word = movie_name_length > biggest_word
-                                   ? movie_name_length
-                                   : biggest_word;
-                });
+  std::for_each(movie_list.begin(), movie_list.end(), [&](const auto &obj) {
+    std::size_t movie_name_length = obj.second.name().size();
+    biggest_word =
+      movie_name_length > biggest_word ? movie_name_length : biggest_word;
+  });
 
   // TODO: Turn this into a routine
   // TOP
@@ -407,13 +436,12 @@ void Controller::list_all_movies() {
   fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
              biggest_word, Width::Rating, Width::Stat, "");
 
-  std::for_each(this->movies_cache_.begin(), this->movies_cache_.end(),
-                [=](const auto &obj) {
-                  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
-                             Width::ID, biggest_word, Width::Rating,
-                             Width::Stat, obj.first, obj.second.name(),
-                             obj.second.rating(), obj.second.stat_as_string());
-                });
+  std::for_each(movie_list.begin(), movie_list.end(), [=](const auto &obj) {
+    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID,
+               biggest_word, Width::Rating, Width::Stat, obj.first,
+               obj.second.name(), obj.second.rating(),
+               obj.second.stat_as_string());
+  });
 
   // BOTTOM
   fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
@@ -421,9 +449,16 @@ void Controller::list_all_movies() {
 }
 
 void Controller::list_all_tvshows() {
-  fmt::print("\n");
-  if (this->tvshow_cache_.empty()) {
-    fmt::print("Your tv show list is empty!\n");
+  const std::string msg =
+    "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
+    "watch\n 3 - completed\n 4 - dropped\n-> ";
+  const int search_type = internal::get_user_input<int>(msg);
+  fmt::print("search_type is {}.\n", search_type);
+
+  auto *database   = get_database();
+  auto tvshow_list = database->select_tvshows(static_cast<Stats>(search_type));
+  if (tvshow_list.empty()) {
+    fmt::print("\n***\nNo tvshow was found for this search type.\n");
     return;
   }
 
@@ -436,12 +471,11 @@ void Controller::list_all_tvshows() {
   // 6    7      8        9      10        11
 
   std::size_t biggest_word = 0;
-  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
-                [&](const auto &obj) {
-                  std::size_t tv_name_length = obj.second.name().size();
-                  biggest_word = tv_name_length > biggest_word ? tv_name_length
-                                                               : biggest_word;
-                });
+  std::for_each(tvshow_list.begin(), tvshow_list.end(), [&](const auto &obj) {
+    std::size_t tv_name_length = obj.second.name().size();
+    biggest_word =
+      tv_name_length > biggest_word ? tv_name_length : biggest_word;
+  });
 
   // TODO: Turn this into a routine
   // TOP
@@ -463,17 +497,15 @@ void Controller::list_all_tvshows() {
     Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
     Width::Total_Episode, "");
 
-  std::for_each(this->tvshow_cache_.begin(), this->tvshow_cache_.end(),
-                [=](const auto &obj) {
-                  fmt::print(
-                    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
-                    "{11:<{5}} |\n",
-                    Width::ID + 2, biggest_word, Width::Rating, Width::Stat,
-                    Width::Episode, Width::Total_Episode, obj.first,
-                    obj.second.name(), obj.second.rating(),
-                    obj.second.stat_as_string(), obj.second.episode(),
-                    obj.second.last_episode());
-                });
+  std::for_each(tvshow_list.begin(), tvshow_list.end(), [=](const auto &obj) {
+    fmt::print(
+      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+      "{11:<{5}} |\n",
+      Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
+      Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
+      obj.second.stat_as_string(), obj.second.episode(),
+      obj.second.last_episode());
+  });
 
   // BOTTOM
   fmt::print(
