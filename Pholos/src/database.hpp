@@ -52,8 +52,8 @@ class Database {
   // auto select(Type context_type, Stats stat = Stats::NotSet);
 
   // TODO: Make these two private.
-  std::map<int, Movies> select_movies(Stats stat = Stats::NotSet);
-  std::map<int, TvShow> select_tvshows(Stats stat = Stats::NotSet);
+  std::map<int, Movies> select_movies(Stats st = Stats::NotSet);
+  std::map<int, TvShow> select_tvshows(Stats st = Stats::NotSet);
   // std::pair<int, Movies> select_movies();
   // std::pair<int, TvShow> select_tvshows();
   // TODO: select * FROM (movies|tvshow) WHERE stats=#;

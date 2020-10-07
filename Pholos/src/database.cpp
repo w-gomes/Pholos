@@ -122,14 +122,14 @@ auto Database::select(Type context_type, Stats stat) {
 }
 */
 
-std::map<int, Movies> Database::select_movies(Stats stat) {
+std::map<int, Movies> Database::select_movies(Stats st) {
   try {
     SQLite::Database db(this->database_name_);
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
-    const auto query_str = [stat]() -> std::string {
-      switch (stat) {
+    const auto query_str = [st]() -> std::string {
+      switch (st) {
         case Stats::NotSet:
           return Query::select_all_movie;
         case Stats::Watching:
@@ -167,14 +167,14 @@ std::map<int, Movies> Database::select_movies(Stats stat) {
   }
 }
 
-std::map<int, TvShow> Database::select_tvshows(Stats stat) {
+std::map<int, TvShow> Database::select_tvshows(Stats st) {
   try {
     SQLite::Database db(this->database_name_);
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
-    const auto query_str = [stat]() -> std::string {
-      switch (stat) {
+    const auto query_str = [st]() -> std::string {
+      switch (st) {
         case Stats::NotSet:
           return Query::select_all_tvshow;
         case Stats::Watching:
