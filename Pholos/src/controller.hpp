@@ -53,7 +53,6 @@ class Controller {
   void draw_menu();
   void cmd() const;
   void help() const;
-  void exit();
   void add_menu();
   void edit();
   void edit_menu(Type type);
@@ -61,6 +60,8 @@ class Controller {
   void list_all_movies();
   void list_all_tvshows();
   bool id_exist(const int id, Type type);
+  bool quit(bool quit) { return this->quit_ = quit; }
+  bool exit() { return this->quit_; }
 
  private:
   // methods
@@ -70,6 +71,7 @@ class Controller {
   void print(const int id, Type type) const;
 
   // variables
+  bool quit_{false};
   static constexpr std::array commands_list = {
     "HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
     "SEARCH", "QUERY", "ABOUT", "LIST", "CMD"};

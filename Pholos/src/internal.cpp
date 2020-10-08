@@ -20,9 +20,5 @@ header_and_footer_size); fmt::print(header); for (const auto &msg : message) {
   fmt::print(footer);
 }
 */
-
-std::size_t generate_id(const std::string &s) {
-  return std::hash<std::string>{}(s);
-}
 }  // namespace Internal
 }  // namespace Pholos

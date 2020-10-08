@@ -6,7 +6,6 @@ namespace Pholos {
 
 class Application {
  public:
-  inline static Application *instance = nullptr;
   static void welcome_message();
 
   Application()  = default;
@@ -19,7 +18,6 @@ class Application {
 
   void run_application();
   void exit_application();
-  void init();
 
  private:
   // methods
@@ -33,6 +31,4 @@ class Application {
   Controller controller_{};
   Database database_{};
 };
-
-Application *get_application();
 }  // namespace Pholos

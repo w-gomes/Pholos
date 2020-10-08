@@ -54,7 +54,6 @@ void Application::run_application() {
   this->running_ = true;
 
   // Initializes database
-  this->database_.set_database_name("data.sqlite3");
   this->database_.init(this->db_loaded_);
 
   if (!this->is_db_loaded()) {
@@ -68,6 +67,11 @@ void Application::run_application() {
   // Application loop
   this->controller_.press_any_key();
   while (is_running()) {
+    if (this->controller_.exit()) {
+      // pepegawildhammer
+      this->exit_application();
+      break;
+    }
     this->controller_.draw_menu();
   }
 }
@@ -80,11 +84,4 @@ void Application::exit_application() {
   fmt::print("\nBye!\n");
   this->running_ = false;
 }
-
-Application *get_application() {
-  assert(Application::instance != nullptr);
-  return Application::instance;
-}
-
-void Application::init() { this->instance = this; }
 }  // namespace Pholos
