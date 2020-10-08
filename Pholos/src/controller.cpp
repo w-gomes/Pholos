@@ -78,12 +78,10 @@ auto movie_or_tvshow() {
 }  // namespace internal
 
 void Controller::press_any_key() {
-  auto *app = get_application();
-
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
   int input = _getch();
   if (input == 0x1B)
-    app->exit_application();
+    this->quit(true);
   else {
     return;
   }
@@ -91,9 +89,6 @@ void Controller::press_any_key() {
 
 // Refactor this
 void Controller::draw_menu() {
-  // Maybe we don't need this.
-  // auto app = get_application();
-
   fmt::print("\nEnter an option! Type [HELP] for command list : ");
   std::string command;
   std::cin >> command;
@@ -110,7 +105,7 @@ void Controller::draw_menu() {
       this->help();
       break;
     case Command::Exit:
-      this->exit();
+      this->quit(true);
       break;
     case Command::Add:
       // Add new movie or tv show
@@ -186,11 +181,6 @@ Command Controller::get_command(std::string_view command) {
   } else {
     return Command::Unknown;
   }
-}
-
-void Controller::exit() {
-  auto app = get_application();
-  app->exit_application();
 }
 
 inline void Controller::cmd() const {
