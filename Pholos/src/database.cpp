@@ -40,7 +40,7 @@ inline std::string type_to_string(Type type) {
 
 bool Database::create_database_file() {
   // Check if the database file already exists.
-  std::ifstream file(this->database_name_);
+  std::ifstream file(Database::database_name_);
   if (file.is_open()) {
     // It does...
     fmt::print("Database file exists!\n");
@@ -48,10 +48,10 @@ bool Database::create_database_file() {
   }
 
   // Database file doesn't exist, so we create an empty one.
-  std::ofstream database_file(this->database_name_);
+  std::ofstream database_file(Database::database_name_);
   if (database_file.is_open()) {
     fmt::print("Database file {} doesn't exist. Creating one...\n",
-               this->database_name_);
+               Database::database_name_);
     return true;
   }
 
@@ -59,10 +59,8 @@ bool Database::create_database_file() {
   return false;
 }
 
-Database::Database() { this->instance = this; }
-
 void Database::init(bool &loaded) {
-  bool database_exist = this->create_database_file();
+  bool database_exist = Database::create_database_file();
   if (!database_exist) {
     fmt::print(
       "An error occurred trying to read the database file. The file might not "
@@ -72,12 +70,12 @@ void Database::init(bool &loaded) {
   }
 
   try {
-    SQLite::Database db(this->database_name_);
+    SQLite::Database db(Database::database_name_);
     fmt::print(
       "Database file {} opened successfully.\nChecking database tables...\n",
-      this->database_name_);
+      Database::database_name_);
     bool table_exists = true;
-    for (const auto &t : this->table_names_) {
+    for (const auto &t : Database::table_names_) {
       table_exists = db.tableExists(t);
       if (!table_exists) {
         fmt::print("No tables found.\n");
@@ -86,7 +84,7 @@ void Database::init(bool &loaded) {
     }
 
     if (!table_exists) {
-      this->create_table();
+      Database::create_table();
     }
 
     loaded = true;
@@ -99,7 +97,7 @@ void Database::init(bool &loaded) {
 // INSERT query.
 // The client should pass the formatted query.
 void Database::insert(std::string query) {
-  SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+  SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
   db.exec(std::move(query));
@@ -126,7 +124,7 @@ auto Database::select(Type context_type, Stats stat) {
 
 std::map<int, Movies> Database::select_movies(Stats st) {
   try {
-    SQLite::Database db(this->database_name_);
+    SQLite::Database db(Database::database_name_);
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
@@ -171,7 +169,7 @@ std::map<int, Movies> Database::select_movies(Stats st) {
 
 std::map<int, TvShow> Database::select_tvshows(Stats st) {
   try {
-    SQLite::Database db(this->database_name_);
+    SQLite::Database db(Database::database_name_);
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
@@ -226,7 +224,7 @@ void Database::update_name(const int id, const std::string &name,
   const std::string query =
     fmt::format(Query::update_name, query_type, name,
                 (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
-  this->execute_update(query);
+  Database::execute_update(query);
 }
 
 void Database::update_stat(const int id, const int stat, Type obj_type) {
@@ -236,7 +234,7 @@ void Database::update_stat(const int id, const int stat, Type obj_type) {
   const std::string query =
     fmt::format(Query::update_stat, query_type, stat,
                 (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
-  this->execute_update(query);
+  Database::execute_update(query);
 }
 
 void Database::update_rating(const int id, const double rating, Type obj_type) {
@@ -246,7 +244,7 @@ void Database::update_rating(const int id, const double rating, Type obj_type) {
   const std::string query =
     fmt::format(Query::update_rating, query_type, rating,
                 (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
-  this->execute_update(query);
+  Database::execute_update(query);
 }
 
 void Database::update_total_episode(const int id, const int total_episode,
@@ -257,7 +255,7 @@ void Database::update_total_episode(const int id, const int total_episode,
   const std::string query =
     fmt::format(Query::update_total_episode, query_type, total_episode,
                 (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
-  this->execute_update(query);
+  Database::execute_update(query);
 }
 
 void Database::update_episode(const int id, Type obj_type, const int distance) {
@@ -267,13 +265,13 @@ void Database::update_episode(const int id, Type obj_type, const int distance) {
   const std::string query =
     fmt::format(Query::update_episode, query_type, distance,
                 (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
-  this->execute_update(query);
+  Database::execute_update(query);
 }
 
 // Private section
 void Database::execute_update(const std::string &query) {
   try {
-    SQLite::Database db(this->database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
     SQLite::Transaction transaction(db);
 
     db.exec(query);
@@ -287,13 +285,13 @@ void Database::execute_update(const std::string &query) {
 
 void Database::create_table() {
   fmt::print("Creating tables now...\n");
-  this->create_movie_table();
-  this->create_tvshow_table();
+  Database::create_movie_table();
+  Database::create_tvshow_table();
   fmt::print("Done\n");
 }
 
 void Database::create_movie_table() {
-  SQLite::Database db(this->database_name_,
+  SQLite::Database db(Database::database_name_,
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
   db.exec(Query::make_create_table_query(Type::Movie));
@@ -301,16 +299,10 @@ void Database::create_movie_table() {
 }
 
 void Database::create_tvshow_table() {
-  SQLite::Database db(this->database_name_,
+  SQLite::Database db(Database::database_name_,
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
   db.exec(Query::make_create_table_query(Type::TvShow));
   transaction.commit();
-}
-
-// is this really necessary?
-Database *get_database() {
-  assert(Database::instance != nullptr);
-  return Database::instance;
 }
 }  // namespace Pholos

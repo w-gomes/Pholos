@@ -307,8 +307,7 @@ void Controller::add_movie() {
   }
 
   Movies movie(internal::add_context<Movies>(name, rating, stat));
-  auto *database = get_database();
-  database->insert(Query::make_insert_query(movie));
+  Database::insert(Query::make_insert_query(movie));
   this->load_content();
 }
 
@@ -360,8 +359,7 @@ void Controller::add_tvshow() {
 
   TvShow tvshow(
     internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
-  auto *database = get_database();
-  database->insert(Query::make_insert_query(tvshow));
+  Database::insert(Query::make_insert_query(tvshow));
   this->load_content();
 }
 
@@ -373,14 +371,12 @@ void Controller::load_content() {
 #if defined(_DEBUG)
   fmt::print("Loading contents into cache...\n");
 #endif
-  auto *database = get_database();
-
   // Desired API call
-  // database->select(Type::Movie, Select_Type::All);
-  const auto movies_list = database->select_movies();
+  // database.select(Type::Movie, Select_Type::All);
+  const auto movies_list = Database::select_movies();
   // Desired API call
-  // database->select(Type::TvShow, Select_Type::All);
-  const auto tvshows_list = database->select_tvshows();
+  // database.select(Type::TvShow, Select_Type::All);
+  const auto tvshows_list = Database::select_tvshows();
 
   // Whenever we add a new object, we call load_content to reload the cache...
   // So that we can get the object's id.
@@ -405,9 +401,8 @@ void Controller::list_all_movies() {
   const int search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
-  auto *database = get_database();
   const auto movie_list =
-    database->select_movies(static_cast<Stats>(search_type));
+    Database::select_movies(static_cast<Stats>(search_type));
   if (movie_list.empty()) {
     fmt::print("\n***\nNo movie was found for this search type.\n");
     return;
@@ -456,9 +451,8 @@ void Controller::list_all_tvshows() {
   const int search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
-  auto *database = get_database();
   const auto tvshow_list =
-    database->select_tvshows(static_cast<Stats>(search_type));
+    Database::select_tvshows(static_cast<Stats>(search_type));
   if (tvshow_list.empty()) {
     fmt::print("\n***\nNo tvshow was found for this search type.\n");
     return;
@@ -596,24 +590,23 @@ void Controller::edit_menu(Type type) {
 
   // TODO: handle wrong user input
   // We update the objects in database using the ID.
-  auto *database = get_database();
   switch (edit_option) {
     case 1: {
       const std::string name = internal::get_user_input<std::string>(
         "Enter the new name, please.\n-> ");
-      database->update_name(id, name, type);
+      Database::update_name(id, name, type);
     } break;
     case 2: {
       const int stat = internal::get_user_input<int>(
         "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
         "(3)\n Dropped "
         "(4)\n-> ");
-      database->update_stat(id, stat, type);
+      Database::update_stat(id, stat, type);
     } break;
     case 3: {
       const double rating =
         internal::get_user_input<double>("Enter the new rating.\n-> ");
-      database->update_rating(id, rating, type);
+      Database::update_rating(id, rating, type);
     } break;
     case 4: {
       // We ask user the number of episodes to increment. Default is by 1.
@@ -622,15 +615,15 @@ void Controller::edit_menu(Type type) {
       if (update_more_than_one) {
         const int distance =
           internal::get_user_input<int>("Enter the amount to increment.\n-> ");
-        database->update_episode(id, type, distance);
+        Database::update_episode(id, type, distance);
       } else {
-        database->update_episode(id, type);
+        Database::update_episode(id, type);
       }
     } break;
     case 5: {
       const int total_episode =
         internal::get_user_input<int>("Enter the new total episode.\n-> ");
-      database->update_total_episode(id, total_episode, type);
+      Database::update_total_episode(id, total_episode, type);
     } break;
     default:
       fmt::print("Unhandled case!!!\n");
