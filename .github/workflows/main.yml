@@ -32,7 +32,7 @@ jobs:
         run: |
             mkdir build
             cd build
-            cmake ..
+            cmake .. -DENABLE_TEST=OFF
             cmake --build . --config Debug
             
         shell: cmd
