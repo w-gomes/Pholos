@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [ Dev ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+      fail-fast: false
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      # Install fmt
+      - name: clone fmt
+        run: git clone https://github.com/fmtlib/fmt $HOME/runner/work/fmt
+        
+      - name: install fmt
+        run: cd $HOME/runner/work/fmt && mkdir build && cd build && cmake .. -DFMT_TEST=OFF && sudo cmake --build . --target install
+      
+      # Install catch2
+      - name: clone catch2
+        run: git clone https://github.com/catchorg/Catch2 $HOME/runner/work/Catch2
+      
+      - name: install catch2
+        run: cd $HOME/runner/work/Catch2 && mkdir build && cd build && cmake .. -DBUILD_TESTING=OFF && sudo cmake --build . --target install
+      
+      # Build
+      - name: Build
+        run: |
+            mkdir build
+            cd build
+            cmake ..
+            cmake --build . --config Debug
+        shell: cmd
