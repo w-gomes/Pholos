@@ -35,28 +35,6 @@ jobs:
             cmake .. -DFMT_TEST=OFF
             sudo cmake --build . --target install
         
-      # Install catch2
-      """
-      - name: install catch2 (windows)
-        if: startswith(matrix.os, 'windows')
-        run: |
-            git clone https://github.com/catchorg/Catch2 $HOME/runner/work/Catch2
-            cd $HOME/runner/work/Catch2
-            mkdir build
-            cd build
-            cmake .. -DBUILD_TESTING=OFF
-            cmake --build . --target install
-      
-      - name: install catch2 (ubuntu)
-        if: startswith(matrix.os, 'ubuntu')
-        run: |
-            git clone https://github.com/catchorg/Catch2 $HOME/runner/work/Catch2
-            cd $HOME/runner/work/Catch2
-            mkdir build
-            cd build
-            cmake .. -DBUILD_TESTING=OFF
-            sudo cmake --build . --target install
-      """
       # Build
       - name: Build
         run: |
