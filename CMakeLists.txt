@@ -40,7 +40,7 @@ target_link_libraries(
   ${PROJECT_NAME}
   PRIVATE project_warnings
   PUBLIC fmt::fmt-header-only
-          SQLiteCPP::SQLiteCPP
+         SQLiteCPP::SQLiteCPP
 )
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
