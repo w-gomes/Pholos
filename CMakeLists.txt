@@ -29,7 +29,7 @@ include(cmake/static_analyzers.cmake)
 
 option(ENABLE_TEST "Enable Test" ON)
 
-add_subdirectory(Pholos/external/SQLiteCPP)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/Pholos/external/SQLiteCPP)
 
 set(Pholos_SOURCES
     Pholos/src/main.cpp
