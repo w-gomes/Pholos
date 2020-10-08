@@ -37,7 +37,7 @@ jobs:
         if: startswith(matrix.os, 'windows')
         run: cd $HOME/runner/work/Catch2 && mkdir build && cd build && cmake .. -DBUILD_TESTING=OFF && cmake --build . --target install
       
-       - name: install catch2 (ubuntu)
+      - name: install catch2 (ubuntu)
         if: startswith(matrix.os, 'ubuntu')
         run: cd $HOME/runner/work/Catch2 && mkdir build && cd build && cmake .. -DBUILD_TESTING=OFF && sudo cmake --build . --target install
       
