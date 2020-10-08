@@ -36,7 +36,18 @@ jobs:
             sudo cmake --build . --target install
         
       # Build
-      - name: Build
+      - name: Build (windows)
+        if: startsWith(matrix.os, 'windows')
+        run: |
+            mkdir build
+            cd build
+            cmake .. -DENABLE_TEST=OFF
+            cmake --build . --config Debug
+            
+        shell: cmd
+
+      - name: Build (ubuntu)
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
             mkdir build
             cd build
