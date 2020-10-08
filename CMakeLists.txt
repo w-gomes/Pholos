@@ -16,6 +16,14 @@ add_library(project_warnings INTERFACE)
 include(cmake/compiler_warnings.cmake)
 set_project_warnings(project_warnings)
 
+# Link this 'library' to set the c++ standard
+add_library(project_options INTERFACE)
+target_compile_features(project_options INTERFACE cxx_std_20)
+
+# sanitizer options if supported by compiler
+include(cmake/sanitizers.cmake)
+enable_sanitizers(project_options)
+
 # static analyzers
 include(cmake/static_analyzers.cmake)
 
@@ -39,10 +47,10 @@ target_include_directories(${PROJECT_NAME} PUBLIC Pholos/src)
 target_link_libraries(
   ${PROJECT_NAME}
   PRIVATE project_warnings
+          project_options
   PUBLIC fmt::fmt-header-only
          SQLiteCPP::SQLiteCPP
 )
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 if(ENABLE_TEST)
   enable_testing()
