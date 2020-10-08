@@ -38,4 +38,5 @@ jobs:
             cd build
             cmake ..
             cmake --build . --config Debug
+            
         shell: cmd
