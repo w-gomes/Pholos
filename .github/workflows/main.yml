@@ -5,10 +5,10 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ${{ matrix.os }}
-      strategy:
-        matrix:
-          os: [windows-latest, ubuntu-latest]
-        fail-fast: false
+    strategy:
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+      fail-fast: false
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
