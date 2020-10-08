@@ -1,10 +1,6 @@
 name: CI
 
-on:
-  push:
-    branches: [ Dev ]
-  pull_request:
-    branches: [ main ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -20,7 +16,7 @@ jobs:
       
       # Install fmt
       - name: install fmt (windows)
-        if: startswith(matrix.os, 'windows')
+        if: startsWith(matrix.os, 'windows')
         run: |
             git clone https://github.com/fmtlib/fmt $HOME/runner/work/fmt
             cd $HOME/runner/work/fmt
@@ -30,7 +26,7 @@ jobs:
             cmake --build . --target install
         
       - name: install fmt (ubuntu)
-        if: startswith(matrix.os, 'ubuntu')
+        if: startsWith(matrix.os, 'ubuntu')
         run: |
             git clone https://github.com/fmtlib/fmt $HOME/runner/work/fmt
             cd $HOME/runner/work/fmt
