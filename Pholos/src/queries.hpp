@@ -31,6 +31,8 @@ struct Query {
         return fmt::format(Query::create_table_tvshow, "tvshow");
       case Type::Movie:
         return fmt::format(Query::create_table_movie, "movies");
+      case Type::None:
+        break;
     }
     return std::string("");
   }

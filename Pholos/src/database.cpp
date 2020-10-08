@@ -18,12 +18,14 @@
 namespace Pholos {
 
 namespace internal {
-const inline std::string type_to_string(Type type) {
+inline std::string type_to_string(Type type) {
   switch (type) {
     case Type::Movie:
       return "movies";
     case Type::TvShow:
       return "tvshow";
+    case Type::None:
+      break;
   }
   return "";
 }
@@ -218,7 +220,7 @@ std::map<int, TvShow> Database::select_tvshows(Stats st) {
 void Database::update_name(const int id, const std::string &name,
                            Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
-  assert(query_type != "");
+  assert(!query_type.empty());
 
   // Maybe implement a generic function
   const std::string query =
@@ -229,7 +231,7 @@ void Database::update_name(const int id, const std::string &name,
 
 void Database::update_stat(const int id, const int stat, Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
-  assert(query_type != "");
+  assert(!query_type.empty());
 
   const std::string query =
     fmt::format(Query::update_stat, query_type, stat,
@@ -239,7 +241,7 @@ void Database::update_stat(const int id, const int stat, Type obj_type) {
 
 void Database::update_rating(const int id, const double rating, Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
-  assert(query_type != "");
+  assert(!query_type.empty());
 
   const std::string query =
     fmt::format(Query::update_rating, query_type, rating,
@@ -250,7 +252,7 @@ void Database::update_rating(const int id, const double rating, Type obj_type) {
 void Database::update_total_episode(const int id, const int total_episode,
                                     Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
-  assert(query_type != "");
+  assert(!query_type.empty());
 
   const std::string query =
     fmt::format(Query::update_total_episode, query_type, total_episode,
@@ -260,7 +262,7 @@ void Database::update_total_episode(const int id, const int total_episode,
 
 void Database::update_episode(const int id, Type obj_type, const int distance) {
   const std::string query_type = internal::type_to_string(obj_type);
-  assert(query_type != "");
+  assert(!query_type.empty());
 
   const std::string query =
     fmt::format(Query::update_episode, query_type, distance,

@@ -590,6 +590,8 @@ void Controller::edit_menu(Type type) {
         "Change total episode (5)\n\n-> ");
       std::cin >> edit_option;
       break;
+    case Type::None:
+      break;
   }
 
   // TODO: handle wrong user input
