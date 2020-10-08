@@ -4,7 +4,7 @@ on: [push]
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
-  BUILD_TYPE: Release
+  BUILD_TYPE: Debug
 
 jobs:
   build:
@@ -19,15 +19,11 @@ jobs:
     
     - name: clone fmt
       shell: bash
-      run: git clone https://github.com/fmtlib/fmt
+      run: git clone https://github.com/fmtlib/fmt $HOME/runner/work/fmt
       
     - name: install fmt
       shell: bash
-      run: cd fmt && mkdir build && cd build && cmake .. -DFMT_TEST=OFF && sudo cmake --build . --target install
-    
-    - name: go back to pholos dir
-      shell: bash
-      run: cd ..
+      run: cd $HOME/runner/work/fmt && mkdir build && cd build && cmake .. -DFMT_TEST=OFF && sudo cmake --build . --target install
       
     - name: Create Build Environment
       # Some projects don't allow in-source building, so create a separate build directory
