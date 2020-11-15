@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 project(Pholos LANGUAGES CXX)
 include(cmake/standard_project_settings.cmake)
