@@ -43,7 +43,7 @@ bool Database::create_database_file() {
   std::ifstream file(Database::database_name_);
   if (file.is_open()) {
     // It does...
-    fmt::print("Database file exists!\n");
+    fmt::print("Database file found!\n");
     return true;
   }
 
@@ -83,9 +83,7 @@ void Database::init(bool &loaded) {
       }
     }
 
-    if (!table_exists) {
-      Database::create_table();
-    }
+    if (!table_exists) { Database::create_table(); }
 
     loaded = true;
   } catch (std::exception &e) {
@@ -146,7 +144,8 @@ std::map<int, Movies> Database::select_movies(Stats st) {
     SQLite::Statement query(db, query_str);
 #if defined(_DEBUG)
     fmt::print("SQLite statement {} compiled. Column counts {}\n",
-               query.getQuery().c_str(), query.getColumnCount());
+               query.getQuery().c_str(),
+               query.getColumnCount());
 #endif
     std::map<int, Movies> movies_list;
     while (query.executeStep()) {
@@ -191,7 +190,8 @@ std::map<int, TvShow> Database::select_tvshows(Stats st) {
     SQLite::Statement query(db, query_str);
 #if defined(_DEBUG)
     fmt::print("SQLite statement {} compiled. Column counts {}\n",
-               query.getQuery().c_str(), query.getColumnCount());
+               query.getQuery().c_str(),
+               query.getColumnCount());
 #endif
     std::map<int, TvShow> tvshow_list;
     while (query.executeStep()) {
@@ -215,15 +215,19 @@ std::map<int, TvShow> Database::select_tvshows(Stats st) {
 }
 
 // UPDATE queries
-void Database::update_name(const int id, const std::string &name,
+void Database::update_name(const int id,
+                           const std::string &name,
                            Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
   // Maybe implement a generic function
   const std::string query =
-    fmt::format(Query::update_name, query_type, name,
-                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
+    fmt::format(Query::update_name,
+                query_type,
+                name,
+                (obj_type == Type::TvShow ? "tvshow" : "movie"),
+                id);
   Database::execute_update(query);
 }
 
@@ -232,8 +236,11 @@ void Database::update_stat(const int id, const int stat, Type obj_type) {
   assert(!query_type.empty());
 
   const std::string query =
-    fmt::format(Query::update_stat, query_type, stat,
-                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
+    fmt::format(Query::update_stat,
+                query_type,
+                stat,
+                (obj_type == Type::TvShow ? "tvshow" : "movie"),
+                id);
   Database::execute_update(query);
 }
 
@@ -242,19 +249,26 @@ void Database::update_rating(const int id, const double rating, Type obj_type) {
   assert(!query_type.empty());
 
   const std::string query =
-    fmt::format(Query::update_rating, query_type, rating,
-                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
+    fmt::format(Query::update_rating,
+                query_type,
+                rating,
+                (obj_type == Type::TvShow ? "tvshow" : "movie"),
+                id);
   Database::execute_update(query);
 }
 
-void Database::update_total_episode(const int id, const int total_episode,
+void Database::update_total_episode(const int id,
+                                    const int total_episode,
                                     Type obj_type) {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
   const std::string query =
-    fmt::format(Query::update_total_episode, query_type, total_episode,
-                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
+    fmt::format(Query::update_total_episode,
+                query_type,
+                total_episode,
+                (obj_type == Type::TvShow ? "tvshow" : "movie"),
+                id);
   Database::execute_update(query);
 }
 
@@ -263,8 +277,11 @@ void Database::update_episode(const int id, Type obj_type, const int distance) {
   assert(!query_type.empty());
 
   const std::string query =
-    fmt::format(Query::update_episode, query_type, distance,
-                (obj_type == Type::TvShow ? "tvshow" : "movie"), id);
+    fmt::format(Query::update_episode,
+                query_type,
+                distance,
+                (obj_type == Type::TvShow ? "tvshow" : "movie"),
+                id);
   Database::execute_update(query);
 }
 

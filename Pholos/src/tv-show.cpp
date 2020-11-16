@@ -4,8 +4,8 @@
 #include <utility>
 
 namespace Pholos {
-TvShow::TvShow(std::string name, int stat, double rating, int episode,
-               int last_episode) {
+TvShow::TvShow(
+  std::string name, int stat, double rating, int episode, int last_episode) {
   this->set_members(std::move(name), rating, stat);
   this->episode_      = stat == 3 ? last_episode : episode;
   this->last_episode_ = last_episode;

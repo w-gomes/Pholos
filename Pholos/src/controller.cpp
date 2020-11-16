@@ -97,9 +97,10 @@ void Controller::draw_menu() {
   std::string command;
   std::cin >> command;
 
-  if (auto findResult = std::find(this->commands_list.begin(),
-                                  this->commands_list.end(), command);
-      findResult == this->commands_list.end()) {
+  if (auto findResult = std::find(Controller::commands_list.begin(),
+                                  Controller::commands_list.end(),
+                                  command);
+      findResult == Controller::commands_list.end()) {
     fmt::print("Command not found!\n");
     return;
   }
@@ -163,40 +164,44 @@ void Controller::draw_menu() {
 }
 
 Command Controller::get_command(std::string_view command) {
+  Command cmd;
   // Can't use switch with strings
   if (command == "HELP") {
-    return Command::Help;
+    cmd = Command::Help;
   } else if (command == "EXIT") {
-    return Command::Exit;
+    cmd = Command::Exit;
   } else if (command == "ADD") {
-    return Command::Add;
+    cmd = Command::Add;
   } else if (command == "EDIT") {
-    return Command::Edit;
+    cmd = Command::Edit;
   } else if (command == "DELETE") {
-    return Command::Delete;
+    cmd = Command::Delete;
   } else if (command == "SEARCH") {
-    return Command::Search;
+    cmd = Command::Search;
   } else if (command == "ABOUT") {
-    return Command::About;
+    cmd = Command::About;
   } else if (command == "LIST") {
-    return Command::List;
+    cmd = Command::List;
   } else if (command == "CMD") {
-    return Command::Cmd;
+    cmd = Command::Cmd;
   } else {
-    return Command::Unknown;
+    cmd = Command::Unknown;
   }
+
+  return cmd;
 }
 
 inline void Controller::cmd() const {
   fmt::print("Available commands: ");
-  std::copy(std::begin(this->commands_list), std::end(this->commands_list),
+  std::copy(std::begin(Controller::commands_list),
+            std::end(Controller::commands_list),
             std::ostream_iterator<std::string>(std::cout, " "));
   fmt::print("\n");
 }
 
 // TODO: incomplete, change the wordings.
 inline void Controller::help() const {
-  const std::string commands = R"(
+  std::string_view commands = R"(
     - Usage:
 
         ADD     add
@@ -384,7 +389,8 @@ void Controller::load_content() {
 
 #if defined(_DEBUG)
   fmt::print("Loaded movies and tvshows cache... {} movies, {} tvshow.\n",
-             this->movies_cache_.size(), this->tvshow_cache_.size());
+             this->movies_cache_.size(),
+             this->tvshow_cache_.size());
 #endif
 }
 
@@ -416,26 +422,49 @@ void Controller::list_all_movies() {
 
   // TODO: Turn this into a routine
   // TOP
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
-             biggest_word, Width::Rating, Width::Stat, "");
-  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID,
-             biggest_word, Width::Rating, Width::Stat, "Movie ID", "Name",
-             "Rating", "Stat");
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+             Width::ID,
+             biggest_word,
+             Width::Rating,
+             Width::Stat,
+             "");
+  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+             Width::ID,
+             biggest_word,
+             Width::Rating,
+             Width::Stat,
+             "Movie ID",
+             "Name",
+             "Rating",
+             "Stat");
 
   // MID
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
-             biggest_word, Width::Rating, Width::Stat, "");
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+             Width::ID,
+             biggest_word,
+             Width::Rating,
+             Width::Stat,
+             "");
 
   std::for_each(movie_list.begin(), movie_list.end(), [=](const auto &obj) {
-    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n", Width::ID,
-               biggest_word, Width::Rating, Width::Stat, obj.first,
-               obj.second.name(), obj.second.rating(),
+    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+               Width::ID,
+               biggest_word,
+               Width::Rating,
+               Width::Stat,
+               obj.first,
+               obj.second.name(),
+               obj.second.rating(),
                obj.second.stat_as_string());
   });
 
   // BOTTOM
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n", Width::ID,
-             biggest_word, Width::Rating, Width::Stat, "");
+  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+             Width::ID,
+             biggest_word,
+             Width::Rating,
+             Width::Stat,
+             "");
 }
 
 void Controller::list_all_tvshows() {
@@ -472,28 +501,55 @@ void Controller::list_all_tvshows() {
   fmt::print(
     "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
-    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-    Width::Total_Episode, "");
+    Width::ID + 2,
+    biggest_word,
+    Width::Rating,
+    Width::Stat,
+    Width::Episode,
+    Width::Total_Episode,
+    "");
   fmt::print(
     "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-    Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+    Width::ID + 2,
+    biggest_word,
+    Width::Rating,
+    Width::Stat,
+    Width::Episode,
+    Width::Total_Episode,
+    "Tv Show ID",
+    "Name",
+    "Rating",
+    "Stat",
+    "Episode",
     "Total Episodes");
 
   // MID
   fmt::print(
     "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
-    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-    Width::Total_Episode, "");
+    Width::ID + 2,
+    biggest_word,
+    Width::Rating,
+    Width::Stat,
+    Width::Episode,
+    Width::Total_Episode,
+    "");
 
   std::for_each(tvshow_list.begin(), tvshow_list.end(), [=](const auto &obj) {
     fmt::print(
       "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
       "{11:<{5}} |\n",
-      Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, obj.first, obj.second.name(), obj.second.rating(),
-      obj.second.stat_as_string(), obj.second.episode(),
+      Width::ID + 2,
+      biggest_word,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      obj.first,
+      obj.second.name(),
+      obj.second.rating(),
+      obj.second.stat_as_string(),
+      obj.second.episode(),
       obj.second.last_episode());
   });
 
@@ -501,8 +557,13 @@ void Controller::list_all_tvshows() {
   fmt::print(
     "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
-    Width::ID + 2, biggest_word, Width::Rating, Width::Stat, Width::Episode,
-    Width::Total_Episode, "");
+    Width::ID + 2,
+    biggest_word,
+    Width::Rating,
+    Width::Stat,
+    Width::Episode,
+    Width::Total_Episode,
+    "");
 }
 
 bool Controller::id_exist(const int id, Type type) {
@@ -641,46 +702,103 @@ void Controller::print(const int id, Type type) const {
     const auto movie = movies_cache_.at(id);
     word_size        = movie.name().size();
     top     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
-                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+                      Width::ID,
+                      word_size,
+                      Width::Rating,
+                      Width::Stat,
+                      "");
     title   = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
-                        Width::ID, word_size, Width::Rating, Width::Stat,
-                        "Movie ID", "Name", "Rating", "Stat");
+                        Width::ID,
+                        word_size,
+                        Width::Rating,
+                        Width::Stat,
+                        "Movie ID",
+                        "Name",
+                        "Rating",
+                        "Stat");
     mid     = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
-                      Width::ID, word_size, Width::Rating, Width::Stat, "");
+                      Width::ID,
+                      word_size,
+                      Width::Rating,
+                      Width::Stat,
+                      "");
     context = fmt::format("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
-                          Width::ID, word_size, Width::Rating, Width::Stat, id,
-                          movie.name(), movie.rating(), movie.stat_as_string());
+                          Width::ID,
+                          word_size,
+                          Width::Rating,
+                          Width::Stat,
+                          id,
+                          movie.name(),
+                          movie.rating(),
+                          movie.stat_as_string());
     bottom  = fmt::format("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
-                         Width::ID, word_size, Width::Rating, Width::Stat, "");
+                         Width::ID,
+                         word_size,
+                         Width::Rating,
+                         Width::Stat,
+                         "");
   } else if (type == Type::TvShow) {
     const auto tvshow = tvshow_cache_.at(id);
     word_size         = tvshow.name().size();
     top               = fmt::format(
       "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
       "+\n",
-      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, "");
+      Width::ID + 2,
+      word_size,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      "");
     title = fmt::format(
       "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
-      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, "Tv Show ID", "Name", "Rating", "Stat", "Episode",
+      Width::ID + 2,
+      word_size,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      "Tv Show ID",
+      "Name",
+      "Rating",
+      "Stat",
+      "Episode",
       "Total Episodes");
     mid = fmt::format(
       "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
       "+\n",
-      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, "");
+      Width::ID + 2,
+      word_size,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      "");
     context = fmt::format(
       "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
       "{11:<{5}} |\n",
-      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, id, tvshow.name(), tvshow.rating(),
-      tvshow.stat_as_string(), tvshow.episode(), tvshow.last_episode());
+      Width::ID + 2,
+      word_size,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      id,
+      tvshow.name(),
+      tvshow.rating(),
+      tvshow.stat_as_string(),
+      tvshow.episode(),
+      tvshow.last_episode());
     bottom = fmt::format(
       "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-"
       "+\n",
-      Width::ID + 2, word_size, Width::Rating, Width::Stat, Width::Episode,
-      Width::Total_Episode, "");
+      Width::ID + 2,
+      word_size,
+      Width::Rating,
+      Width::Stat,
+      Width::Episode,
+      Width::Total_Episode,
+      "");
   }
 
   fmt::print("{}{}{}{}{}", top, title, mid, context, bottom);

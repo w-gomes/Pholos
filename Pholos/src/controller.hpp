@@ -72,9 +72,16 @@ class Controller {
 
   // variables
   bool quit_{false};
-  static constexpr std::array commands_list = {
-    "HELP",   "EXIT",  "ADD",   "EDIT", "DELETE",
-    "SEARCH", "QUERY", "ABOUT", "LIST", "CMD"};
+  static constexpr std::array commands_list = {"HELP",
+                                               "EXIT",
+                                               "ADD",
+                                               "EDIT",
+                                               "DELETE",
+                                               "SEARCH",
+                                               "QUERY",
+                                               "ABOUT",
+                                               "LIST",
+                                               "CMD"};
 
   std::map<int, Movies> movies_cache_{};
   std::map<int, TvShow> tvshow_cache_{};

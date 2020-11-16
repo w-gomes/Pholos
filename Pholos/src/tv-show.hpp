@@ -10,8 +10,8 @@ class TvShow : public ContentBase {
  public:
   TvShow() = default;
 
-  TvShow(std::string name, int stat, double rating, int episode,
-         int last_episode);
+  TvShow(
+    std::string name, int stat, double rating, int episode, int last_episode);
 
   TvShow(const TvShow &other) = default;
   TvShow &operator=(const TvShow &other) = default;

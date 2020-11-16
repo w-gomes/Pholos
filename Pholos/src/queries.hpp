@@ -11,14 +11,18 @@ struct Query {
 
   /* Insert query for movies */
   static auto make_insert_query(const Movies &movie) {
-    return fmt::format(Query::insert_movie, movie.name(), movie.rating(),
-                       movie.stat());
+    return fmt::format(
+      Query::insert_movie, movie.name(), movie.rating(), movie.stat());
   }
 
   /* Insert query for tv shows */
   static auto make_insert_query(const TvShow &tvshow) {
-    return fmt::format(Query::insert_tvshow, tvshow.name(), tvshow.rating(),
-                       tvshow.stat(), tvshow.episode(), tvshow.last_episode());
+    return fmt::format(Query::insert_tvshow,
+                       tvshow.name(),
+                       tvshow.rating(),
+                       tvshow.stat(),
+                       tvshow.episode(),
+                       tvshow.last_episode());
   }
 
   // test

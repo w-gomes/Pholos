@@ -60,9 +60,11 @@ class Database {
   static void update_name(const int id, const std::string &name, Type obj_type);
   static void update_stat(const int id, const int stat, Type obj_type);
   static void update_rating(const int id, const double rating, Type obj_type);
-  static void update_total_episode(const int id, const int total_episode,
+  static void update_total_episode(const int id,
+                                   const int total_episode,
                                    Type obj_type);
-  static void update_episode(const int id, Type obj_type,
+  static void update_episode(const int id,
+                             Type obj_type,
                              const int distance = 1);
 
   // Private section
@@ -75,7 +77,6 @@ class Database {
   static void create_movie_table();
   static void create_tvshow_table();
 
- private:
   inline static std::string database_name_{"data.sqlite3"};
 
   static constexpr std::array table_names_{"tvshow", "movies"};
