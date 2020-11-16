@@ -80,9 +80,13 @@ auto movie_or_tvshow() {
 void Controller::press_any_key() {
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
   int input = _getch();
-  if (input == 0x1B)
+  enum esc {
+    key_esc = 0x1B,
+  };
+
+  if (input == esc::key_esc) {
     this->quit(true);
-  else {
+  } else {
     return;
   }
 }
