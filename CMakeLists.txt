@@ -27,7 +27,7 @@ enable_sanitizers(project_options)
 # static analyzers
 include(cmake/static_analyzers.cmake)
 
-option(ENABLE_TEST "Enable Test" ON)
+option(ENABLE_TEST "Enable Test" OFF)
 
 add_subdirectory(Pholos/external/SQLiteCPP)
 

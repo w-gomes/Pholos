@@ -6,9 +6,13 @@ if(ENABLE_CPPCHECK)
   if(CPPCHECK)
     set(CMAKE_CXX_CPPCHECK
         ${CPPCHECK}
+        --suppress=missingInclude
         --enable=all
+        --inline-suppr
         --inconclusive
-        )
+        -i
+        ${CMAKE_SOURCE_DIR}/Pholos/external/SQLiteCpp
+    )
   else()
     message(SEND_ERROR "cppcheck requested but executable not found")
   endif()
