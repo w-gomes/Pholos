@@ -3,11 +3,12 @@
 #include <conio.h>  // _getch()
 
 #include <algorithm>
-#include <cassert>  // assert()
-#include <cctype>   // std::tolower()
-#include <iostream>
+#include <cassert>   // assert()
+#include <cctype>    // std::tolower()
+#include <iostream>  // std::cin, std::getline
 #include <iterator>
 #include <string>
+#include <string_view>
 #include <utility>  // std::pair
 
 #include "application.hpp"

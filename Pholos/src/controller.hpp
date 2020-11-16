@@ -18,7 +18,7 @@ namespace internal {
 
 // Helper to get user input such as id, rating, episodes, etc.
 template <typename T>
-T get_user_input(const std::string &message) {
+T get_user_input(std::string_view message) {
   fmt::print("{}", message);
   T value;
   std::cin >> value;
@@ -27,10 +27,10 @@ T get_user_input(const std::string &message) {
 
 // Template specialization declaration
 template <>
-bool get_user_input<bool>(const std::string &message);
+bool get_user_input<bool>(std::string_view message);
 
 template <>
-std::string get_user_input<std::string>(const std::string &message);
+std::string get_user_input<std::string>(std::string_view message);
 
 }  // namespace internal
 

@@ -11,6 +11,7 @@ class Application {
   Application()  = default;
   ~Application() = default;
 
+  // No move or copy
   Application(const Application &obj) = delete;
   Application &operator=(const Application &obj) = delete;
   Application(Application &&obj)                 = delete;
@@ -21,8 +22,8 @@ class Application {
 
  private:
   // methods
-  bool is_running() const;
-  bool is_db_loaded() const;
+  [[nodiscard]] bool is_running() const;
+  [[nodiscard]] bool is_db_loaded() const;
 
   // variables
   bool running_{false};

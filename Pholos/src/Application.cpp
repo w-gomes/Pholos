@@ -1,13 +1,14 @@
 #include "application.hpp"
 
 #include <cassert>  // assert()
+#include <string_view>
 
 #include "fmt/format.h"
 
 namespace Pholos {
 
 void Application::welcome_message() {
-  const std::string welcome = R"(
+  std::string_view welcome = R"(
       Welcome to Pholos Application!
       Your movie and tv show tracker!
 
@@ -27,7 +28,7 @@ void Application::welcome_message() {
 
   )";
 
-  const std::string commands = R"(
+  std::string_view commands = R"(
   - Usage:
 
       ADD       add

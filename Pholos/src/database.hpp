@@ -38,7 +38,7 @@ class Database {
   static std::string name() { return Database::database_name_; }
 
   // INSERT queries
-  static void insert(std::string query);
+  static void insert(const std::string &query);
 
   // SELECT queries
   // For multiple objects we return a map,

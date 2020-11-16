@@ -94,11 +94,11 @@ void Database::init(bool &loaded) {
 
 // INSERT query.
 // The client should pass the formatted query.
-void Database::insert(std::string query) {
+void Database::insert(const std::string &query) {
   SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
-  db.exec(std::move(query));
+  db.exec(query);
   transaction.commit();
 }
 
