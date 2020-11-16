@@ -306,7 +306,7 @@ void Controller::add_movie() {
     std::cin >> rating;
   }
 
-  Movies movie(internal::add_context<Movies>(name, rating, stat));
+  auto movie = Movies(internal::add_context<Movies>(name, rating, stat));
   Database::insert(Query::make_insert_query(movie));
   this->load_content();
 }
@@ -357,7 +357,7 @@ void Controller::add_tvshow() {
     }
   }
 
-  TvShow tvshow(
+  auto tvshow = TvShow(
     internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
   Database::insert(Query::make_insert_query(tvshow));
   this->load_content();
@@ -660,13 +660,13 @@ void Controller::edit_menu(Type type) {
       Database::update_stat(id, stat, type);
     } break;
     case 3: {
-      const double rating =
+      const auto rating =
         internal::get_user_input<double>("Enter the new rating.\n-> ");
       Database::update_rating(id, rating, type);
     } break;
     case 4: {
       // We ask user the number of episodes to increment. Default is by 1.
-      const bool update_more_than_one = internal::get_user_input<bool>(
+      const auto update_more_than_one = internal::get_user_input<bool>(
         "Do you want to update more than 1? (y/n)\n-> ");
       if (update_more_than_one) {
         const int distance =
