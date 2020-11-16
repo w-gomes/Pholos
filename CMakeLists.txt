@@ -42,8 +42,10 @@ set(Pholos_SOURCES
     Pholos/src/internal.cpp
     )
 
+set(NUMERIC_ALIASES_INCLUDE ${PROJECT_SOURCE_DIR}/Pholos/external/tl)
+
 add_executable(${PROJECT_NAME} ${Pholos_SOURCES})
-target_include_directories(${PROJECT_NAME} PUBLIC Pholos/src)
+target_include_directories(${PROJECT_NAME} PUBLIC Pholos/src ${NUMERIC_ALIASES_INCLUDE})
 target_link_libraries(
   ${PROJECT_NAME}
   PRIVATE project_warnings

@@ -17,6 +17,7 @@
 #include "fmt/format.h"
 #include "internal.hpp"
 #include "movies.hpp"
+#include "numeric-aliases.hpp"  // rust-like aliases
 #include "queries.hpp"
 #include "tv-show.hpp"
 
@@ -26,20 +27,19 @@ namespace internal {
 
 // Cannot use a simple overloaded function
 // because only return type is different.
+// TODO: is there a better way to implement the get_user_input functions?
 template <>
-bool get_user_input<bool>(const std::string &message) {
+bool get_user_input<bool>(std::string_view message) {
   fmt::print("{}", message);
-  char value;
+  auto value = tl::uchar{};
   std::cin >> value;
   bool result = false;
-  if (std::tolower(value) == 'y') {
-    result = true;
-  }
+  if (std::tolower(value) == 'y') { result = true; }
   return result;
 }
 
 template <>
-std::string get_user_input<std::string>(const std::string &message) {
+std::string get_user_input<std::string>(std::string_view message) {
   fmt::print("{}", message);
   std::string name;
   std::cin.get();  // to consume enter
@@ -49,7 +49,7 @@ std::string get_user_input<std::string>(const std::string &message) {
 
 auto movie_or_tvshow() {
   fmt::print("Movie [m] or Tv Show [t]? : ");
-  char user_choose;
+  auto user_choose = tl::uchar{};
   bool user_choice = false;
   Type type;
 
@@ -290,7 +290,7 @@ void Controller::add_movie() {
 
   fmt::print("Do you want to add a stat? (y/n) : ");
 
-  char confirm;
+  auto confirm = tl::uchar{};
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
     fmt::print(
@@ -329,7 +329,7 @@ void Controller::add_tvshow() {
 
   fmt::print("Do you want to add a stat? (y/n) : ");
 
-  char confirm;
+  auto confirm = tl::uchar{};
   std::cin >> confirm;
   if (std::tolower(confirm) == 'y') {
     fmt::print(
