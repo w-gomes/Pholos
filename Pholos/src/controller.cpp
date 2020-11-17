@@ -20,32 +20,11 @@
 #include "numeric-aliases.hpp"  // rust-like aliases
 #include "queries.hpp"
 #include "tv-show.hpp"
+#include "utility.hpp"
 
 namespace Pholos {
 
 namespace internal {
-
-// Cannot use a simple overloaded function
-// because only return type is different.
-// TODO: is there a better way to implement the get_user_input functions?
-template <>
-bool get_user_input<bool>(std::string_view message) {
-  fmt::print("{}", message);
-  auto value = tl::uchar{};
-  std::cin >> value;
-  bool result = false;
-  if (std::tolower(value) == 'y') { result = true; }
-  return result;
-}
-
-template <>
-std::string get_user_input<std::string>(std::string_view message) {
-  fmt::print("{}", message);
-  std::string name;
-  std::cin.get();  // to consume enter
-  std::getline(std::cin, name);
-  return name;
-}
 
 auto movie_or_tvshow() {
   fmt::print("Movie [m] or Tv Show [t]? : ");

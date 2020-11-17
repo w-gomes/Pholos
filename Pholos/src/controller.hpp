@@ -14,26 +14,6 @@
 
 namespace Pholos {
 
-namespace internal {
-
-// Helper to get user input such as id, rating, episodes, etc.
-template <typename T>
-T get_user_input(std::string_view message) {
-  fmt::print("{}", message);
-  T value;
-  std::cin >> value;
-  return value;
-}
-
-// Template specialization declaration
-template <>
-bool get_user_input<bool>(std::string_view message);
-
-template <>
-std::string get_user_input<std::string>(std::string_view message);
-
-}  // namespace internal
-
 /*
  * Controller interface
  */
