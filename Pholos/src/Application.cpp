@@ -59,7 +59,7 @@ void Application::run_application() {
 
   if (!this->is_db_loaded()) {
     this->running_ = false;
-    fmt::print("Existing application! Press any key to leave.");
+    fmt::print("Existing application... Press any key to leave!");
   }
 
   // Database is loaded, so we can load the contents into the cache.
