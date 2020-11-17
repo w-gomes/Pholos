@@ -31,7 +31,7 @@ Out get_user_input(std::string_view message) {
     Out out{false};
     if (std::tolower(value) == 'y') { out = true; }
     return out;
-    // is Out is a std::string -> name, or any big string.
+    // if Out is a std::string -> name, or any big string.
   } else if constexpr (std::is_same_v<Out, std::string>) {
     Out out;
     std::cin.get();  // to consume enter
