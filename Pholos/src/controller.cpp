@@ -29,8 +29,8 @@ namespace internal {
 auto movie_or_tvshow() {
   fmt::print("Movie [m] or Tv Show [t]? : ");
   auto user_choose = tl::uchar{};
-  bool user_choice = false;
-  Type type;
+  auto type        = Type{};
+  auto user_choice{false};
 
   do {
     std::cin >> user_choose;
@@ -59,7 +59,7 @@ auto movie_or_tvshow() {
 
 void Controller::press_any_key() {
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
-  int input = _getch();
+  auto input = _getch();
   enum esc {
     key_esc = 0x1B,
   };
@@ -74,7 +74,7 @@ void Controller::press_any_key() {
 // Refactor this
 void Controller::draw_menu() {
   fmt::print("\nEnter an option! Type [HELP] for command list : ");
-  std::string command;
+  auto command = std::string{};
   std::cin >> command;
 
   if (auto findResult = std::find(Controller::commands_list.begin(),
@@ -144,7 +144,7 @@ void Controller::draw_menu() {
 }
 
 Command Controller::get_command(std::string_view command) {
-  Command cmd;
+  auto cmd = Command{};
   // Can't use switch with strings
   if (command == "HELP") {
     cmd = Command::Help;
@@ -181,7 +181,7 @@ inline void Controller::cmd() const {
 
 // TODO: incomplete, change the wordings.
 inline void Controller::help() const {
-  std::string_view commands = R"(
+  auto commands = std::string_view{R"(
     - Usage:
 
         ADD     add
@@ -236,7 +236,7 @@ inline void Controller::help() const {
         HELP    help
                 Show this command list.
 
-  )";
+  )"};
   fmt::print(commands);
 }
 
@@ -259,11 +259,11 @@ void Controller::add_menu() {
 }
 
 void Controller::add_movie() {
-  int stat{-1};
-  double rating{0.0};
+  auto stat{-1};
+  auto rating{0.0};
 
   fmt::print("Adding a new Movie...\nEnter the name, please.\n-> ");
-  std::string name;
+  auto name = std::string{};
   std::cin.get();  // to consume enter.
   std::getline(std::cin, name);
 
@@ -291,10 +291,10 @@ void Controller::add_movie() {
 }
 
 void Controller::add_tvshow() {
-  int stat{-1};
-  double rating{0.0};
-  int episode{0};
-  int last_episode{0};
+  auto stat{-1};
+  auto rating{0.0};
+  auto episode{0};
+  auto last_episode{0};
 
   fmt::print(
     "\n***\nNote: Currently, Pholos doesn't support season. That means if you "
@@ -302,7 +302,7 @@ void Controller::add_tvshow() {
     "for each "
     "season.\n\nAdding a new TvShow...\nEnter the name, "
     "please.\n-> ");
-  std::string name;
+  auto name = std::string{};
   std::cin.get();  // to consume enter.
   std::getline(std::cin, name);
 
@@ -375,10 +375,10 @@ void Controller::load_content() {
 }
 
 void Controller::list_all_movies() {
-  const std::string msg =
-    "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
-    "watch\n 3 - completed\n 4 - dropped\n-> ";
-  const int search_type = internal::get_user_input<int>(msg);
+  auto msg = std::string_view{
+    "Please enter the search type.\n-1 - all\n 1 - watching\n 2 - plan to "
+    "watch\n 3 - completed\n 4 - dropped\n-> "};
+  const auto search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
   const auto movie_list =
@@ -393,9 +393,9 @@ void Controller::list_all_movies() {
   // 0          1            2              3
   // Id | Name | Rating | Stat
   // 4    5      6        7
-  std::size_t biggest_word = 0;
+  auto biggest_word = std::size_t{0};
   std::for_each(movie_list.begin(), movie_list.end(), [&](const auto &obj) {
-    std::size_t movie_name_length = obj.second.name().size();
+    auto movie_name_length = std::size_t{obj.second.name().size()};
     biggest_word =
       movie_name_length > biggest_word ? movie_name_length : biggest_word;
   });
@@ -448,10 +448,10 @@ void Controller::list_all_movies() {
 }
 
 void Controller::list_all_tvshows() {
-  const std::string msg =
+  auto msg = std::string_view{
     "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
-    "watch\n 3 - completed\n 4 - dropped\n-> ";
-  const int search_type = internal::get_user_input<int>(msg);
+    "watch\n 3 - completed\n 4 - dropped\n-> "};
+  const auto search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
 
   const auto tvshow_list =
@@ -469,9 +469,9 @@ void Controller::list_all_tvshows() {
   // Id | Name | Rating | Stat | Episode | Total Episodes
   // 6    7      8        9      10        11
 
-  std::size_t biggest_word = 0;
+  auto biggest_word = std::size_t{0};
   std::for_each(tvshow_list.begin(), tvshow_list.end(), [&](const auto &obj) {
-    std::size_t tv_name_length = obj.second.name().size();
+    auto tv_name_length = std::size_t{obj.second.name().size()};
     biggest_word =
       tv_name_length > biggest_word ? tv_name_length : biggest_word;
   });
@@ -547,7 +547,7 @@ void Controller::list_all_tvshows() {
 }
 
 bool Controller::id_exist(const int id, Type type) {
-  auto found = false;
+  auto found{false};
   switch (type) {
     case Type::Movie:
       if (auto search = this->movies_cache_.find(id);
@@ -588,13 +588,13 @@ void Controller::edit() {
 }
 
 void Controller::edit_menu(Type type) {
-  int edit_option = 0;
+  auto edit_option{0};
 
   fmt::print(
     "\n***\nNote: You must know the object id in other to edit.\nUse list all "
     "to get the id.\n\n");
   // Check for object's id.
-  int id     = internal::get_user_input<int>("Please enter the id.\n-> ");
+  auto id    = internal::get_user_input<int>("Please enter the id.\n-> ");
   bool exist = this->id_exist(id, type);
 
   if (!exist) {
@@ -627,12 +627,12 @@ void Controller::edit_menu(Type type) {
   // We update the objects in database using the ID.
   switch (edit_option) {
     case 1: {
-      const std::string name = internal::get_user_input<std::string>(
+      const auto name = internal::get_user_input<std::string>(
         "Enter the new name, please.\n-> ");
       Database::update_name(id, name, type);
     } break;
     case 2: {
-      const int stat = internal::get_user_input<int>(
+      const auto stat = internal::get_user_input<int>(
         "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
         "(3)\n Dropped "
         "(4)\n-> ");
@@ -648,7 +648,7 @@ void Controller::edit_menu(Type type) {
       const auto update_more_than_one = internal::get_user_input<bool>(
         "Do you want to update more than 1? (y/n)\n-> ");
       if (update_more_than_one) {
-        const int distance =
+        const auto distance =
           internal::get_user_input<int>("Enter the amount to increment.\n-> ");
         Database::update_episode(id, type, distance);
       } else {
@@ -656,7 +656,7 @@ void Controller::edit_menu(Type type) {
       }
     } break;
     case 5: {
-      const int total_episode =
+      const auto total_episode =
         internal::get_user_input<int>("Enter the new total episode.\n-> ");
       Database::update_total_episode(id, total_episode, type);
     } break;
@@ -671,12 +671,12 @@ void Controller::edit_menu(Type type) {
 }
 
 void Controller::print(const int id, Type type) const {
-  std::string top;
-  std::string mid;
-  std::string title;
-  std::string context;
-  std::string bottom;
-  std::size_t word_size = 0;
+  auto top       = std::string{};
+  auto mid       = std::string{};
+  auto title     = std::string{};
+  auto context   = std::string{};
+  auto bottom    = std::string{};
+  auto word_size = std::size_t{0};
 
   if (type == Type::Movie) {
     const auto movie = movies_cache_.at(id);
