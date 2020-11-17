@@ -28,9 +28,9 @@ Out get_user_input(std::string_view message) {
   if constexpr (std::is_same_v<Out, bool>) {
     auto value = tl::uchar{};
     std::cin >> value;
-    Out result{false};
-    if (std::tolower(value) == 'y') { result = true; }
-    return result;
+    Out out{false};
+    if (std::tolower(value) == 'y') { out = true; }
+    return out;
     // is Out is a std::string -> name, or any big string.
   } else if constexpr (std::is_same_v<Out, std::string>) {
     Out out;
@@ -38,9 +38,9 @@ Out get_user_input(std::string_view message) {
     std::getline(std::cin, out);
     return out;
   } else if constexpr (std::is_arithmetic_v<Out>) {
-    Out value;
-    std::cin >> value;
-    return value;
+    Out out;
+    std::cin >> out;
+    return out;
   }
 }
 
