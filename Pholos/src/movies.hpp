@@ -17,11 +17,11 @@ class Movies : public ContentBase {
   Movies(Movies &&other) noexcept = default;
   Movies &operator=(Movies &&other) noexcept = default;
 
-  ~Movies() = default;
+  ~Movies() override = default;
 
-  std::string stat_as_string() const override;
-  std::string name() const override;
-  double rating() const override;
-  int stat() const override;
+  [[nodiscard]] std::string stat_as_string() const override;
+  [[nodiscard]] std::string name() const override;
+  [[nodiscard]] double rating() const override;
+  [[nodiscard]] int stat() const override;
 };
 }  // namespace Pholos

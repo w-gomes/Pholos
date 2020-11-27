@@ -12,10 +12,10 @@ class ContentBase {
  public:
   ContentBase() = default;
 
-  virtual std::string name() const           = 0;
-  virtual double rating() const              = 0;
-  virtual int stat() const                   = 0;
-  virtual std::string stat_as_string() const = 0;
+  [[nodiscard]] virtual std::string name() const           = 0;
+  [[nodiscard]] virtual double rating() const              = 0;
+  [[nodiscard]] virtual int stat() const                   = 0;
+  [[nodiscard]] virtual std::string stat_as_string() const = 0;
 
   void change_stat(int new_stat);
   void change_rating(double new_rating);

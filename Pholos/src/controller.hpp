@@ -39,9 +39,9 @@ class Controller {
   Command get_command(std::string_view command);
   void list_all_movies();
   void list_all_tvshows();
-  bool id_exist(const int id, Type type);
-  bool quit(bool quit) { return this->quit_ = quit; }
-  bool exit() { return this->quit_; }
+  void quit(bool quit) { this->quit_ = quit; }
+  [[nodiscard]] bool id_exist(const int id, Type type);
+  [[nodiscard]] bool exit() const { return this->quit_; }
 
  private:
   // methods
