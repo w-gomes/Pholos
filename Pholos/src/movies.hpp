@@ -19,9 +19,9 @@ class Movies : public ContentBase {
 
   ~Movies() override = default;
 
-  [[nodiscard]] std::string stat_as_string() const override;
-  [[nodiscard]] std::string name() const override;
-  [[nodiscard]] double rating() const override;
-  [[nodiscard]] int stat() const override;
+  [[nodiscard]] auto stat_as_string() const -> std::string override;
+  [[nodiscard]] auto name() const -> std::string override;
+  [[nodiscard]] auto rating() const -> double override;
+  [[nodiscard]] auto stat() const -> int override;
 };
 }  // namespace Pholos

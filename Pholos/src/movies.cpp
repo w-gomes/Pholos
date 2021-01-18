@@ -8,13 +8,13 @@ Movies::Movies(std::string name, double rating, int stat) {
   this->set_members(std::move(name), rating, stat);
 }
 
-std::string Movies::name() const { return this->name_; }
+auto Movies::name() const -> std::string { return this->name_; }
 
-double Movies::rating() const { return this->rating_; }
+auto Movies::rating() const -> double { return this->rating_; }
 
-int Movies::stat() const { return static_cast<int>(this->stat_); }
+auto Movies::stat() const -> int { return static_cast<int>(this->stat_); }
 
-std::string Movies::stat_as_string() const {
+auto Movies::stat_as_string() const -> std::string {
   switch (this->stat_) {
     case Stats::NotSet:
       return "Not Set";

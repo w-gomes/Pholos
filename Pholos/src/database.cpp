@@ -18,7 +18,7 @@
 namespace Pholos {
 
 namespace internal {
-inline std::string type_to_string(Type type) {
+inline auto type_to_string(Type type) -> std::string {
   switch (type) {
     case Type::Movie:
       return "movies";
@@ -38,7 +38,7 @@ inline std::string type_to_string(Type type) {
 // }
 }  // namespace internal
 
-bool Database::create_database_file() {
+auto Database::create_database_file() -> bool {
   // Check if the database file already exists.
   std::ifstream file(Database::database_name_);
   if (file.is_open()) {
@@ -59,7 +59,7 @@ bool Database::create_database_file() {
   return false;
 }
 
-void Database::init(bool &loaded) {
+auto Database::init(bool &loaded) -> void {
   bool database_exist = Database::create_database_file();
   if (!database_exist) {
     fmt::print(
@@ -94,7 +94,7 @@ void Database::init(bool &loaded) {
 
 // INSERT query.
 // The client should pass the formatted query.
-void Database::insert(const std::string &query) {
+auto Database::insert(const std::string &query) -> void {
   SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
@@ -120,7 +120,7 @@ auto Database::select(Type context_type, Stats stat) {
 }
 */
 
-std::map<int, Movies> Database::select_movies(Stats st) {
+auto Database::select_movies(Stats st) -> std::map<int, Movies> {
   try {
     SQLite::Database db(Database::database_name_);
 #if defined(_DEBUG)
@@ -166,7 +166,7 @@ std::map<int, Movies> Database::select_movies(Stats st) {
   }
 }
 
-std::map<int, TvShow> Database::select_tvshows(Stats st) {
+auto Database::select_tvshows(Stats st) -> std::map<int, TvShow> {
   try {
     SQLite::Database db(Database::database_name_);
 #if defined(_DEBUG)
@@ -215,9 +215,8 @@ std::map<int, TvShow> Database::select_tvshows(Stats st) {
 }
 
 // UPDATE queries
-void Database::update_name(const int id,
-                           const std::string &name,
-                           Type obj_type) {
+auto Database::update_name(const int id, const std::string &name, Type obj_type)
+  -> void {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
@@ -231,7 +230,8 @@ void Database::update_name(const int id,
   Database::execute_update(query);
 }
 
-void Database::update_stat(const int id, const int stat, Type obj_type) {
+auto Database::update_stat(const int id, const int stat, Type obj_type)
+  -> void {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
@@ -244,7 +244,8 @@ void Database::update_stat(const int id, const int stat, Type obj_type) {
   Database::execute_update(query);
 }
 
-void Database::update_rating(const int id, const double rating, Type obj_type) {
+auto Database::update_rating(const int id, const double rating, Type obj_type)
+  -> void {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
@@ -257,9 +258,9 @@ void Database::update_rating(const int id, const double rating, Type obj_type) {
   Database::execute_update(query);
 }
 
-void Database::update_total_episode(const int id,
+auto Database::update_total_episode(const int id,
                                     const int total_episode,
-                                    Type obj_type) {
+                                    Type obj_type) -> void {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
@@ -272,7 +273,8 @@ void Database::update_total_episode(const int id,
   Database::execute_update(query);
 }
 
-void Database::update_episode(const int id, Type obj_type, const int distance) {
+auto Database::update_episode(const int id, Type obj_type, const int distance)
+  -> void {
   const std::string query_type = internal::type_to_string(obj_type);
   assert(!query_type.empty());
 
@@ -286,7 +288,7 @@ void Database::update_episode(const int id, Type obj_type, const int distance) {
 }
 
 // Private section
-void Database::execute_update(const std::string &query) {
+auto Database::execute_update(const std::string &query) -> void {
   try {
     SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
     SQLite::Transaction transaction(db);
@@ -300,14 +302,14 @@ void Database::execute_update(const std::string &query) {
   }
 }
 
-void Database::create_table() {
+auto Database::create_table() -> void {
   fmt::print("Creating tables now...\n");
   Database::create_movie_table();
   Database::create_tvshow_table();
   fmt::print("Done\n");
 }
 
-void Database::create_movie_table() {
+auto Database::create_movie_table() -> void {
   SQLite::Database db(Database::database_name_,
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
@@ -315,7 +317,7 @@ void Database::create_movie_table() {
   transaction.commit();
 }
 
-void Database::create_tvshow_table() {
+auto Database::create_tvshow_table() -> void {
   SQLite::Database db(Database::database_name_,
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);

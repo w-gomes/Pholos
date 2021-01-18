@@ -1,10 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cctype>  // std::tolower()
-#include <iostream>
 #include <map>
-#include <string>
 #include <string_view>
 
 #include "constants.hpp"
@@ -28,27 +25,27 @@ class Controller {
 
   ~Controller() = default;
 
-  void load_content();
-  void press_any_key();  // This needs a better name
-  void draw_menu();
-  void cmd() const;
-  void help() const;
-  void add_menu();
-  void edit();
-  void edit_menu(Type type);
-  Command get_command(std::string_view command);
-  void list_all_movies();
-  void list_all_tvshows();
-  void quit(bool quit) { this->quit_ = quit; }
-  [[nodiscard]] bool id_exist(const int id, Type type);
-  [[nodiscard]] bool exit() const { return this->quit_; }
+  auto load_content() -> void;
+  auto press_any_key() -> void;  // This needs a better name
+  auto draw_menu() -> void;
+  auto cmd() const -> void;
+  auto help() const -> void;
+  auto add_menu() -> void;
+  auto edit() -> void;
+  auto edit_menu(Type type) -> void;
+  auto get_command(std::string_view command) -> Command;
+  auto list_all_movies() -> void;
+  auto list_all_tvshows() -> void;
+  auto quit(bool quit) -> void { this->quit_ = quit; }
+  [[nodiscard]] auto id_exist(int id, Type type) -> bool;
+  [[nodiscard]] auto exit() const -> bool { return this->quit_; }
 
  private:
   // methods
-  void add_movie();
-  void add_tvshow();
+  auto add_movie() -> void;
+  auto add_tvshow() -> void;
 
-  void print(const int id, Type type) const;
+  auto print(int id, Type type) const -> void;
 
   // variables
   bool quit_{false};

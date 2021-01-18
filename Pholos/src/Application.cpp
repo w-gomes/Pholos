@@ -7,7 +7,7 @@
 
 namespace Pholos {
 
-void Application::welcome_message() {
+auto Application::welcome_message() -> void {
   std::string_view welcome = R"(
       Welcome to Pholos Application!
       Your movie and tv show tracker!
@@ -48,7 +48,7 @@ void Application::welcome_message() {
 }
 
 // Main loop
-void Application::run_application() {
+auto Application::run_application() -> void {
   // Welcome message and logo
   Application::welcome_message();
 
@@ -77,11 +77,11 @@ void Application::run_application() {
   }
 }
 
-bool Application::is_running() const { return this->running_; }
+auto Application::is_running() const -> bool { return this->running_; }
 
-bool Application::is_db_loaded() const { return this->db_loaded_; }
+auto Application::is_db_loaded() const -> bool { return this->db_loaded_; }
 
-void Application::exit_application() {
+auto Application::exit_application() -> void {
   fmt::print("\nBye!\n");
   this->running_ = false;
 }

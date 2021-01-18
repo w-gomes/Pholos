@@ -21,15 +21,15 @@ class TvShow : public ContentBase {
 
   ~TvShow() override = default;
 
-  [[nodiscard]] std::string stat_as_string() const override;
-  [[nodiscard]] std::string name() const override;
-  [[nodiscard]] double rating() const override;
-  [[nodiscard]] int stat() const override;
-  [[nodiscard]] int episode() const;
-  [[nodiscard]] int last_episode() const;
+  [[nodiscard]] auto stat_as_string() const -> std::string override;
+  [[nodiscard]] auto name() const -> std::string override;
+  [[nodiscard]] auto rating() const -> double override;
+  [[nodiscard]] auto stat() const -> int override;
+  [[nodiscard]] auto episode() const -> int;
+  [[nodiscard]] auto last_episode() const -> int;
 
-  void change_episose(int episode);
-  void change_last_episode(int last_episode);
+  auto change_episose(int episode) -> void;
+  auto change_last_episode(int last_episode) -> void;
 
  private:
   int episode_{};

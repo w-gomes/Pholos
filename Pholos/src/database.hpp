@@ -30,15 +30,15 @@ class Database {
   // It checks if the database file exits, if not, it creates one.
   // Then it creates the database tables.
   // it calls create_database_file()
-  void init(bool &loaded);
+  auto init(bool &loaded) -> void;
 
-  static void change_database_name(std::string database_name) {
+  static auto change_database_name(std::string database_name) -> void {
     Database::database_name_ = (std::move(database_name));
   }
-  static std::string name() { return Database::database_name_; }
+  static auto name() -> std::string { return Database::database_name_; }
 
   // INSERT queries
-  static void insert(const std::string &query);
+  static auto insert(const std::string &query) -> void;
 
   // SELECT queries
   // For multiple objects we return a map,
@@ -49,33 +49,35 @@ class Database {
   // auto select(Type context_type, Stats stat = Stats::NotSet);
 
   // TODO: Make these two private.
-  static std::map<int, Movies> select_movies(Stats st = Stats::NotSet);
-  static std::map<int, TvShow> select_tvshows(Stats st = Stats::NotSet);
+  static auto select_movies(Stats st = Stats::NotSet) -> std::map<int, Movies>;
+  static auto select_tvshows(Stats st = Stats::NotSet) -> std::map<int, TvShow>;
   // std::pair<int, Movies> select_movies();
   // std::pair<int, TvShow> select_tvshows();
   // TODO: select * FROM (movies|tvshow) WHERE stats=#;
   // So, we can print a single object.
 
   // UPDATE queries
-  static void update_name(const int id, const std::string &name, Type obj_type);
-  static void update_stat(const int id, const int stat, Type obj_type);
-  static void update_rating(const int id, const double rating, Type obj_type);
-  static void update_total_episode(const int id,
+  static auto update_name(const int id, const std::string &name, Type obj_type)
+    -> void;
+  static auto update_stat(const int id, const int stat, Type obj_type) -> void;
+  static auto update_rating(const int id, const double rating, Type obj_type)
+    -> void;
+  static auto update_total_episode(const int id,
                                    const int total_episode,
-                                   Type obj_type);
-  static void update_episode(const int id,
+                                   Type obj_type) -> void;
+  static auto update_episode(const int id,
                              Type obj_type,
-                             const int distance = 1);
+                             const int distance = 1) -> void;
 
   // Private section
  private:
-  static bool create_database_file();
+  static auto create_database_file() -> bool;
 
   // Helper functions to create the database's tables.
-  static void execute_update(const std::string &query);
-  static void create_table();
-  static void create_movie_table();
-  static void create_tvshow_table();
+  static auto execute_update(const std::string &query) -> void;
+  static auto create_table() -> void;
+  static auto create_movie_table() -> void;
+  static auto create_tvshow_table() -> void;
 
   inline static std::string database_name_{"data.sqlite3"};
 

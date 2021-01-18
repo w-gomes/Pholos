@@ -11,16 +11,15 @@ TvShow::TvShow(
   this->last_episode_ = last_episode;
 }
 
-std::string TvShow::name() const { return this->name_; }
+auto TvShow::name() const -> std::string { return this->name_; }
 
-double TvShow::rating() const { return this->rating_; }
+auto TvShow::rating() const -> double { return this->rating_; }
 
-int TvShow::stat() const { return static_cast<int>(this->stat_); }
+auto TvShow::stat() const -> int { return static_cast<int>(this->stat_); }
+auto TvShow::episode() const -> int { return this->episode_; }
+auto TvShow::last_episode() const -> int { return this->last_episode_; }
 
-int TvShow::episode() const { return this->episode_; }
-int TvShow::last_episode() const { return this->last_episode_; }
-
-std::string TvShow::stat_as_string() const {
+auto TvShow::stat_as_string() const -> std::string {
   switch (this->stat_) {
     case Stats::NotSet:
       return "Not Set";
@@ -37,8 +36,8 @@ std::string TvShow::stat_as_string() const {
   }
 }
 
-void TvShow::change_episose(int episode) { this->episode_ = episode; }
-void TvShow::change_last_episode(int last_episode) {
+auto TvShow::change_episose(int episode) -> void { this->episode_ = episode; }
+auto TvShow::change_last_episode(int last_episode) -> void {
   this->last_episode_ = last_episode;
 }
 }  // namespace Pholos

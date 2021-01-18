@@ -57,7 +57,7 @@ auto movie_or_tvshow() {
 
 }  // namespace internal
 
-void Controller::press_any_key() {
+auto Controller::press_any_key() -> void {
   fmt::print("\n\nPress any key to continue or [ESC] to leave!");
   auto input = _getch();
   enum esc {
@@ -72,7 +72,7 @@ void Controller::press_any_key() {
 }
 
 // Refactor this
-void Controller::draw_menu() {
+auto Controller::draw_menu() -> void {
   fmt::print("\nEnter an option! Type [HELP] for command list : ");
   auto command = std::string{};
   std::cin >> command;
@@ -143,7 +143,7 @@ void Controller::draw_menu() {
   }
 }
 
-Command Controller::get_command(std::string_view command) {
+auto Controller::get_command(std::string_view command) -> Command {
   auto cmd = Command{};
   // Can't use switch with strings
   if (command == "HELP") {
@@ -171,7 +171,7 @@ Command Controller::get_command(std::string_view command) {
   return cmd;
 }
 
-inline void Controller::cmd() const {
+inline auto Controller::cmd() const -> void {
   fmt::print("Available commands: ");
   std::copy(std::begin(Controller::commands_list),
             std::end(Controller::commands_list),
@@ -180,7 +180,7 @@ inline void Controller::cmd() const {
 }
 
 // TODO: incomplete, change the wordings.
-inline void Controller::help() const {
+inline auto Controller::help() const -> void {
   auto commands = std::string_view{R"(
     - Usage:
 
@@ -241,7 +241,7 @@ inline void Controller::help() const {
 }
 
 // Add new movie or tvshow
-void Controller::add_menu() {
+auto Controller::add_menu() -> void {
   auto [user_chose, type] = internal::movie_or_tvshow();
 
   if (user_chose) {
@@ -258,7 +258,7 @@ void Controller::add_menu() {
   }
 }
 
-void Controller::add_movie() {
+auto Controller::add_movie() -> void {
   auto stat{-1};
   auto rating{0.0};
 
@@ -290,7 +290,7 @@ void Controller::add_movie() {
   this->load_content();
 }
 
-void Controller::add_tvshow() {
+auto Controller::add_tvshow() -> void {
   auto stat{-1};
   auto rating{0.0};
   auto episode{0};
@@ -346,7 +346,7 @@ void Controller::add_tvshow() {
 // When we run the application for the first time. We call load_content to
 // populate movies_list and tvshow_list. To avoid reading database to check if a
 // content is in it.
-void Controller::load_content() {
+auto Controller::load_content() -> void {
 #if defined(_DEBUG)
   fmt::print("Loading contents into cache...\n");
 #endif
@@ -374,7 +374,7 @@ void Controller::load_content() {
 #endif
 }
 
-void Controller::list_all_movies() {
+auto Controller::list_all_movies() -> void {
   auto msg = std::string_view{
     "Please enter the search type.\n-1 - all\n 1 - watching\n 2 - plan to "
     "watch\n 3 - completed\n 4 - dropped\n-> "};
@@ -447,7 +447,7 @@ void Controller::list_all_movies() {
              "");
 }
 
-void Controller::list_all_tvshows() {
+auto Controller::list_all_tvshows() -> void {
   auto msg = std::string_view{
     "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
     "watch\n 3 - completed\n 4 - dropped\n-> "};
@@ -546,7 +546,7 @@ void Controller::list_all_tvshows() {
     "");
 }
 
-bool Controller::id_exist(const int id, Type type) {
+auto Controller::id_exist(int id, Type type) -> bool {
   auto found{false};
   switch (type) {
     case Type::Movie:
@@ -568,7 +568,7 @@ bool Controller::id_exist(const int id, Type type) {
   return found;
 }
 
-void Controller::edit() {
+auto Controller::edit() -> void {
   // Which object we want to edit: movie or tv show.
   const auto [user_chose, type] = internal::movie_or_tvshow();
 
@@ -587,7 +587,7 @@ void Controller::edit() {
   this->edit_menu(type);
 }
 
-void Controller::edit_menu(Type type) {
+auto Controller::edit_menu(Type type) -> void {
   auto edit_option{0};
 
   fmt::print(
@@ -670,7 +670,7 @@ void Controller::edit_menu(Type type) {
   this->print(id, type);
 }
 
-void Controller::print(const int id, Type type) const {
+auto Controller::print(int id, Type type) const -> void {
   auto top       = std::string{};
   auto mid       = std::string{};
   auto title     = std::string{};

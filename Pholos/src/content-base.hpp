@@ -12,14 +12,14 @@ class ContentBase {
  public:
   ContentBase() = default;
 
-  [[nodiscard]] virtual std::string name() const           = 0;
-  [[nodiscard]] virtual double rating() const              = 0;
-  [[nodiscard]] virtual int stat() const                   = 0;
-  [[nodiscard]] virtual std::string stat_as_string() const = 0;
+  [[nodiscard]] virtual auto name() const -> std::string           = 0;
+  [[nodiscard]] virtual auto rating() const -> double              = 0;
+  [[nodiscard]] virtual auto stat() const -> int                   = 0;
+  [[nodiscard]] virtual auto stat_as_string() const -> std::string = 0;
 
-  void change_stat(int new_stat);
-  void change_rating(double new_rating);
-  void change_name(const std::string &new_name);
+  auto change_stat(int new_stat) -> void;
+  auto change_rating(double new_rating) -> void;
+  auto change_name(const std::string &new_name) -> void;
 
   virtual ~ContentBase() = default;
 
@@ -32,7 +32,7 @@ class ContentBase {
     Dropped     = 4
   };
 
-  void set_members(std::string name, double rating, int stat);
+  auto set_members(std::string name, double rating, int stat) -> void;
 
   std::string name_{};
   double rating_{};

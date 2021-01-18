@@ -22,7 +22,7 @@ concept is_good_input = std::is_arithmetic_v<T> || std::is_same_v<T, char> ||
                         std::is_same_v<T, std::string>;
 
 template <is_good_input Out>
-Out get_user_input(std::string_view message) {
+auto get_user_input(std::string_view message) -> Out {
   fmt::print("{}", message);
   // if Out is bool -> yes or no question.
   if constexpr (std::is_same_v<Out, bool>) {
