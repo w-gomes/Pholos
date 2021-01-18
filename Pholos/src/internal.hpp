@@ -1,16 +1,13 @@
 #pragma once
 
-#include <string>
-#include <utility>
+namespace Pholos::internal {
 
-namespace Pholos {
+#define FWD(x) static_cast<decltype(x) &&>(x)
 
-namespace internal {
 // Add helper function that calls constructor of either
 // Movies or TvShow
 template <typename Context, typename... Types>
-Context add_context(Types &&... type) {
-  return Context(std::forward<Types>(type)...);
+Context add_context(Types &&...type) {
+  return Context(FWD(type)...);
 }
-}  // namespace internal
-}  // namespace Pholos
+}  // namespace Pholos::internal

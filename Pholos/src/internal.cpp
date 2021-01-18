@@ -1,8 +1,5 @@
 #include "internal.hpp"
 
-#include <functional>
-#include <string>
-
 namespace Pholos {
 
 namespace Internal {
