@@ -15,6 +15,9 @@ add_library(SQLiteCPP::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 add_subdirectory(sqlite3)
 
+include_directories(SYSTEM ${PROJECT_SOURCE_DIR}/include
+                           ${PROJECT_SOURCE_DIR}/sqlite3)
+
 target_include_directories(${PROJECT_NAME} 
     PUBLIC ${PROJECT_SOURCE_DIR}/include
     PUBLIC ${PROJECT_SOURCE_DIR}/sqlite3
