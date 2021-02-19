@@ -41,54 +41,15 @@ class ContentBase {
     }
   }
 
-  ContentBase() = default;
-  friend Derived;
-
-  Derived &derived() { return static_cast<Derived &>(*this); }
-  Derived const &derived() const { return static_cast<Derived const &>(*this); }
-
- public:
-  [[nodiscard]] auto stat_as_string() const -> std::string
-    requires std::same_as<Derived, Movies> {
-    auto &self = this->derived();
-    return ContentBase::stat_to_string(self.stat_);
-  }
-
-  [[nodiscard]] auto stat_as_string() const -> std::string
-    requires std::same_as<Derived, TvShow> {
-    auto &self = this->derived();
-    return ContentBase::stat_to_string(self.stat_);
-  }
-
-  [[nodiscard]] auto name() const -> std::string
-    requires std::same_as<Derived, Movies> {
+  [[nodiscard]] auto name() const -> std::string {
     return this->derived().name_;
   }
 
-  [[nodiscard]] auto name() const -> std::string
-    requires std::same_as<Derived, TvShow> {
-    return this->derived().name_;
-  }
-
-  [[nodiscard]] auto rating() const
-    -> double requires std::same_as<Derived, Movies> {
-    return this->derived().rating_;
-    ;
-  }
-
-  [[nodiscard]] auto rating() const
-    -> double requires std::same_as<Derived, TvShow> {
+  [[nodiscard]] auto rating() const -> double {
     return this->derived().rating_;
   }
 
-  [[nodiscard]] auto stat() const
-    -> int requires std::same_as<Derived, Movies> {
-    auto &self = this->derived();
-    return static_cast<int>(self.stat_);
-  }
-
-  [[nodiscard]] auto stat() const
-    -> int requires std::same_as<Derived, TvShow> {
+  [[nodiscard]] auto stat() const -> int {
     auto &self = this->derived();
     return static_cast<int>(self.stat_);
   }
@@ -103,4 +64,5 @@ class ContentBase {
     return this->derived().last_episode_;
   }
 };
+
 }  // namespace Pholos
