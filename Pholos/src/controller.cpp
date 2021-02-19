@@ -259,7 +259,7 @@ auto Controller::add_menu() -> void {
 }
 
 auto Controller::add_movie() -> void {
-  auto stat{-1};
+  auto stat{0};
   auto rating{0.0};
 
   fmt::print("Adding a new Movie...\nEnter the name, please.\n-> ");
@@ -291,7 +291,7 @@ auto Controller::add_movie() -> void {
 }
 
 auto Controller::add_tvshow() -> void {
-  auto stat{-1};
+  auto stat{0};
   auto rating{0.0};
   auto episode{0};
   auto last_episode{0};
@@ -375,7 +375,7 @@ auto Controller::load_content() -> void {
 
 auto Controller::list_all_movies() -> void {
   auto msg = std::string_view{
-    "Please enter the search type.\n-1 - all\n 1 - watching\n 2 - plan to "
+    "Please enter the search type.\n 0 - all\n 1 - watching\n 2 - plan to "
     "watch\n 3 - completed\n 4 - dropped\n-> "};
   const auto search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);
@@ -448,7 +448,7 @@ auto Controller::list_all_movies() -> void {
 
 auto Controller::list_all_tvshows() -> void {
   auto msg = std::string_view{
-    "Please enter the search type.\n -1 - all\n 1 - watching\n 2 - plan to "
+    "Please enter the search type.\n 0 - all\n 1 - watching\n 2 - plan to "
     "watch\n 3 - completed\n 4 - dropped\n-> "};
   const auto search_type = internal::get_user_input<int>(msg);
   fmt::print("search_type is {}.\n", search_type);

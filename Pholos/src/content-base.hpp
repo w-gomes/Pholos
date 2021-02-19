@@ -7,6 +7,8 @@
 #include <concepts>
 #include <string>
 
+#include "constants.hpp"
+
 namespace Pholos {
 
 struct Movies;
@@ -14,16 +16,16 @@ struct TvShow;
 
 template <typename Derived>
 class ContentBase {
-  enum class Stats {
-    NotSet      = -1,
-    Watching    = 1,
-    PlanToWatch = 2,
-    Completed   = 3,
-    Dropped     = 4
-  };
+  ContentBase() = default;
+  friend Derived;
 
-  static auto stat_to_string(Stats stat) -> std::string {
-    switch (stat) {
+  Derived &derived() { return static_cast<Derived &>(*this); }
+  Derived const &derived() const { return static_cast<Derived const &>(*this); }
+
+ public:
+  [[nodiscard]] auto stat_as_string() const -> std::string {
+    auto &self = this->derived();
+    switch (self.stat_) {
       case Stats::NotSet:
         return "Not Set";
       case Stats::Watching:

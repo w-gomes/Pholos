@@ -26,7 +26,7 @@ enum Width : std::size_t {
 };
 
 enum class Stats {
-  NotSet      = -1,
+  NotSet      = 0,
   Watching    = 1,
   PlanToWatch = 2,
   Completed   = 3,
