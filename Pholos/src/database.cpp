@@ -154,8 +154,8 @@ auto Database::select_movies(Stats st) -> std::map<int, Movies> {
       const double rating    = query.getColumn(2);
       const int stat         = query.getColumn(3);
 
-      Movies movie(name, rating, stat);
-      movies_list[id] = movie;
+      auto movie = Movies(name, rating, stat);
+      movies_list.try_emplace(id, movie);
     }
     return movies_list;
   } catch (std::exception &e) {
@@ -202,8 +202,8 @@ auto Database::select_tvshows(Stats st) -> std::map<int, TvShow> {
       const int episode      = query.getColumn(4);
       const int last_episode = query.getColumn(5);
 
-      TvShow tvshow(name, stat, rating, episode, last_episode);
-      tvshow_list[id] = tvshow;
+      auto tvshow = TvShow(name, rating, stat, episode, last_episode);
+      tvshow_list.try_emplace(id, tvshow);
     }
     return tvshow_list;
   } catch (std::exception &e) {

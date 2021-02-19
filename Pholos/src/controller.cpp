@@ -285,7 +285,7 @@ auto Controller::add_movie() -> void {
     std::cin >> rating;
   }
 
-  auto movie = Movies(internal::add_context<Movies>(name, rating, stat));
+  auto movie = Movies(name, rating, stat);
   Database::insert(Query::make_insert_query(movie));
   this->load_content();
 }
@@ -336,8 +336,7 @@ auto Controller::add_tvshow() -> void {
     }
   }
 
-  auto tvshow = TvShow(
-    internal::add_context<TvShow>(name, stat, rating, episode, last_episode));
+  auto tvshow = TvShow(name, rating, stat, episode, last_episode);
   Database::insert(Query::make_insert_query(tvshow));
   this->load_content();
 }

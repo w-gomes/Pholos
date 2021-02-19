@@ -9,8 +9,8 @@
 
 namespace Pholos {
 
-class Movies;
-class TvShow;
+struct Movies;
+struct TvShow;
 
 // - Database API
 // All the database calls are provided by this module

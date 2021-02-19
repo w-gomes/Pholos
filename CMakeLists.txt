@@ -34,11 +34,8 @@ add_subdirectory(Pholos/external/SQLiteCPP)
 set(Pholos_SOURCES
     Pholos/src/main.cpp
     Pholos/src/application.cpp
-    Pholos/src/tv-show.cpp
     Pholos/src/database.cpp
     Pholos/src/controller.cpp
-    Pholos/src/movies.cpp
-    Pholos/src/content-base.cpp
     Pholos/src/internal.cpp
     )
 
