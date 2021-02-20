@@ -392,12 +392,14 @@ auto Controller::list_all_movies() -> void {
   // 0          1            2              3
   // Id | Name | Rating | Stat
   // 4    5      6        7
-  auto biggest_word = std::size_t{0};
-  std::for_each(movie_list.begin(), movie_list.end(), [&](const auto &obj) {
-    auto movie_name_length = std::size_t{obj.second.name().size()};
-    biggest_word =
-      movie_name_length > biggest_word ? movie_name_length : biggest_word;
-  });
+  const auto biggest_word =
+    (*std::ranges::max_element(movie_list,
+                               [](const auto &obj1, const auto &obj2) {
+                                 return obj1.second.name().size() <
+                                        obj2.second.name().size();
+                               }))
+      .second.name()
+      .size();
 
   // TODO: Turn this into a routine
   // TOP
@@ -467,13 +469,14 @@ auto Controller::list_all_tvshows() -> void {
   //
   // Id | Name | Rating | Stat | Episode | Total Episodes
   // 6    7      8        9      10        11
-
-  auto biggest_word = std::size_t{0};
-  std::for_each(tvshow_list.begin(), tvshow_list.end(), [&](const auto &obj) {
-    auto tv_name_length = std::size_t{obj.second.name().size()};
-    biggest_word =
-      tv_name_length > biggest_word ? tv_name_length : biggest_word;
-  });
+  const auto biggest_word =
+    (*std::ranges::max_element(tvshow_list,
+                               [](const auto &obj1, const auto &obj2) {
+                                 return obj1.second.name().size() <
+                                        obj2.second.name().size();
+                               }))
+      .second.name()
+      .size();
 
   // TODO: Turn this into a routine
   // TOP
