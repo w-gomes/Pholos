@@ -311,6 +311,7 @@ auto Database::create_table() -> void {
 
 auto Database::create_movie_table() -> void {
   SQLite::Database db(Database::database_name_,
+                      // NOLINTNEXTLINE(hicpp-signed-bitwise)
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
   db.exec(Query::make_create_table_query(Type::Movie));
@@ -319,6 +320,7 @@ auto Database::create_movie_table() -> void {
 
 auto Database::create_tvshow_table() -> void {
   SQLite::Database db(Database::database_name_,
+                      // NOLINTNEXTLINE(hicpp-signed-bitwise)
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
   db.exec(Query::make_create_table_query(Type::TvShow));

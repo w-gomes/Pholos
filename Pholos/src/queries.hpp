@@ -47,56 +47,68 @@ struct Query {
   /*** INSERT QUERIES ***/
 
   /* INSERT tvshow */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const insert_tvshow =
     "INSERT INTO tvshow (name, rating, stats, episode, last_episode) "
     "VALUES "
     "('{0}', {1}, {2}, {3}, {4})"s;
 
   /* INSERT movies */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const insert_movie =
     "INSERT INTO movies (name, rating, stats) VALUES ('{0}', {1}, {2})"s;
 
   /*** SELECT QUERIES ***/
 
   /* SELECT * from movies */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const select_all_movie = "SELECT * from movies"s;
 
   /* SELECT * from tvshow */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const select_all_tvshow = "SELECT * from tvshow"s;
 
   /* SELECT * from movies using stats */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const select_movie_by_stats =
     "SELECT * from movies WHERE stats={}"s;
 
   /* SELECT * from tvshow using stats */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const select_tvshow_by_stats =
     "SELECT * from tvshow WHERE stats={}"s;
 
   /*** UPDATE QUERIES ***/
 
   /* UPDATE name */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const update_name =
     "UPDATE {} SET name='{}' WHERE id_{}={}"s;
 
   /* UPDATE stat */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const update_stat =
     "UPDATE {} SET stats={} WHERE id_{}={}"s;
 
   /* UPDATE rating */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const update_rating =
     "UPDATE {} SET rating={} WHERE id_{}={}"s;
 
   /* UPDATE total episode */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const update_total_episode =
     "UPDATE {} SET last_episode{} WHERE id_{}={}"s;
 
   /* UPDATE episode */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const update_episode =
     "UPDATE {} SET episode=episode + {} WHERE id_{}={}"s;
 
   /*** CREATE TABLE QUERIES ***/
 
   /* CREATE TABLE tvshow */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const create_table_tvshow =
     "CREATE TABLE IF NOT EXISTS {} (`id_tvshow` INTEGER PRIMARY KEY "
     "AUTOINCREMENT, `name` TEXT NOT "
@@ -104,6 +116,7 @@ struct Query {
     "INTEGER);"s;
 
   /* CREATE TABLE movies */
+  // NOLINTNEXTLINE(cert-err58-cpp)
   inline static auto const create_table_movie =
     "CREATE TABLE IF NOT EXISTS {} (`id_movie` INTEGER PRIMARY KEY "
     "AUTOINCREMENT, `name` TEXT NOT "
