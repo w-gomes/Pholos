@@ -403,13 +403,13 @@ auto Controller::list_all_movies() -> void {
 
   // TODO: Turn this into a routine
   // TOP
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+  fmt::print(" +-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
              Width::ID,
              biggest_word,
              Width::Rating,
              Width::Stat,
              "");
-  fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+  fmt::print(" | {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
              Width::ID,
              biggest_word,
              Width::Rating,
@@ -420,7 +420,7 @@ auto Controller::list_all_movies() -> void {
              "Stat");
 
   // MID
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+  fmt::print(" +-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
              Width::ID,
              biggest_word,
              Width::Rating,
@@ -428,7 +428,7 @@ auto Controller::list_all_movies() -> void {
              "");
 
   std::for_each(movie_list.begin(), movie_list.end(), [=](const auto &obj) {
-    fmt::print("| {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+    fmt::print(" | {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
                Width::ID,
                biggest_word,
                Width::Rating,
@@ -440,7 +440,7 @@ auto Controller::list_all_movies() -> void {
   });
 
   // BOTTOM
-  fmt::print("+-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
+  fmt::print(" +-{4:-^{0}}---{4:-^{1}}---{4:-^{2}}---{4:-^{3}}-+\n",
              Width::ID,
              biggest_word,
              Width::Rating,
@@ -481,7 +481,7 @@ auto Controller::list_all_tvshows() -> void {
   // TODO: Turn this into a routine
   // TOP
   fmt::print(
-    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    " +-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
     Width::ID + 2,
     biggest_word,
@@ -491,7 +491,7 @@ auto Controller::list_all_tvshows() -> void {
     Width::Total_Episode,
     "");
   fmt::print(
-    "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
+    " | {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | {11:<{5}} |\n",
     Width::ID + 2,
     biggest_word,
     Width::Rating,
@@ -507,7 +507,7 @@ auto Controller::list_all_tvshows() -> void {
 
   // MID
   fmt::print(
-    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    " +-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
     Width::ID + 2,
     biggest_word,
@@ -519,7 +519,7 @@ auto Controller::list_all_tvshows() -> void {
 
   std::for_each(tvshow_list.begin(), tvshow_list.end(), [=](const auto &obj) {
     fmt::print(
-      "| {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+      " | {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
       "{11:<{5}} |\n",
       Width::ID + 2,
       biggest_word,
@@ -537,7 +537,7 @@ auto Controller::list_all_tvshows() -> void {
 
   // BOTTOM
   fmt::print(
-    "+-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
+    " +-{6:-^{0}}---{6:-^{1}}---{6:-^{2}}---{6:-^{3}}---{6:-^{4}}---{6:-^{5}}-+"
     "\n",
     Width::ID + 2,
     biggest_word,
