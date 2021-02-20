@@ -77,6 +77,11 @@ auto Controller::draw_menu() -> void {
   auto command = std::string{};
   std::cin >> command;
 
+  std::ranges::transform(
+    begin(command), end(command), begin(command), [](unsigned char c) {
+      return std::toupper(c);
+    });
+
   if (auto findResult = std::find(Controller::commands_list.begin(),
                                   Controller::commands_list.end(),
                                   command);
