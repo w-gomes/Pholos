@@ -28,12 +28,11 @@ namespace internal {
 
 auto movie_or_tvshow() {
   fmt::print("Movie [m] or Tv Show [t]? : ");
-  auto user_choose = tl::uchar{};
-  auto type        = Type{};
+  auto type = Type{};
   auto user_choice{false};
 
   do {
-    std::cin >> user_choose;
+    auto user_choose = internal::get_user_input<char>("");
 
     if (std::tolower(user_choose) == 'm') {
       user_choice = true;
@@ -50,7 +49,6 @@ auto movie_or_tvshow() {
       fmt::print("Enter [c] to cancel. : ");
     }
   } while (!user_choice);
-  std::cin.clear();
 
   return std::make_pair(user_choice, type);
 }
@@ -73,24 +71,18 @@ auto Controller::press_any_key() -> void {
 
 // Refactor this
 auto Controller::draw_menu() -> void {
-  fmt::print("\nEnter an option! Type [HELP] for command list : ");
-  auto command = std::string{};
-  std::cin >> command;
+  auto command = internal::get_user_input<std::string>(
+    "\nEnter an option! Type [HELP] for command list : ");
+  if (command.empty()) { return; }
 
   std::ranges::transform(
     begin(command), end(command), begin(command), [](unsigned char c) {
       return std::toupper(c);
     });
 
-  if (auto findResult = std::find(Controller::commands_list.begin(),
-                                  Controller::commands_list.end(),
-                                  command);
-      findResult == Controller::commands_list.end()) {
-    fmt::print("Command not found!\n");
-    return;
-  }
+  auto [cmd, type] = get_command(command);
 
-  switch (this->get_command(command)) {
+  switch (cmd) {
     case Command::Help:
       this->help();
       break;
@@ -131,11 +123,21 @@ auto Controller::draw_menu() -> void {
       fmt::print("{}", "\nAbout command...\n");
       break;
     case Command::List:
-      // List all Elements
       // TODO: Add options to list only movies and tvshows,
       // and by filters (e.g. list all completed).
-      this->list_all_movies();
-      this->list_all_tvshows();
+      switch (type) {
+        case Type::None:
+          // List all Elements
+          this->list_all_movies();
+          this->list_all_tvshows();
+          break;
+        case Type::Movie:
+          this->list_all_movies();
+          break;
+        case Type::TvShow:
+          this->list_all_tvshows();
+          break;
+      }
       break;
     case Command::Cmd:
       // Show all list of commands.
@@ -143,34 +145,47 @@ auto Controller::draw_menu() -> void {
       this->cmd();
       break;
     case Command::Unknown:
-      fmt::print("Unknown command!\n");
+      fmt::print("Command is not valid or incomplete\n");
       break;
   }
 }
 
-auto Controller::get_command(std::string_view command) -> Command {
-  auto cmd = Command{};
+auto Controller::get_command(std::string_view command)
+  -> std::pair<Command, Type> {
+  // checks if command is valid.
+  if (auto contains = std::ranges::find_if(
+        Controller::commands_list,
+        [&](const auto &obj) { return command.starts_with(obj); });
+      contains == commands_list.end()) {
+    return {Command::Unknown, Type::None};
+  }
+
+  auto cmd = std::pair<Command, Type>{};
   // Can't use switch with strings
   if (command == "HELP") {
-    cmd = Command::Help;
+    cmd = {Command::Help, Type::None};
   } else if (command == "EXIT") {
-    cmd = Command::Exit;
+    cmd = {Command::Exit, Type::None};
   } else if (command == "ADD") {
-    cmd = Command::Add;
+    cmd = {Command::Add, Type::None};
   } else if (command == "EDIT") {
-    cmd = Command::Edit;
+    cmd = {Command::Edit, Type::None};
   } else if (command == "DELETE") {
-    cmd = Command::Delete;
+    cmd = {Command::Delete, Type::None};
   } else if (command == "SEARCH") {
-    cmd = Command::Search;
+    cmd = {Command::Search, Type::None};
   } else if (command == "ABOUT") {
-    cmd = Command::About;
+    cmd = {Command::About, Type::None};
   } else if (command == "LIST") {
-    cmd = Command::List;
+    cmd = {Command::List, Type::None};
+  } else if (command == "LIST MOVIES" || command == "LIST M") {
+    cmd = {Command::List, Type::Movie};
+  } else if (command == "LIST TVSHOW" || command == "LIST TV") {
+    cmd = {Command::List, Type::TvShow};
   } else if (command == "CMD") {
-    cmd = Command::Cmd;
+    cmd = {Command::Cmd, Type::None};
   } else {
-    cmd = Command::Unknown;
+    cmd = {Command::Unknown, Type::None};
   }
 
   return cmd;
@@ -267,27 +282,21 @@ auto Controller::add_movie() -> void {
   auto stat{0};
   auto rating{0.0};
 
-  fmt::print("Adding a new Movie...\nEnter the name, please.\n-> ");
-  auto name = std::string{};
-  std::cin.get();  // to consume enter.
-  std::getline(std::cin, name);
+  auto name = internal::get_user_input<std::string>(
+    "Adding a new Movie...\nEnter the name, please.\n-> ");
 
-  fmt::print("Do you want to add a stat? (y/n) : ");
-
-  auto confirm = tl::uchar{};
-  std::cin >> confirm;
+  auto confirm =
+    internal::get_user_input<char>("Do you want to add a stat? (y/n) : ");
   if (std::tolower(confirm) == 'y') {
-    fmt::print(
+    stat = internal::get_user_input<int>(
       "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
       "Dropped (4)\n-> ");
-    std::cin >> stat;
   }
 
-  fmt::print("Do you want to add a rating? (y/n) : ");
-  std::cin >> confirm;
+  confirm =
+    internal::get_user_input<char>("Do you want to add a rating? (y/n) : ");
   if (std::tolower(confirm) == 'y') {
-    fmt::print("Enter the rating.\n-> ");
-    std::cin >> rating;
+    rating = internal::get_user_input<double>("Enter the rating.\n-> ");
   }
 
   auto movie = Movies(name, rating, stat);
@@ -307,38 +316,33 @@ auto Controller::add_tvshow() -> void {
     "for each "
     "season.\n\nAdding a new TvShow...\nEnter the name, "
     "please.\n-> ");
-  auto name = std::string{};
-  std::cin.get();  // to consume enter.
-  std::getline(std::cin, name);
+  auto name = internal::get_user_input<std::string>("");
 
-  fmt::print("Do you want to add a stat? (y/n) : ");
-
-  auto confirm = tl::uchar{};
-  std::cin >> confirm;
+  auto confirm =
+    internal::get_user_input<char>("Do you want to add a stat? (y/n) : ");
   if (std::tolower(confirm) == 'y') {
-    fmt::print(
+    stat = internal::get_user_input<int>(
       "Enter the stat.\n Watching (1)\n Plan to Watch (2)\n Completed (3)\n "
       "Dropped (4)\n-> ");
-    std::cin >> stat;
   }
 
-  fmt::print("Do you want to add a rating? (y/n) : ");
-  std::cin >> confirm;
+  confirm =
+    internal::get_user_input<char>("Do you want to add a rating? (y/n) : ");
   if (std::tolower(confirm) == 'y') {
-    fmt::print("Enter the rating.\n-> ");
-    std::cin >> rating;
+    rating = internal::get_user_input<double>("Enter the rating.\n-> ");
   }
 
-  fmt::print("Do you want to add how many episodes there are? (y/n) : ");
-  std::cin >> confirm;
+  confirm = internal::get_user_input<char>(
+    "Do you want to add how many episodes there are? (y/n) : ");
   if (std::tolower(confirm) == 'y') {
-    fmt::print("Enter the total episodes.\n-> ");
-    std::cin >> last_episode;
+    last_episode =
+      internal::get_user_input<int>("Enter the total episodes.\n-> ");
 
     if (stat != 3) {
-      fmt::print("What episode are you on?\n-> ");
-      std::cin >> episode;
+      episode = internal::get_user_input<int>("What episode are you on?\n-> ");
     }
+
+    if (stat == 3) { episode = last_episode; }
   }
 
   auto tvshow = TvShow(name, rating, stat, episode, last_episode);
@@ -433,7 +437,7 @@ auto Controller::list_all_movies() -> void {
              "");
 
   std::for_each(movie_list.begin(), movie_list.end(), [=](const auto &obj) {
-    fmt::print(" | {4:<{0}} | {5:<{1}} | {6:<{2}} | {7:<{3}} |\n",
+    fmt::print(" | {4:<{0}} | {5:<{1}} | {6:<{2}.1f} | {7:<{3}} |\n",
                Width::ID,
                biggest_word,
                Width::Rating,
@@ -524,7 +528,7 @@ auto Controller::list_all_tvshows() -> void {
 
   std::for_each(tvshow_list.begin(), tvshow_list.end(), [=](const auto &obj) {
     fmt::print(
-      " | {6:<{0}} | {7:<{1}} | {8:<{2}} | {9:<{3}} | {10:<{4}} | "
+      " | {6:<{0}} | {7:<{1}} | {8:<{2}.1f} | {9:<{3}} | {10:<{4}} | "
       "{11:<{5}} |\n",
       Width::ID + 2,
       biggest_word,
@@ -612,19 +616,17 @@ auto Controller::edit_menu(Type type) -> void {
   // TODO: handle wrong usage: edit_option > 5 and < 1;
   switch (type) {
     case Type::Movie:
-      fmt::print(
+      edit_option = internal::get_user_input<int>(
         "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
         "(3)\n\n-> ");
-      std::cin >> edit_option;
       break;
     case Type::TvShow:
-      fmt::print(
+      edit_option = internal::get_user_input<int>(
         "Edit options:\n Change name (1)\n Change stat (2)\n Change rating "
         "(3)\n "
         "Change episode "
         "(4)\n "
         "Change total episode (5)\n\n-> ");
-      std::cin >> edit_option;
       break;
     case Type::None:
       break;

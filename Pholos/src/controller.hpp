@@ -3,9 +3,10 @@
 #include <array>
 #include <map>
 #include <string_view>
+#include <utility>
 
 #include "constants.hpp"
-#include "fmt/core.h"
+#include "fmt/format.h"
 #include "movies.hpp"
 #include "tv-show.hpp"
 
@@ -33,7 +34,7 @@ class Controller {
   auto add_menu() -> void;
   auto edit() -> void;
   auto edit_menu(Type type) -> void;
-  auto get_command(std::string_view command) -> Command;
+  auto get_command(std::string_view command) -> std::pair<Command, Type>;
   auto list_all_movies() -> void;
   auto list_all_tvshows() -> void;
   auto quit(bool quit) -> void { this->quit_ = quit; }
@@ -49,16 +50,16 @@ class Controller {
 
   // variables
   bool quit_{false};
-  static constexpr std::array commands_list = {"HELP",
-                                               "EXIT",
-                                               "ADD",
-                                               "EDIT",
-                                               "DELETE",
-                                               "SEARCH",
-                                               "QUERY",
-                                               "ABOUT",
-                                               "LIST",
-                                               "CMD"};
+  inline static std::array<std::string, 10> commands_list = {"HELP",
+                                                             "EXIT",
+                                                             "ADD",
+                                                             "EDIT",
+                                                             "DELETE",
+                                                             "SEARCH",
+                                                             "QUERY",
+                                                             "ABOUT",
+                                                             "LIST",
+                                                             "CMD"};
 
   std::map<int, Movies> movies_cache_{};
   std::map<int, TvShow> tvshow_cache_{};
