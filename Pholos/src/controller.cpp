@@ -561,17 +561,11 @@ auto Controller::id_exist(int id, Type type) -> bool {
   auto found{false};
   switch (type) {
     case Type::Movie:
-      if (auto search = this->movies_cache_.find(id);
-          search != this->movies_cache_.end()) {
-        found = true;
-      }
+      found = this->movies_cache_.contains(id);
       break;
     case Type::TvShow:
-      if (auto search = this->tvshow_cache_.find(id);
-          search != this->tvshow_cache_.end()) {
-        found = true;
-        break;
-      }
+      found = this->tvshow_cache_.contains(id);
+      break;
     case Type::None:
       fmt::print("Error! case Type::None is not a real object!\n");
       break;
