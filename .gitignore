@@ -8,3 +8,5 @@ build/
 
 doc/
 .cache/
+
+CMakeUserPresets.json
