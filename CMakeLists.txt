@@ -20,6 +20,15 @@ set_project_warnings(project_warnings)
 add_library(project_options INTERFACE)
 target_compile_features(project_options INTERFACE cxx_std_20)
 
+# time trace if clang
+if(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+  option(ENABLE_TIME_TRACE "Enable -ftime-trace to generate time tracing .json files on clang" ON)
+  if(ENABLE_TIME_TRACE)
+    message("-- -ftime-trace is enabled.")
+    target_compile_options(project_options INTERFACE -ftime-trace)
+  endif()
+endif()
+
 # sanitizer options if supported by compiler
 include(cmake/sanitizers.cmake)
 enable_sanitizers(project_options)

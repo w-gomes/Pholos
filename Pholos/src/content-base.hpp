@@ -19,8 +19,10 @@ class ContentBase {
   ContentBase() = default;
   friend Derived;
 
-  Derived &derived() { return static_cast<Derived &>(*this); }
-  Derived const &derived() const { return static_cast<Derived const &>(*this); }
+  [[nodiscard]] Derived &derived() { return static_cast<Derived &>(*this); }
+  [[nodiscard]] Derived const &derived() const {
+    return static_cast<Derived const &>(*this);
+  }
 
  public:
   [[nodiscard]] auto stat_as_string() const -> std::string {

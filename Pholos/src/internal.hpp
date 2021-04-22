@@ -2,7 +2,7 @@
 
 namespace Pholos::internal {
 
-#define FWD(x) static_cast<decltype(x) &&>(x)
+#define FWD(x) static_cast<decltype(x) &&>(x)  // NOLINT
 
 // Add helper function that calls constructor of either
 // Movies or TvShow
