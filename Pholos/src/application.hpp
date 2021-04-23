@@ -1,14 +1,21 @@
 #pragma once
+#include <filesystem>
+
 #include "controller.hpp"
 #include "database.hpp"
 
 namespace Pholos {
 
+namespace fs = std::filesystem;
+
 class Application {
  public:
   static auto welcome_message() -> void;
 
-  Application()  = default;
+  // TODO: Find a better way to use Database in Controller...
+  Application()
+    : controller_(&database_)
+    , database_(fs::current_path()) {}
   ~Application() = default;
 
   // No move or copy
@@ -19,6 +26,7 @@ class Application {
 
   auto run_application() -> void;
   auto exit_application() -> void;
+  [[nodiscard]] auto get_database() -> Database &;
 
  private:
   // methods
@@ -29,7 +37,7 @@ class Application {
   bool running_{false};
   bool db_loaded_{false};
 
-  Controller controller_{};
-  Database database_{};
+  Controller controller_;
+  Database database_;
 };
 }  // namespace Pholos

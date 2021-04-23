@@ -2,6 +2,7 @@
 
 #include <SQLiteCpp/SQLiteCpp.h>
 
+#include <algorithm>
 #include <cassert>  // assert()
 #include <cctype>   // std::tolower()
 #include <fstream>
@@ -39,27 +40,37 @@ inline auto type_to_string(Type type) -> std::string {
 }  // namespace internal
 
 auto Database::create_database_file() -> bool {
-  // Check if the database file already exists.
-  std::ifstream file(Database::database_name_);
-  if (file.is_open()) {
-    // It does...
-    fmt::print("Database file found!\n");
-    return true;
+  if (!fs::exists(fs::path(data_folder_) /= database_name_)) {
+    fmt::print("{} not found, creating one...\n", database_name_);
+    auto file = std::ofstream(root_path_);
+    if (!fs::exists(root_path_)) { return false; }
+    fmt::print("Database created.\n");
   }
+  return true;
+}
 
-  // Database file doesn't exist, so we create an empty one.
-  std::ofstream database_file(Database::database_name_);
-  if (database_file.is_open()) {
-    fmt::print("Database file {} doesn't exist. Creating one...\n",
-               Database::database_name_);
-    return true;
-  }
-
-  // Something wrong happened.
-  return false;
+auto Database::get_database_path() const -> std::string {
+  return root_path_.string();
 }
 
 auto Database::init(bool &loaded) -> void {
+  // TODO: maybe turn this into a method?
+  // create a data/ folder if it doesn't exist.
+  // update fs::path
+  root_path_ /= data_folder_;
+  if (!fs::exists(root_path_)) {
+    fmt::print("{} not found, creating one...\n", data_folder_);
+    const auto created = fs::create_directory(root_path_);
+    if (!created) {
+      fmt::print("{}\n", "Error trying to create data folder");
+      loaded = false;
+      return;
+    }
+  }
+  // update fs::path
+  root_path_ /= database_name_;
+
+  // create a database file i.e. a sqlite3 file.
   bool database_exist = Database::create_database_file();
   if (!database_exist) {
     fmt::print(
@@ -69,11 +80,14 @@ auto Database::init(bool &loaded) -> void {
     return;
   }
 
+  // TODO: create backup folder.
+
+  // database tables exist?
   try {
-    SQLite::Database db(Database::database_name_);
+    SQLite::Database db(get_database_path());
     fmt::print(
       "Database file {} opened successfully.\nChecking database tables...\n",
-      Database::database_name_);
+      get_database_path());
     bool table_exists = true;
     for (const auto &t : Database::table_names_) {
       table_exists = db.tableExists(t);
@@ -95,7 +109,7 @@ auto Database::init(bool &loaded) -> void {
 // INSERT query.
 // The client should pass the formatted query.
 auto Database::insert(const std::string &query) -> void {
-  SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
+  SQLite::Database db(get_database_path(), SQLite::OPEN_READWRITE);
   SQLite::Transaction transaction(db);
 
   db.exec(query);
@@ -122,7 +136,7 @@ auto Database::select(Type context_type, Stats stat) {
 
 auto Database::select_movies(Stats st) -> std::map<int, Movies> {
   try {
-    SQLite::Database db(Database::database_name_);
+    SQLite::Database db(get_database_path());
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
@@ -168,7 +182,7 @@ auto Database::select_movies(Stats st) -> std::map<int, Movies> {
 
 auto Database::select_tvshows(Stats st) -> std::map<int, TvShow> {
   try {
-    SQLite::Database db(Database::database_name_);
+    SQLite::Database db(get_database_path());
 #if defined(_DEBUG)
     fmt::print("Database {} opened successfully.\n", db.getFilename().c_str());
 #endif
@@ -290,7 +304,7 @@ auto Database::update_episode(const int id, Type obj_type, const int distance)
 // Private section
 auto Database::execute_update(const std::string &query) -> void {
   try {
-    SQLite::Database db(Database::database_name_, SQLite::OPEN_READWRITE);
+    SQLite::Database db(get_database_path(), SQLite::OPEN_READWRITE);
     SQLite::Transaction transaction(db);
 
     db.exec(query);
@@ -310,7 +324,7 @@ auto Database::create_table() -> void {
 }
 
 auto Database::create_movie_table() -> void {
-  SQLite::Database db(Database::database_name_,
+  SQLite::Database db(get_database_path(),
                       // NOLINTNEXTLINE(hicpp-signed-bitwise)
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);
@@ -319,7 +333,7 @@ auto Database::create_movie_table() -> void {
 }
 
 auto Database::create_tvshow_table() -> void {
-  SQLite::Database db(Database::database_name_,
+  SQLite::Database db(get_database_path(),
                       // NOLINTNEXTLINE(hicpp-signed-bitwise)
                       SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE);
   SQLite::Transaction transaction(db);

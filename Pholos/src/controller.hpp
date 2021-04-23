@@ -12,12 +12,15 @@
 
 namespace Pholos {
 
+class Database;
+
 /*
  * Controller interface
  */
 class Controller {
  public:
-  Controller() = default;
+  explicit Controller(Database *database)
+    : database_{database} {}
 
   Controller(const Controller &obj) = delete;
   Controller &operator=(const Controller &obj) = delete;
@@ -50,19 +53,20 @@ class Controller {
 
   // variables
   bool quit_{false};
-  inline static std::array<std::string, 10> commands_list = {"HELP",
-                                                             "EXIT",
-                                                             "ADD",
-                                                             "EDIT",
-                                                             "DELETE",
-                                                             "SEARCH",
-                                                             "QUERY",
-                                                             "ABOUT",
-                                                             "LIST",
-                                                             "CMD"};
+  const inline static std::array<std::string, 10> commands_list = {"HELP",
+                                                                   "EXIT",
+                                                                   "ADD",
+                                                                   "EDIT",
+                                                                   "DELETE",
+                                                                   "SEARCH",
+                                                                   "QUERY",
+                                                                   "ABOUT",
+                                                                   "LIST",
+                                                                   "CMD"};
 
   std::map<int, Movies> movies_cache_{};
   std::map<int, TvShow> tvshow_cache_{};
+  Database *database_;
 };
 
 }  // namespace Pholos

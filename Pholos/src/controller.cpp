@@ -301,7 +301,7 @@ auto Controller::add_movie() -> void {
   }
 
   auto movie = Movies(name, rating, stat);
-  Database::insert(Query::make_insert_query(movie));
+  database_->insert(Query::make_insert_query(movie));
   this->load_content();
 }
 
@@ -347,7 +347,7 @@ auto Controller::add_tvshow() -> void {
   }
 
   auto tvshow = TvShow(name, rating, stat, episode, last_episode);
-  Database::insert(Query::make_insert_query(tvshow));
+  database_->insert(Query::make_insert_query(tvshow));
   this->load_content();
 }
 
@@ -361,10 +361,10 @@ auto Controller::load_content() -> void {
 #endif
   // Desired API call
   // database.select(Type::Movie, Select_Type::All);
-  const auto movies_list = Database::select_movies();
+  const auto movies_list = database_->select_movies();
   // Desired API call
   // database.select(Type::TvShow, Select_Type::All);
-  const auto tvshows_list = Database::select_tvshows();
+  const auto tvshows_list = database_->select_tvshows();
 
   // Whenever we add a new object, we call load_content to reload the cache...
   // So that we can get the object's id.
@@ -391,7 +391,7 @@ auto Controller::list_all_movies() -> void {
   fmt::print("search_type is {}.\n", search_type);
 
   const auto movie_list =
-    Database::select_movies(static_cast<Stats>(search_type));
+    database_->select_movies(static_cast<Stats>(search_type));
   if (movie_list.empty()) {
     fmt::print("\n***\nNo movie was found for this search type.\n");
     return;
@@ -466,7 +466,7 @@ auto Controller::list_all_tvshows() -> void {
   fmt::print("search_type is {}.\n", search_type);
 
   const auto tvshow_list =
-    Database::select_tvshows(static_cast<Stats>(search_type));
+    database_->select_tvshows(static_cast<Stats>(search_type));
   if (tvshow_list.empty()) {
     fmt::print("\n***\nNo tvshow was found for this search type.\n");
     return;
@@ -633,19 +633,19 @@ auto Controller::edit_menu(Type type) -> void {
     case 1: {
       const auto name = internal::get_user_input<std::string>(
         "Enter the new name, please.\n-> ");
-      Database::update_name(id, name, type);
+      database_->update_name(id, name, type);
     } break;
     case 2: {
       const auto stat = internal::get_user_input<int>(
         "Enter the new stat:\n Watching (1)\n Plan to Watch (2)\n Completed "
         "(3)\n Dropped "
         "(4)\n-> ");
-      Database::update_stat(id, stat, type);
+      database_->update_stat(id, stat, type);
     } break;
     case 3: {
       const auto rating =
         internal::get_user_input<double>("Enter the new rating.\n-> ");
-      Database::update_rating(id, rating, type);
+      database_->update_rating(id, rating, type);
     } break;
     case 4: {
       // We ask user the number of episodes to increment. Default is by 1.
@@ -654,15 +654,15 @@ auto Controller::edit_menu(Type type) -> void {
       if (update_more_than_one) {
         const auto distance =
           internal::get_user_input<int>("Enter the amount to increment.\n-> ");
-        Database::update_episode(id, type, distance);
+        database_->update_episode(id, type, distance);
       } else {
-        Database::update_episode(id, type);
+        database_->update_episode(id, type);
       }
     } break;
     case 5: {
       const auto total_episode =
         internal::get_user_input<int>("Enter the new total episode.\n-> ");
-      Database::update_total_episode(id, total_episode, type);
+      database_->update_total_episode(id, total_episode, type);
     } break;
     default:
       fmt::print("Unhandled case!!!\n");

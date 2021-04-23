@@ -81,6 +81,8 @@ auto Application::is_running() const -> bool { return this->running_; }
 
 auto Application::is_db_loaded() const -> bool { return this->db_loaded_; }
 
+auto Application::get_database() -> Database& { return this->database_; }
+
 auto Application::exit_application() -> void {
   fmt::print("\nBye!\n");
   this->running_ = false;
