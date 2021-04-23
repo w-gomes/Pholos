@@ -40,11 +40,12 @@ inline auto type_to_string(Type type) -> std::string {
 }  // namespace internal
 
 auto Database::create_database_file() -> bool {
-  if (!fs::exists(fs::path(data_folder_) /= database_name_)) {
-    fmt::print("{} not found, creating one...\n", database_name_);
+  if (!fs::exists(root_path_)) {
+    fmt::print(
+      "{} not found, creating {}...\n", root_path_.string(), database_name_);
     auto file = std::ofstream(root_path_);
     if (!fs::exists(root_path_)) { return false; }
-    fmt::print("Database created.\n");
+    fmt::print("{} created at {}.\n", database_name_, root_path_.string());
   }
   return true;
 }
@@ -59,7 +60,8 @@ auto Database::init(bool &loaded) -> void {
   // update fs::path
   root_path_ /= data_folder_;
   if (!fs::exists(root_path_)) {
-    fmt::print("{} not found, creating one...\n", data_folder_);
+    fmt::print(
+      "{} not found, creating {}...\n", root_path_.string(), data_folder_);
     const auto created = fs::create_directory(root_path_);
     if (!created) {
       fmt::print("{}\n", "Error trying to create data folder");
@@ -92,7 +94,7 @@ auto Database::init(bool &loaded) -> void {
     for (const auto &t : Database::table_names_) {
       table_exists = db.tableExists(t);
       if (!table_exists) {
-        fmt::print("No tables found.\n");
+        fmt::print("No tables found. ");
         break;
       }
     }
